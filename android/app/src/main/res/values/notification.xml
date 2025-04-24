@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <bool name="com_google_firebase_messaging_auto_init_enabled">true</bool>
+    <bool name="com_google_firebase_messaging_notify_icon_use_app_icon">true</bool>
+    <bool name="com_google_firebase_messaging_notify_title_use_app_name">true</bool>
+</resources> 

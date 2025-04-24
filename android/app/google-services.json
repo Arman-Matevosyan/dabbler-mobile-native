@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "886915555488",
+    "project_id": "dabbler-ce817",
+    "storage_bucket": "dabbler-ce817.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:886915555488:android:71f986710c4fd83ce8e9c5",
+        "android_client_info": {
+          "package_name": "com.dabbler"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAqK_EgFlf2kmoSM9FapSjs-X1_DU4hqrc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
