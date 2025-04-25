@@ -71,8 +71,8 @@
 			</dict>
 		</dict>
 	</dict>
-    <key>FirebaseAppDelegateProxyEnabled</key>
-    <false/>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<false/>
 	<key>NSCalendarsUsageDescription</key>
 	<string>Allow Dabbler to access your calendar</string>
 	<key>NSCameraUsageDescription</key>

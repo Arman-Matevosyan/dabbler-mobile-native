@@ -17,15 +17,15 @@ import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import {firebaseMessaging} from '@/services/firebase/messaging';
 import {initializeFirebase} from '@/services/firebase';
 import {useAuthStore} from './stores/authStore';
+import SplashScreen from 'react-native-splash-screen';
 import '@/services/i18n';
-import { hideSplashScreen } from '@/config/bootsplash';
-import AnimatedSplash from '@/components/AnimatedSplash';
 
 const AppContainer = () => {
   const {colors, mode} = useTheme();
   const systemPreference = useColorScheme();
   const isDarkMode =
-    mode === 'dark' || ((mode as string) === 'system' && systemPreference === 'dark');
+    mode === 'dark' ||
+    ((mode as string) === 'system' && systemPreference === 'dark');
   const {handleSocialAuthCallback} = useAuthStore();
 
   useEffect(() => {
@@ -129,7 +129,7 @@ const AppContainer = () => {
         barStyle={isDarkMode ? 'light-content' : 'dark-content'}
         backgroundColor={colors.background}
       />
-      <NavigationContainer theme={navigationTheme} onReady={hideSplashScreen}>
+      <NavigationContainer theme={navigationTheme}>
         <RootNavigator />
       </NavigationContainer>
     </>
@@ -137,6 +137,11 @@ const AppContainer = () => {
 };
 
 const App = () => {
+  useEffect(() => {
+    // Hide splash screen once the app is ready
+    SplashScreen.hide();
+  }, []);
+
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <ThemeProvider>
@@ -144,9 +149,7 @@ const App = () => {
           <SafeAreaProvider>
             <QueryClientProvider client={queryClient}>
               <BottomSheetModalProvider>
-                <AnimatedSplash logoRotate={360} animationDuration={1200}>
-                  <AppContainer />
-                </AnimatedSplash>
+                <AppContainer />
               </BottomSheetModalProvider>
             </QueryClientProvider>
           </SafeAreaProvider>

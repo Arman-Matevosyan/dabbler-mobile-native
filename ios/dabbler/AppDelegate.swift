@@ -4,10 +4,10 @@ import React_RCTAppDelegate
 import ReactAppDependencyProvider
 import FirebaseCore
 import FirebaseMessaging
-import RNBootSplash 
 import Firebase
 import GoogleMaps
 import UserNotifications
+import react_native_splash_screen
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
@@ -29,12 +29,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         reactNativeDelegate = delegate
         reactNativeFactory = factory
         
-        window = UIWindow(frame: UIScreen.main.bounds)
-        factory.startReactNative(
-            withModuleName: "dabbler",
-            in: window,
-            launchOptions: launchOptions
+        let moduleName = "dabbler"
+        let initialProps: [String: Any] = [:]
+
+        let rootView = RCTRootView(
+            bridge: bridge,
+            moduleName: moduleName,
+            initialProperties: initialProps
         )
+
+        let rootViewController = UIViewController()
+        rootViewController.view = rootView
+
+        window = UIWindow(frame: UIScreen.main.bounds)
+        window?.rootViewController = rootViewController
+        window?.makeKeyAndVisible()
+
+        // Show splash screen
+        SplashScreen.show()
         
         return true
     }
@@ -102,11 +114,6 @@ class ReactNativeDelegate: RCTDefaultReactNativeFactoryDelegate {
         return self.bundleURL() 
     }
     
-    override func customize(_ rootView: RCTRootView!) {
-        super.customize(rootView)
-        RNBootSplash.initWithStoryboard("BootSplash", rootView: rootView)
-    }
-
     override func bundleURL() -> URL? {
         #if DEBUG
         return RCTBundleURLProvider.sharedSettings().jsBundleURL(

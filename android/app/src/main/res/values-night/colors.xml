@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="bootsplash_background">#121212</color>
     <color name="primary">#337BE2</color>
+    <color name="primary_dark">#2966BC</color>
     <color name="background">#121212</color>
     <color name="notification_color">#337BE2</color>
+    <color name="bootsplash_background">#121212</color>
 </resources> 

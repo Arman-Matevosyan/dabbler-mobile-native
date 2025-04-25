@@ -12,6 +12,6 @@ module.exports = {
         },
       },
     ],
-    'react-native-reanimated/plugin',
+    ['react-native-reanimated/plugin', { version: '3.17.5' }],
   ],
 };
