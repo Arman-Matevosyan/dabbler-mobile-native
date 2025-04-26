@@ -7,8 +7,13 @@ const {width, height} = Dimensions.get('window');
 
 export const SearchSkeleton = () => {
   const {colors} = useTheme();
+  const insets = useSafeAreaInsets();
   return (
-    <View style={[styles.searchSkeleton, {backgroundColor: colors.card}]}>
+    <View
+      style={[
+        styles.searchSkeleton,
+        {backgroundColor: colors.card, paddingTop: insets.top},
+      ]}>
       <View style={styles.searchBarContainer}>
         <Skeleton width="100%" height={48} style={{borderRadius: 24}} />
       </View>

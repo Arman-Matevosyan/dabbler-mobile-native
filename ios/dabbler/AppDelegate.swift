@@ -4,10 +4,8 @@ import React_RCTAppDelegate
 import ReactAppDependencyProvider
 import FirebaseCore
 import FirebaseMessaging
-import Firebase
 import GoogleMaps
 import UserNotifications
-import react_native_splash_screen
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate, MessagingDelegate {
@@ -23,45 +21,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         
         setupPushNotifications(application)
         
-        let delegate = ReactNativeDelegate()
-        let factory = RCTReactNativeFactory(delegate: delegate)
-        delegate.dependencyProvider = RCTAppDependencyProvider()
-        reactNativeDelegate = delegate
-        reactNativeFactory = factory
-        
-        let moduleName = "dabbler"
-        let initialProps: [String: Any] = [:]
-
-        let rootView = RCTRootView(
-            bridge: bridge,
-            moduleName: moduleName,
-            initialProperties: initialProps
-        )
-
-        let rootViewController = UIViewController()
-        rootViewController.view = rootView
-
-        window = UIWindow(frame: UIScreen.main.bounds)
-        window?.rootViewController = rootViewController
-        window?.makeKeyAndVisible()
-
-        // Show splash screen
-        SplashScreen.show()
+        setupReactNative(launchOptions: launchOptions)
         
         return true
     }
     
     private func setupPushNotifications(_ application: UIApplication) {
-        // Set notification delegates
         UNUserNotificationCenter.current().delegate = self
         Messaging.messaging().delegate = self
         
         let authOptions: UNAuthorizationOptions = [.alert, .badge, .sound]
         UNUserNotificationCenter.current().requestAuthorization(options: authOptions) { granted, error in
             if let error = error {
-                print("Authorization error: \(error.localizedDescription)")
+                print("Error requesting notification permissions: \(error.localizedDescription)")
                 return
             }
+            print("Notification permissions granted: \(granted)")
             
             guard granted else { return }
             
@@ -75,6 +50,23 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         }
         
         application.registerForRemoteNotifications()
+        GMSServices.provideAPIKey("AIzaSyDgqOpCGS62WWYFk-pBEcBo6Rw8hlRaufg")
+
+    }
+    
+    private func setupReactNative(launchOptions: [UIApplication.LaunchOptionsKey: Any]?) {
+        let delegate = ReactNativeDelegate()
+        let factory = RCTReactNativeFactory(delegate: delegate)
+        delegate.dependencyProvider = RCTAppDependencyProvider()
+        reactNativeDelegate = delegate
+        reactNativeFactory = factory
+        
+        window = UIWindow(frame: UIScreen.main.bounds)
+        factory.startReactNative(
+            withModuleName: "dabbler",
+            in: window,
+            launchOptions: launchOptions
+        )
     }
 
     func application(_ application: UIApplication, 
@@ -88,7 +80,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         print("Failed to register for remote notifications: \(error.localizedDescription)")
     }
 
-    func messaging(_ messaging: Messaging, didReceiveRegistrationToken fcmToken: String?) {
+    func messaging(_ messaging: Messaging, 
+                   didReceiveRegistrationToken fcmToken: String?) {
         print("Firebase registration token: \(String(describing: fcmToken))")
     }
 
@@ -111,9 +104,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
 
 class ReactNativeDelegate: RCTDefaultReactNativeFactoryDelegate {
     override func sourceURL(for bridge: RCTBridge) -> URL? {
-        return self.bundleURL() 
+        return self.bundleURL()
     }
-    
+
     override func bundleURL() -> URL? {
         #if DEBUG
         return RCTBundleURLProvider.sharedSettings().jsBundleURL(

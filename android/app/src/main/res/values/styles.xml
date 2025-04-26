@@ -1,14 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Base application theme -->
+
     <style name="AppTheme" parent="Theme.AppCompat.DayNight.NoActionBar">
-        <!-- Customize your theme here -->
-        <item name="android:editTextBackground">@android:color/transparent</item>
-        <item name="android:windowBackground">@color/primary_dark</item>
+        <item name="android:editTextBackground">@drawable/rn_edit_text_material</item>
     </style>
 
-    <!-- BootTheme for the splash screen -->
-    <style name="BootTheme" parent="AppTheme">
-        <item name="android:windowBackground">@drawable/bootsplash</item>
-    </style>
-</resources> 
+</resources>

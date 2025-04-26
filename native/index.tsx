@@ -17,7 +17,6 @@ import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import {firebaseMessaging} from '@/services/firebase/messaging';
 import {initializeFirebase} from '@/services/firebase';
 import {useAuthStore} from './stores/authStore';
-import SplashScreen from 'react-native-splash-screen';
 import '@/services/i18n';
 
 const AppContainer = () => {
@@ -137,11 +136,6 @@ const AppContainer = () => {
 };
 
 const App = () => {
-  useEffect(() => {
-    // Hide splash screen once the app is ready
-    SplashScreen.hide();
-  }, []);
-
   return (
     <GestureHandlerRootView style={{flex: 1}}>
       <ThemeProvider>

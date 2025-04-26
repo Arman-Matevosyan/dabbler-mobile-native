@@ -18,7 +18,7 @@ import {
   PlansSkeleton,
   CheckinHistorySkeleton,
 } from './components/skeletons';
-import {ProfileScreenSkeleton} from './components/ProfileScreenSkeleton';
+import {ProfileSkeleton} from './AuthUser';
 
 export type ProfileStackParamList = {
   AuthUser: undefined;
@@ -68,65 +68,75 @@ const Payment = lazy(() => import('./screens/payment/Payment'));
 const Stack = createStackNavigator<ProfileStackParamList>();
 
 // Create custom WithSkeleton HOC for each screen type
-const WithSettingsSkeleton = (Component: React.ComponentType<any>) => (props: any) => (
-  <Suspense fallback={<SettingsScreenSkeleton />}>
-    <Component {...props} />
-  </Suspense>
-);
+const WithSettingsSkeleton =
+  (Component: React.ComponentType<any>) => (props: any) => (
+    <Suspense fallback={<SettingsScreenSkeleton />}>
+      <Component {...props} />
+    </Suspense>
+  );
 
-const WithProfileDetailsSkeleton = (Component: React.ComponentType<any>) => (props: any) => (
-  <Suspense fallback={<ProfileDetailsSkeleton />}>
-    <Component {...props} />
-  </Suspense>
-);
+const WithProfileDetailsSkeleton =
+  (Component: React.ComponentType<any>) => (props: any) => (
+    <Suspense fallback={<ProfileDetailsSkeleton />}>
+      <Component {...props} />
+    </Suspense>
+  );
 
-const WithDisplaySkeleton = (Component: React.ComponentType<any>) => (props: any) => (
-  <Suspense fallback={<DisplaySkeleton />}>
-    <Component {...props} />
-  </Suspense>
-);
+const WithDisplaySkeleton =
+  (Component: React.ComponentType<any>) => (props: any) => (
+    <Suspense fallback={<DisplaySkeleton />}>
+      <Component {...props} />
+    </Suspense>
+  );
 
-const WithLanguageSkeleton = (Component: React.ComponentType<any>) => (props: any) => (
-  <Suspense fallback={<LanguageSkeleton />}>
-    <Component {...props} />
-  </Suspense>
-);
+const WithLanguageSkeleton =
+  (Component: React.ComponentType<any>) => (props: any) => (
+    <Suspense fallback={<LanguageSkeleton />}>
+      <Component {...props} />
+    </Suspense>
+  );
 
-const WithFavoritesSkeleton = (Component: React.ComponentType<any>) => (props: any) => (
-  <Suspense fallback={<FavoritesScreenSkeleton />}>
-    <Component {...props} />
-  </Suspense>
-);
+const WithFavoritesSkeleton =
+  (Component: React.ComponentType<any>) => (props: any) => (
+    <Suspense fallback={<FavoritesScreenSkeleton />}>
+      <Component {...props} />
+    </Suspense>
+  );
 
-const WithCheckinHistorySkeleton = (Component: React.ComponentType<any>) => (props: any) => (
-  <Suspense fallback={<CheckinHistorySkeleton />}>
-    <Component {...props} />
-  </Suspense>
-);
+const WithCheckinHistorySkeleton =
+  (Component: React.ComponentType<any>) => (props: any) => (
+    <Suspense fallback={<CheckinHistorySkeleton />}>
+      <Component {...props} />
+    </Suspense>
+  );
 
-const WithMembershipSkeleton = (Component: React.ComponentType<any>) => (props: any) => (
-  <Suspense fallback={<MembershipSkeleton />}>
-    <Component {...props} />
-  </Suspense>
-);
+const WithMembershipSkeleton =
+  (Component: React.ComponentType<any>) => (props: any) => (
+    <Suspense fallback={<MembershipSkeleton />}>
+      <Component {...props} />
+    </Suspense>
+  );
 
-const WithPaymentSkeleton = (Component: React.ComponentType<any>) => (props: any) => (
-  <Suspense fallback={<PaymentSkeleton />}>
-    <Component {...props} />
-  </Suspense>
-);
+const WithPaymentSkeleton =
+  (Component: React.ComponentType<any>) => (props: any) => (
+    <Suspense fallback={<PaymentSkeleton />}>
+      <Component {...props} />
+    </Suspense>
+  );
 
-const WithPlansSkeleton = (Component: React.ComponentType<any>) => (props: any) => (
-  <Suspense fallback={<PlansSkeleton />}>
-    <Component {...props} />
-  </Suspense>
-);
+const WithPlansSkeleton =
+  (Component: React.ComponentType<any>) => (props: any) => (
+    <Suspense fallback={<PlansSkeleton />}>
+      <Component {...props} />
+    </Suspense>
+  );
 
-const WithDefaultSkeleton = (Component: React.ComponentType<any>) => (props: any) => (
-  <Suspense fallback={<ProfileScreenSkeleton />}>
-    <Component {...props} />
-  </Suspense>
-);
+const WithDefaultSkeleton =
+  (Component: React.ComponentType<any>) => (props: any) => (
+    <Suspense fallback={<ProfileSkeleton />}>
+      <Component {...props} />
+    </Suspense>
+  );
 
 export default function ProfileNavigator() {
   const {isAuthenticated, showSubscriptionModal, setShowSubscriptionModal} =
@@ -152,7 +162,10 @@ export default function ProfileNavigator() {
         initialRouteName={isAuthenticated ? 'AuthUser' : 'UnAuth'}>
         {isAuthenticated ? (
           <>
-            <Stack.Screen name="AuthUser" component={WithDefaultSkeleton(AuthenticatedProfile)} />
+            <Stack.Screen
+              name="AuthUser"
+              component={WithDefaultSkeleton(AuthenticatedProfile)}
+            />
             <Stack.Screen
               name="Settings"
               component={WithSettingsSkeleton(SettingsScreen)}
@@ -161,9 +174,15 @@ export default function ProfileNavigator() {
               name="ProfileDetails"
               component={WithProfileDetailsSkeleton(Details)}
             />
-            <Stack.Screen name="Display" component={WithDisplaySkeleton(Display)} />
+            <Stack.Screen
+              name="Display"
+              component={WithDisplaySkeleton(Display)}
+            />
             <Stack.Screen name="Plans" component={WithPlansSkeleton(Plans)} />
-            <Stack.Screen name="Language" component={WithLanguageSkeleton(Language)} />
+            <Stack.Screen
+              name="Language"
+              component={WithLanguageSkeleton(Language)}
+            />
             <Stack.Screen
               name="Favorites"
               component={WithFavoritesSkeleton(FavoriteScreen)}
@@ -176,10 +195,16 @@ export default function ProfileNavigator() {
               name="Membership"
               component={WithMembershipSkeleton(Membership)}
             />
-            <Stack.Screen name="Payment" component={WithPaymentSkeleton(Payment)} />
+            <Stack.Screen
+              name="Payment"
+              component={WithPaymentSkeleton(Payment)}
+            />
           </>
         ) : (
-          <Stack.Screen name="UnAuth" component={WithDefaultSkeleton(UnAuthProfile)} />
+          <Stack.Screen
+            name="UnAuth"
+            component={WithDefaultSkeleton(UnAuthProfile)}
+          />
         )}
       </Stack.Navigator>
 

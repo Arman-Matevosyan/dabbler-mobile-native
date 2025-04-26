@@ -99,6 +99,8 @@
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>BootSplash</string>
+	<key>UIUserInterfaceStyle</key>
+	<string>Automatic</string>
 	<key>UIRequiredDeviceCapabilities</key>
 	<array>
 		<string>arm64</string>

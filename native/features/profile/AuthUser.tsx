@@ -22,11 +22,11 @@ import {useTranslation} from 'react-i18next';
 
 export const ProfileSkeleton = () => {
   const {colors} = useTheme();
-
+  const insets = useSafeAreaInsets();
   return (
     <View
       style={[styles.skeletonContainer, {backgroundColor: colors.background}]}>
-      <View style={styles.headerContainer}>
+      <View style={(styles.headerContainer, {paddingTop: insets.top})}>
         <Skeleton width={24} height={24} borderRadius={12} />
       </View>
       <Skeleton style={styles.avatarSkeleton} />
@@ -156,7 +156,7 @@ const AuthenticatedProfile: React.FC = () => {
           contactUs: t('profile.support.contactUs'),
           about: t('profile.about.title'),
           version: t('profile.about.version'),
-          logout: t('profile.logout')
+          logout: t('profile.logout'),
         }}
       />
     ),

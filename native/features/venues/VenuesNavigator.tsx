@@ -28,15 +28,12 @@ const VenuesScreenWrapper = (props: any) => (
 
 const VenueDetailsScreenWrapper = (props: any) => {
   const navigation = props.navigation;
-  
+
   return (
-    <Suspense 
+    <Suspense
       fallback={
-        <VenueDetailsScreenSkeleton 
-          onClose={() => navigation.goBack()} 
-        />
-      }
-    >
+        <VenueDetailsScreenSkeleton onClose={() => navigation.goBack()} />
+      }>
       <VenueDetailsScreen {...props} />
     </Suspense>
   );

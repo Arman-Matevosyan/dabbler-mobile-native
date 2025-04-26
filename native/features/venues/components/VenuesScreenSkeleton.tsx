@@ -6,12 +6,17 @@ import {
   MapSkeleton,
   BottomSheetSkeleton,
 } from './VenueSkeleton';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 export const VenuesScreenSkeleton = () => {
   const {colors} = useTheme();
-
+  const insets = useSafeAreaInsets();
   return (
-    <View style={[styles.container, {backgroundColor: colors.background}]}>
+    <View
+      style={[
+        styles.container,
+        {backgroundColor: colors.background, paddingTop: insets.top},
+      ]}>
       <SearchSkeleton />
       <MapSkeleton />
       <BottomSheetSkeleton />
