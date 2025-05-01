@@ -1,4 +1,4 @@
-import {ICoordinates} from './shared.interfaces';
+import { ICoordinates } from './shared.interfaces';
 
 export interface IClass {
   id: string;

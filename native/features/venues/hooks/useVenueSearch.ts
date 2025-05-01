@@ -1,9 +1,9 @@
-import {useQuery} from '@tanstack/react-query';
-import {ContentAPI} from '@/services/api';
-import {VenueQueryKeys} from '@/constants/queryKeys';
-import {MapCluster} from '@/types/venues.interfaces';
-import {useMemo} from 'react';
-import {client} from '@/services/client';
+import { useQuery } from '@tanstack/react-query';
+import { ContentAPI } from '@/services/api';
+import { VenueQueryKeys } from '@/constants/queryKeys';
+import { MapCluster } from '@/types/venues.interfaces';
+import { useMemo } from 'react';
+import { client } from '@/services/client';
 
 export interface VenueSearchParams {
   locationLat?: number;
@@ -27,7 +27,7 @@ export interface Venue {
     city?: string;
     district?: string;
   };
-  covers?: Array<{url: string}>;
+  covers?: Array<{ url: string }>;
 }
 
 export interface Cluster {
@@ -69,11 +69,8 @@ export function useVenueSearch(params: SearchParams, isFocused: boolean) {
     }),
     [params],
   );
-  console.log(serializedParams);
 
-  const hasLocationParams = Boolean(
-    params.locationLat && params.locationLng && params.radius,
-  );
+  const hasLocationParams = Boolean(params.locationLat && params.locationLng && params.radius);
 
   return useQuery({
     queryKey: [VenueQueryKeys.venuesSearch, serializedParams],
@@ -84,10 +81,7 @@ export function useVenueSearch(params: SearchParams, isFocused: boolean) {
       const clusters = data.response?.clusters || [];
       return {
         clusters: clusters
-          .filter(
-            (c: MapCluster) =>
-              c.count > 1 && c.center?.latitude && c.center?.longitude,
-          )
+          .filter((c: MapCluster) => c.count > 1 && c.center?.latitude && c.center?.longitude)
           .map((c: MapCluster) => ({
             ...c,
             id: c.id || `cluster-${c.center.latitude}-${c.center.longitude}`,
@@ -95,9 +89,7 @@ export function useVenueSearch(params: SearchParams, isFocused: boolean) {
         venues: clusters
           .filter(
             (c: MapCluster) =>
-              c.count === 1 &&
-              c.venue &&
-              Array.isArray(c.venue.location.coordinates),
+              c.count === 1 && c.venue && Array.isArray(c.venue.location.coordinates),
           )
           .map((c: MapCluster) => ({
             ...c.venue!,
@@ -124,9 +116,7 @@ export const useVenueDetails = (venueId: string) => {
   });
 };
 
-const fetchVenues = async (
-  params: SearchParams,
-): Promise<MapSearchResponse> => {
+const fetchVenues = async (params: SearchParams): Promise<MapSearchResponse> => {
   try {
     let categoryParam = undefined;
     if (params.category && Array.isArray(params.category)) {

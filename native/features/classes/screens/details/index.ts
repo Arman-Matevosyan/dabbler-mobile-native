@@ -1,3 +1,3 @@
 import ClassDetailsScreen from './ClassDetailsScreen';
 
-export default ClassDetailsScreen; 
+export default ClassDetailsScreen;

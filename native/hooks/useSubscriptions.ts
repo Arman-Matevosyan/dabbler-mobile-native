@@ -1,8 +1,8 @@
-import {PaymentQueryKeys} from '@/constants/queryKeys';
-import {PaymentAPI} from '@/services/api';
-import {ISubscription} from '@/types/payment.interfaces';
-import {useQuery} from '@tanstack/react-query';
-import {useAuthStore} from '@/stores/authStore';
+import { PaymentQueryKeys } from '@/constants/queryKeys';
+import { PaymentAPI } from '@/services/api';
+import { ISubscription } from '@/types/payment.interfaces';
+import { useQuery } from '@tanstack/react-query';
+import { useAuthStore } from '@/stores/authStore';
 
 export const useSubscriptions = () => {
   return useQuery<ISubscription[], Error>({

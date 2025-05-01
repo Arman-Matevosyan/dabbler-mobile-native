@@ -1,29 +1,21 @@
-import {Skeleton, useTheme} from '@/design-system';
-import {StyleSheet, View} from 'react-native';
+import { Skeleton, useTheme } from '@/design-system';
+import { StyleSheet, View } from 'react-native';
 
 export const HeaderSkeleton = () => {
   return (
     <View style={styles.header}>
-      <Skeleton
-        width="60%"
-        height={28}
-        style={{marginBottom: 8, alignSelf: 'center'}}
-      />
-      <Skeleton width="80%" height={16} style={{alignSelf: 'center'}} />
+      <Skeleton width="60%" height={28} style={{ marginBottom: 8, alignSelf: 'center' }} />
+      <Skeleton width="80%" height={16} style={{ alignSelf: 'center' }} />
     </View>
   );
 };
 
 export const QrScannerSkeleton = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   return (
-    <View style={[styles.scannerSkeleton, {backgroundColor: colors.card}]}>
-      <Skeleton width={200} height={200} style={{borderRadius: 8}} />
-      <Skeleton
-        width="70%"
-        height={50}
-        style={{borderRadius: 8, marginTop: 24}}
-      />
+    <View style={[styles.scannerSkeleton, { backgroundColor: colors.card }]}>
+      <Skeleton width={200} height={200} style={{ borderRadius: 8 }} />
+      <Skeleton width="70%" height={50} style={{ borderRadius: 8, marginTop: 24 }} />
     </View>
   );
 };

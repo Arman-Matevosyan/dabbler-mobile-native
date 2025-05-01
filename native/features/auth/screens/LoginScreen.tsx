@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -8,19 +8,16 @@ import {
   Platform,
   ActivityIndicator,
 } from 'react-native';
-import {useTheme, Input, Button, Text} from '@design-system';
-import {zodResolver} from '@hookform/resolvers/zod';
-import {useForm, Controller} from 'react-hook-form';
-import {loginSchema, LoginFormData} from '@/validation/authSchemas';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useAuthStore} from '@/stores/authStore';
-import {useNavigation, CommonActions} from '@react-navigation/native';
-import {
-  AuthStackNavigationProp,
-  RootStackNavigationProp,
-} from '@/navigation/types';
-import {SocialLoginButtons} from '../components/SocialMediaButtons';
-import {useTranslation} from 'react-i18next';
+import { useTheme, Input, Button, Text } from '@design-system';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm, Controller } from 'react-hook-form';
+import { loginSchema, LoginFormData } from '@/validation/authSchemas';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useAuthStore } from '@/stores/authStore';
+import { useNavigation, CommonActions } from '@react-navigation/native';
+import { AuthStackNavigationProp, RootStackNavigationProp } from '@/navigation/types';
+import { SocialLoginButtons } from '../components/SocialMediaButtons';
+import { useTranslation } from 'react-i18next';
 
 interface LoginScreenProps {
   navigation: {
@@ -31,18 +28,18 @@ interface LoginScreenProps {
 }
 
 export const LoginScreen = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const insets = useSafeAreaInsets();
-  const {login, isLoading, error, clearError} = useAuthStore();
+  const { login, isLoading, error, clearError } = useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
   const authNavigation = useNavigation<AuthStackNavigationProp>();
   const rootNavigation = useNavigation<RootStackNavigationProp>();
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   const {
     control,
     handleSubmit,
-    formState: {errors},
+    formState: { errors },
   } = useForm<LoginFormData>({
     resolver: zodResolver(loginSchema),
     defaultValues: {
@@ -54,7 +51,7 @@ export const LoginScreen = () => {
   const onSubmit = async (data: LoginFormData) => {
     clearError();
     try {
-      await login({email: data.loginEmail, password: data.loginPassword});
+      await login({ email: data.loginEmail, password: data.loginPassword });
       rootNavigation.dispatch(
         CommonActions.reset({
           index: 0,
@@ -66,7 +63,7 @@ export const LoginScreen = () => {
                   {
                     name: 'Profile',
                     state: {
-                      routes: [{name: 'AuthUser'}],
+                      routes: [{ name: 'AuthUser' }],
                     },
                   },
                 ],
@@ -86,17 +83,11 @@ export const LoginScreen = () => {
 
   return (
     <KeyboardAvoidingView
-      style={[
-        styles.container,
-        {backgroundColor: colors.background, paddingTop: insets.top},
-      ]}
+      style={[styles.container, { backgroundColor: colors.background, paddingTop: insets.top }]}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ScrollView
         style={styles.scrollView}
-        contentContainerStyle={[
-          styles.scrollViewContent,
-          {paddingBottom: insets.bottom},
-        ]}
+        contentContainerStyle={[styles.scrollViewContent, { paddingBottom: insets.bottom }]}
         keyboardShouldPersistTaps="handled">
         <View style={styles.header}>
           <Text variant="heading1" bold>
@@ -126,7 +117,7 @@ export const LoginScreen = () => {
           <Controller
             control={control}
             name="loginEmail"
-            render={({field: {onChange, onBlur, value}}) => (
+            render={({ field: { onChange, onBlur, value } }) => (
               <Input
                 label={t('auth.login.email')}
                 placeholder={t('auth.login.emailPlaceholder')}
@@ -144,7 +135,7 @@ export const LoginScreen = () => {
           <Controller
             control={control}
             name="loginPassword"
-            render={({field: {onChange, onBlur, value}}) => (
+            render={({ field: { onChange, onBlur, value } }) => (
               <Input
                 label={t('auth.login.password')}
                 placeholder={t('auth.login.passwordPlaceholder')}
@@ -176,11 +167,7 @@ export const LoginScreen = () => {
           />
 
           {isLoading && (
-            <ActivityIndicator
-              size="small"
-              color={colors.accent}
-              style={styles.loader}
-            />
+            <ActivityIndicator size="small" color={colors.accent} style={styles.loader} />
           )}
         </View>
 
@@ -195,9 +182,9 @@ export const LoginScreen = () => {
           </TouchableOpacity>
         </View>
         <View style={styles.dividerContainer}>
-          <View style={[styles.divider, {backgroundColor: colors.border}]} />
+          <View style={[styles.divider, { backgroundColor: colors.border }]} />
           <Text style={styles.dividerText}>{t('auth.login.or')}</Text>
-          <View style={[styles.divider, {backgroundColor: colors.border}]} />
+          <View style={[styles.divider, { backgroundColor: colors.border }]} />
         </View>
         <SocialLoginButtons />
       </ScrollView>

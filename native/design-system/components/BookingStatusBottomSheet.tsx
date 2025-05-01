@@ -1,309 +1,237 @@
-import React, {useRef, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   Text,
   View,
-  Dimensions,
+  Modal,
   TouchableOpacity,
+  ScrollView,
+  Dimensions,
 } from 'react-native';
-import {useTheme} from '../theme/ThemeContext';
-import {Button} from './Button';
+import { useTheme } from '../theme/ThemeContext';
+import { Button } from './Button';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import NativeBottomSheet, {NativeBottomSheetRef} from '../NativeBottomSheet';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const {width} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
-export type BookingStatus = 'success' | 'danger' | 'confirm' | 'cancelled';
+export type BookingStatus = 'booking' | 'success' | 'cancelConfirm' | 'cancelled';
 
 interface BookingStatusBottomSheetProps {
   isVisible: boolean;
   onClose: () => void;
-  onConfirm?: () => void;
-  onCancel?: () => void;
+  onBookConfirm?: () => void;
+  onCancelConfirm?: () => void;
   onAddToCalendar?: () => void;
   onShare?: () => void;
   status: BookingStatus;
-  title?: string;
-  message?: string;
-  cancelMessage?: string;
   className?: string;
+  classDescription?: string;
   dateTime?: string;
   venue?: string;
-  cancellationFee?: string;
+  instructor?: string;
+  price?: string;
+  duration?: string;
+  cancellationPolicy?: string;
+  invalidateQueries?: () => void;
 }
 
-export const BookingStatusBottomSheet: React.FC<
-  BookingStatusBottomSheetProps
-> = ({
+export const BookingStatusBottomSheet: React.FC<BookingStatusBottomSheetProps> = ({
   isVisible,
   onClose,
-  onConfirm,
+  onBookConfirm,
+  onCancelConfirm,
   onAddToCalendar,
-  onShare,
   status,
-  title,
-  message,
-  cancelMessage,
   className,
+  classDescription,
   dateTime,
-  cancellationFee,
+  venue,
+  invalidateQueries,
 }) => {
-  const {colors} = useTheme();
-  const insets = useSafeAreaInsets();
-  const bottomSheetRef = useRef<NativeBottomSheetRef>(null);
+  const { colors } = useTheme();
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (isVisible && status === 'success') {
+    if (isVisible && (status === 'success' || status === 'cancelled')) {
       const timer = setTimeout(() => {
         onClose();
-      }, 5000);
+        if (invalidateQueries) {
+          invalidateQueries();
+        }
+      }, 3000);
       return () => clearTimeout(timer);
     }
-  }, [isVisible, status, onClose]);
+  }, [isVisible, status, onClose, invalidateQueries]);
 
-  useEffect(() => {
-    if (isVisible) {
-      setTimeout(() => {
-        bottomSheetRef.current?.snapToIndex(1);
-      }, 100);
-    } else {
-      bottomSheetRef.current?.snapToIndex(0);
-    }
-  }, [isVisible]);
-
-  const handleConfirm = () => {
-    if (onConfirm) {
-      onConfirm();
+  const handleBookNow = async () => {
+    if (onBookConfirm) {
+      setLoading(true);
+      try {
+        onBookConfirm();
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
-  const handleBackdropPress = () => {
-    if (status === 'success' || status === 'cancelled') {
-      onClose();
+  const handleCancelBooking = async () => {
+    if (onCancelConfirm) {
+      setLoading(true);
+      try {
+        await onCancelConfirm();
+        if (invalidateQueries) {
+          invalidateQueries();
+        }
+      } finally {
+        setLoading(false);
+      }
     }
   };
+
+  const renderCheckIcon = (iconColor: string): React.ReactElement => (
+    <View style={[styles.checkCircle, { borderColor: iconColor }]}>
+      <MaterialIcons name="check" size={24} color={iconColor} />
+    </View>
+  );
+
+  const renderBookingInfo = () => (
+    <View style={[styles.infoContainer, { borderColor: colors.border }]}>
+      {className && (
+        <Text style={[styles.className, { color: colors.textPrimary }]}>{className}</Text>
+      )}
+      {dateTime && (
+        <View style={styles.infoRow}>
+          <MaterialIcons name="event" size={14} color={colors.textSecondary} />
+          <Text style={[styles.infoText, { color: colors.textSecondary }]}>{dateTime}</Text>
+        </View>
+      )}
+      {venue && (
+        <View style={styles.infoRow}>
+          <MaterialIcons name="location-on" size={14} color={colors.textSecondary} />
+          <Text style={[styles.infoText, { color: colors.textSecondary }]}>{venue}</Text>
+        </View>
+      )}
+    </View>
+  );
 
   const renderContent = () => {
     switch (status) {
+      case 'booking':
+        return (
+          <ScrollView>
+            <View style={styles.contentContainer}>
+              <Text style={[styles.title, { color: colors.textPrimary }]}>Booking Details</Text>
+
+              {renderBookingInfo()}
+
+              {classDescription && (
+                <Text style={[styles.description, { color: colors.textSecondary }]}>
+                  {classDescription}
+                </Text>
+              )}
+
+              <Button
+                title="Book Now"
+                variant="primary"
+                size="small"
+                onPress={handleBookNow}
+                style={styles.smallButton}
+                loading={loading}
+              />
+
+              <Button
+                title="Cancel"
+                variant="outline"
+                size="small"
+                onPress={onClose}
+                style={{
+                  ...styles.smallOutlineButton,
+                  borderColor: colors.border,
+                }}
+                textStyle={{ color: colors.textPrimary }}
+              />
+            </View>
+          </ScrollView>
+        );
+
       case 'success':
         return (
-          <View
-            style={[
-              styles.contentContainer,
-              {paddingBottom: insets.bottom || 24},
-            ]}>
-            <View style={styles.successIconContainer}>
-              <View
-                style={[styles.outerCircle, {backgroundColor: colors.success}]}>
-                <View style={styles.innerCircle}>
-                  <MaterialIcons
-                    name="check"
-                    size={38}
-                    color={colors.success}
-                  />
-                </View>
-              </View>
+          <View style={styles.contentContainer}>
+            <View style={styles.centeredIconContainer}>
+              {renderCheckIcon(colors.success)}
+              <Text style={[styles.statusText, { color: colors.textPrimary }]}>
+                Booking Confirmed
+              </Text>
             </View>
-            <Text style={[styles.title, {color: colors.textPrimary}]}>
-              {title || 'Booking confirmed'}
-            </Text>
-            <Text style={[styles.message, {color: colors.textSecondary}]}>
-              {message ||
-                "We can't wait to see you! Keep track of your complete schedule on the profile screen."}
-            </Text>
-            <Text
-              style={[
-                styles.message,
-                {color: colors.textSecondary, marginTop: 16},
-              ]}>
-              Don't forget to add this booking to your calendar app for perfect
-              organization. See you soon!
-            </Text>
+
+            {renderBookingInfo()}
 
             <Button
               title="Add to Calendar"
               variant="primary"
-              size="large"
+              size="small"
               onPress={onAddToCalendar}
-              style={styles.button}
-              icon={
-                <MaterialIcons name="calendar-today" size={20} color="white" />
-              }
-            />
-
-            {onShare && (
-              <Button
-                title="Share"
-                variant="outline"
-                size="large"
-                onPress={onShare}
-                style={{
-                  ...styles.outlineButton,
-                  borderColor: colors.accent,
-                }}
-                textStyle={{color: colors.accent}}
-                icon={
-                  <MaterialIcons name="share" size={20} color={colors.accent} />
-                }
-              />
-            )}
-
-            <Button
-              title="Done"
-              variant="ghost"
-              size="large"
-              onPress={onClose}
-              style={styles.textButton}
-              textStyle={{color: colors.textSecondary}}
+              style={{ ...styles.smallButton, backgroundColor: colors.accent }}
             />
           </View>
         );
 
-      case 'danger':
+      case 'cancelConfirm':
         return (
-          <View
-            style={[
-              styles.contentContainer,
-              {paddingBottom: insets.bottom || 24},
-            ]}>
-            <View style={styles.iconContainer}>
-              <View
-                style={[styles.outerCircle, {backgroundColor: '#E53E3E33'}]}>
-                <View style={styles.innerCircle}>
-                  <MaterialIcons name="warning" size={38} color="#E53E3E" />
-                </View>
-              </View>
+          <View style={styles.contentContainer}>
+            <View style={styles.centeredIconContainer}>
+              {renderCheckIcon(colors.success)}
+              <Text style={[styles.statusText, { color: colors.textPrimary }]}>
+                Cancel Booking?
+              </Text>
             </View>
-            <Text style={[styles.title, {color: colors.textPrimary}]}>
-              Are you sure?
-            </Text>
-            <Text style={[styles.message, {color: colors.textSecondary}]}>
-              {cancelMessage ||
-                'Please cancel at least 12 hours prior to the class to avoid late cancellation or no-show fees.'}
-            </Text>
 
-            <Button
-              title="Cancel Booking"
-              variant="primary"
-              size="large"
-              onPress={handleConfirm}
-              style={{
-                ...styles.button,
-                backgroundColor: '#E53E3E',
-              }}
-            />
+            {renderBookingInfo()}
 
-            <Button
-              title="Keep Booking"
-              variant="outline"
-              size="large"
-              onPress={onClose}
-              style={{
-                ...styles.outlineButton,
-                borderColor: colors.border,
-              }}
-              textStyle={{color: colors.textPrimary}}
-            />
+            <View style={styles.buttonContainer}>
+              <Button
+                title="Yes"
+                variant="primary"
+                size="small"
+                onPress={handleCancelBooking}
+                style={{
+                  backgroundColor: colors.error,
+                  flex: 1,
+                  marginRight: 8,
+                  height: 40,
+                }}
+                loading={loading}
+              />
+
+              <Button
+                title="No"
+                variant="outline"
+                size="small"
+                onPress={onClose}
+                style={{
+                  borderColor: colors.border,
+                  flex: 1,
+                  marginLeft: 8,
+                  height: 40,
+                }}
+                textStyle={{ color: colors.textPrimary }}
+              />
+            </View>
           </View>
         );
 
       case 'cancelled':
         return (
-          <View
-            style={[
-              styles.contentContainer,
-              {paddingBottom: insets.bottom || 24},
-            ]}>
-            <View style={styles.iconContainer}>
-              <View
-                style={[styles.outerCircle, {backgroundColor: '#E53E3E33'}]}>
-                <View style={styles.innerCircle}>
-                  <MaterialIcons name="check" size={38} color="#E53E3E" />
-                </View>
-              </View>
-            </View>
-            <Text style={[styles.title, {color: colors.textPrimary}]}>
-              Booking Cancelled
-            </Text>
-            <Text style={[styles.message, {color: colors.textSecondary}]}>
-              Your booking has been successfully cancelled. We hope to see you
-              again soon!
-            </Text>
-
-            <Button
-              title="Close"
-              variant="outline"
-              size="large"
-              onPress={onClose}
-              style={{
-                ...styles.outlineButton,
-                borderColor: colors.border,
-                marginTop: 24,
-              }}
-              textStyle={{color: colors.textPrimary}}
-            />
-          </View>
-        );
-
-      case 'confirm':
-        return (
-          <View
-            style={[
-              styles.contentContainer,
-              {paddingBottom: insets.bottom || 24},
-            ]}>
-            <Text style={[styles.title, {color: colors.textPrimary}]}>
-              You need to cancel?
-            </Text>
-
-            <View style={styles.classInfoContainer}>
-              <Text style={[styles.className, {color: colors.textPrimary}]}>
-                {className}
-              </Text>
-              <Text style={[styles.classPrice, {color: colors.textPrimary}]}>
-                € 0
+          <View style={styles.contentContainer}>
+            <View style={styles.centeredIconContainer}>
+              {renderCheckIcon(colors.success)}
+              <Text style={[styles.statusText, { color: colors.textPrimary }]}>
+                Booking Cancelled
               </Text>
             </View>
 
-            <Text style={[styles.dateTime, {color: colors.textSecondary}]}>
-              {dateTime}
-            </Text>
-
-            <Text
-              style={[
-                styles.message,
-                {color: colors.textSecondary, marginTop: 16},
-              ]}>
-              {cancellationFee ||
-                'The free cancellation period has ended. To avoid a €15 no-show fee, you can cancel up until 12 hours before the class starts, but a €0 late cancellation fee will apply.'}
-            </Text>
-
-            <Button
-              title="Confirm cancellation"
-              variant="primary"
-              size="large"
-              onPress={handleConfirm}
-              style={{
-                ...styles.button,
-                backgroundColor: '#E53E3E',
-              }}
-              icon={
-                <MaterialIcons name="arrow-forward" size={20} color="white" />
-              }
-            />
-
-            <Button
-              title="Go Back"
-              variant="outline"
-              size="large"
-              onPress={onClose}
-              style={{
-                ...styles.outlineButton,
-                borderColor: colors.border,
-              }}
-              textStyle={{color: colors.textPrimary}}
-            />
+            {renderBookingInfo()}
           </View>
         );
 
@@ -312,150 +240,148 @@ export const BookingStatusBottomSheet: React.FC<
     }
   };
 
+  if (!isVisible) {
+    return null;
+  }
+
   return (
-    <>
-      {isVisible && (
+    <Modal transparent={true} visible={isVisible} animationType="slide" onRequestClose={onClose}>
+      <View style={styles.modalContainer}>
         <TouchableOpacity
-          style={styles.backdrop}
+          style={[styles.backdrop, { backgroundColor: colors.backdropOverlay }]}
           activeOpacity={1}
-          onPress={handleBackdropPress}
+          onPress={onClose}
         />
-      )}
-      <NativeBottomSheet
-        ref={bottomSheetRef}
-        snapPoints={['0%', '80%']}
-        index={isVisible ? 1 : 0}
-        enablePanDownToClose={true}
-        onChange={index => {
-          if (index === 0 && isVisible) {
-            onClose();
-          }
-        }}
-        handleIndicatorStyle={{
-          width: 40,
-          height: 4,
-          backgroundColor: colors.border,
-        }}>
-        <View style={styles.bottomSheet}>{renderContent()}</View>
-      </NativeBottomSheet>
-    </>
+        <View
+          style={[
+            styles.bottomSheet,
+            {
+              backgroundColor: colors.bottomSheetBackground,
+              maxHeight:
+                status === 'cancelConfirm'
+                  ? height * 0.35
+                  : status === 'booking'
+                    ? height * 0.4
+                    : height * 0.3,
+            },
+          ]}>
+          <View style={styles.handleContainer}>
+            <View style={[styles.handle, { backgroundColor: colors.bottomSheetHandle }]} />
+          </View>
+          {renderContent()}
+        </View>
+      </View>
+    </Modal>
   );
 };
 
 const styles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'flex-end',
+  },
   backdrop: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    zIndex: 90,
+    ...StyleSheet.absoluteFillObject,
   },
   bottomSheet: {
-    zIndex: 100,
+    borderTopLeftRadius: 20,
+    borderTopRightRadius: 20,
     width: '100%',
-    minHeight: 300,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -3 },
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 10,
+  },
+  handleContainer: {
+    width: '100%',
+    alignItems: 'center',
+    paddingTop: 10,
+    paddingBottom: 6,
+  },
+  handle: {
+    width: 36,
+    height: 4,
+    borderRadius: 2,
   },
   contentContainer: {
-    padding: 24,
-    flex: 1,
+    padding: 16,
     width: '100%',
   },
-  successIconContainer: {
+  centeredIconContainer: {
+    width: '100%',
     alignItems: 'center',
-    marginBottom: 24,
-  },
-  iconContainer: {
-    alignItems: 'center',
-    marginBottom: 24,
-  },
-  outerCircle: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
     justifyContent: 'center',
-    alignItems: 'center',
-    opacity: 0.3,
+    marginBottom: 16,
+    marginTop: 8,
   },
-  innerCircle: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: 'white',
-    justifyContent: 'center',
+  checkCircle: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    borderWidth: 2,
     alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
+    marginBottom: 8,
+  },
+  statusText: {
+    fontSize: 16,
+    fontWeight: '600',
+    textAlign: 'center',
   },
   title: {
-    fontSize: 24,
-    fontWeight: '700',
+    fontSize: 18,
+    fontWeight: '600',
     marginBottom: 12,
-    textAlign: 'left',
   },
-  message: {
-    fontSize: 16,
-    lineHeight: 22,
-    fontWeight: '400',
-    textAlign: 'left',
-  },
-  button: {
-    height: 52,
+  smallButton: {
+    height: 40,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 24,
-    borderRadius: 4,
+    marginTop: 16,
+    borderRadius: 6,
     width: '100%',
   },
-  outlineButton: {
-    height: 52,
+  smallOutlineButton: {
+    height: 40,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 12,
+    marginTop: 8,
     borderWidth: 1,
-    borderRadius: 4,
+    borderRadius: 6,
     width: '100%',
   },
-  textButton: {
-    height: 44,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginTop: 12,
-    borderRadius: 4,
-    width: '100%',
-  },
-  buttonContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  buttonText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: '600',
-    marginLeft: 8,
-  },
-  outlineButtonText: {
-    fontSize: 16,
-    fontWeight: '600',
-    marginLeft: 8,
-  },
-  classInfoContainer: {
+  buttonContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 4,
     marginTop: 16,
+    width: '100%',
+  },
+  infoContainer: {
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 12,
+    marginTop: 4,
+    borderWidth: 1,
   },
   className: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '600',
-    flex: 1,
+    marginBottom: 6,
   },
-  classPrice: {
-    fontSize: 18,
-    fontWeight: '600',
+  infoRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 6,
   },
-  dateTime: {
+  infoText: {
     fontSize: 14,
-    marginBottom: 16,
+    marginLeft: 6,
+  },
+  description: {
+    fontSize: 14,
+    lineHeight: 18,
+    marginBottom: 12,
   },
 });

@@ -1,39 +1,33 @@
 import React from 'react';
-import {View, StyleSheet, ScrollView} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {Skeleton, useTheme} from '@/design-system';
+import { View, StyleSheet, ScrollView } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Skeleton, useTheme } from '@/design-system';
 
 export const PaymentSkeleton = () => {
   const insets = useSafeAreaInsets();
-  const {colors} = useTheme();
+  const { colors } = useTheme();
 
   return (
     <View
-      style={[
-        styles.container,
-        {backgroundColor: colors.background, paddingTop: insets.top},
-      ]}>
+      style={[styles.container, { backgroundColor: colors.background, paddingTop: insets.top }]}>
       <View style={styles.header}>
-        <Skeleton width={24} height={24} style={{marginRight: 16}} />
+        <Skeleton width={24} height={24} style={{ marginRight: 16 }} />
         <Skeleton width="50%" height={24} />
       </View>
-      
+
       <ScrollView style={styles.scrollView}>
         <View style={styles.content}>
-          <Skeleton width="70%" height={28} style={{marginBottom: 24}} />
-          
+          <Skeleton width="70%" height={28} style={{ marginBottom: 24 }} />
+
           <View style={styles.section}>
-            <Skeleton width="60%" height={20} style={{marginBottom: 16}} />
-            
+            <Skeleton width="60%" height={20} style={{ marginBottom: 16 }} />
+
             {[1, 2].map(item => (
-              <View 
-                key={item} 
-                style={[styles.cardItem, {backgroundColor: colors.card}]}
-              >
+              <View key={item} style={[styles.cardItem, { backgroundColor: colors.card }]}>
                 <View style={styles.cardDetails}>
-                  <Skeleton width={40} height={30} style={{marginRight: 12}} />
+                  <Skeleton width={40} height={30} style={{ marginRight: 12 }} />
                   <View>
-                    <Skeleton width={120} height={18} style={{marginBottom: 6}} />
+                    <Skeleton width={120} height={18} style={{ marginBottom: 6 }} />
                     <Skeleton width={80} height={14} />
                   </View>
                 </View>
@@ -41,15 +35,15 @@ export const PaymentSkeleton = () => {
               </View>
             ))}
           </View>
-          
+
           <View style={styles.section}>
-            <Skeleton width="70%" height={20} style={{marginBottom: 16}} />
-            
-            <View style={[styles.historyCard, {backgroundColor: colors.card}]}>
+            <Skeleton width="70%" height={20} style={{ marginBottom: 16 }} />
+
+            <View style={[styles.historyCard, { backgroundColor: colors.card }]}>
               {[1, 2, 3].map(item => (
                 <View key={item} style={styles.historyItem}>
                   <View>
-                    <Skeleton width={140} height={18} style={{marginBottom: 6}} />
+                    <Skeleton width={140} height={18} style={{ marginBottom: 6 }} />
                     <Skeleton width={100} height={14} />
                   </View>
                   <Skeleton width={70} height={22} />
@@ -57,12 +51,8 @@ export const PaymentSkeleton = () => {
               ))}
             </View>
           </View>
-          
-          <Skeleton 
-            width="100%" 
-            height={50} 
-            style={{borderRadius: 25, marginTop: 16}} 
-          />
+
+          <Skeleton width="100%" height={50} style={{ borderRadius: 25, marginTop: 16 }} />
         </View>
       </ScrollView>
     </View>
@@ -98,7 +88,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     marginBottom: 12,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
@@ -111,7 +101,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     padding: 16,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 2,
@@ -124,4 +114,4 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(0,0,0,0.05)',
   },
-}); 
+});

@@ -42,28 +42,25 @@ export const useVenueSearchStore = () => {
     category: [],
   });
 
-  const updateLocation = useCallback(
-    (params: LocationParams) => {
-      setLocationParams(params);
-    },
-    []
-  );
+  const updateLocation = useCallback((params: LocationParams) => {
+    setLocationParams(params);
+  }, []);
 
   const setQuery = useCallback((query: string) => {
-    setFilters((prev) => ({ ...prev, query }));
+    setFilters(prev => ({ ...prev, query }));
   }, []);
 
   const setCategory = useCallback((category: string) => {
-    setFilters((prev) => {
+    setFilters(prev => {
       const categories = [...prev.category];
       const index = categories.indexOf(category);
-      
+
       if (index > -1) {
         categories.splice(index, 1);
       } else {
         categories.push(category);
       }
-      
+
       return { ...prev, category: categories };
     });
   }, []);
@@ -93,4 +90,4 @@ export const useVenueSearchStore = () => {
     useLocationParams,
     useVenueFilters,
   };
-}; 
+};

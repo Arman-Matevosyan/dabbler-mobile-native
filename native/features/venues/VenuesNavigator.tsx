@@ -1,14 +1,12 @@
-import React, {lazy, Suspense} from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {useTheme} from '@/design-system';
-import {VenuesScreenSkeleton} from './components/VenuesScreenSkeleton';
-import {VenueDetailsScreenSkeleton} from './screens/details/components/VenueDetailsScreenSkeleton';
+import React, { lazy, Suspense } from 'react';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { useTheme } from '@/design-system';
 import VenueClassesPage from './screens/list/VenueClassesList';
+import { VenuesScreenSkeleton } from './components/skeletons';
+import { VenueDetailsScreenSkeleton } from './screens/details/components';
 
 const VenuesScreen = lazy(() => import('./VenuesScreen'));
-const VenueDetailsScreen = lazy(
-  () => import('./screens/details/VenueDetailsScreen'),
-);
+const VenueDetailsScreen = lazy(() => import('./screens/details/VenueDetailsScreen'));
 
 export type VenuesStackParamList = {
   VenuesList: undefined;
@@ -27,13 +25,8 @@ const VenuesScreenWrapper = (props: any) => (
 );
 
 const VenueDetailsScreenWrapper = (props: any) => {
-  const navigation = props.navigation;
-
   return (
-    <Suspense
-      fallback={
-        <VenueDetailsScreenSkeleton onClose={() => navigation.goBack()} />
-      }>
+    <Suspense fallback={<VenueDetailsScreenSkeleton />}>
       <VenueDetailsScreen {...props} />
     </Suspense>
   );
@@ -42,14 +35,14 @@ const VenueDetailsScreenWrapper = (props: any) => {
 const Stack = createNativeStackNavigator<VenuesStackParamList>();
 
 export const VenuesNavigator = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
 
   return (
     <Stack.Navigator
       initialRouteName="VenuesList"
       screenOptions={{
         headerShown: false,
-        contentStyle: {backgroundColor: colors.background},
+        contentStyle: { backgroundColor: colors.background },
       }}>
       <Stack.Screen name="VenuesList" component={VenuesScreenWrapper} />
       <Stack.Screen name="VenueDetails" component={VenueDetailsScreenWrapper} />

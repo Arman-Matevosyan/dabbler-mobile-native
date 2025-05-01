@@ -10,69 +10,54 @@ interface ClassMetaProps {
   onVenuePress?: () => void;
 }
 
-export const ClassMeta = React.memo(({ 
-  categories, 
-  venueName, 
-  instructorInfo, 
-  onVenuePress 
-}: ClassMetaProps) => {
-  const { colors } = useTheme();
-  
-  return (
-    <View style={styles.container}>
-      {categories && categories.length > 0 && (
-        <View style={styles.metaRow}>
-          <MaterialIcons
-            name="local-offer"
-            size={20}
-            color={colors.textSecondary}
-            style={styles.icon}
-          />
-          <Text style={[styles.metaText, { color: colors.textSecondary }]}>
-            {categories.join(', ')}
-          </Text>
-        </View>
-      )}
+export const ClassMeta = React.memo(
+  ({ categories, venueName, instructorInfo, onVenuePress }: ClassMetaProps) => {
+    const { colors } = useTheme();
 
-      {venueName && (
-        <TouchableOpacity
-          style={styles.metaRow}
-          onPress={onVenuePress}
-          disabled={!onVenuePress}
-          activeOpacity={onVenuePress ? 0.7 : 1}>
-          <MaterialIcons
-            name="place"
-            size={20}
-            color={colors.accent}
-            style={styles.icon}
-          />
-          <Text
-            style={[
-              styles.metaText,
-              { color: colors.accent },
-              styles.venueName,
-            ]}>
-            {venueName}
-          </Text>
-        </TouchableOpacity>
-      )}
+    return (
+      <View style={styles.container}>
+        {categories && categories.length > 0 && (
+          <View style={styles.metaRow}>
+            <MaterialIcons
+              name="local-offer"
+              size={20}
+              color={colors.textSecondary}
+              style={styles.icon}
+            />
+            <Text style={[styles.metaText, { color: colors.textSecondary }]}>
+              {categories.join(', ')}
+            </Text>
+          </View>
+        )}
 
-      {instructorInfo && (
-        <View style={styles.metaRow}>
-          <MaterialIcons
-            name="person"
-            size={20}
-            color={colors.textSecondary}
-            style={styles.icon}
-          />
-          <Text style={[styles.metaText, { color: colors.textSecondary }]}>
-            {instructorInfo}
-          </Text>
-        </View>
-      )}
-    </View>
-  );
-});
+        {venueName && (
+          <TouchableOpacity
+            style={styles.metaRow}
+            onPress={onVenuePress}
+            disabled={!onVenuePress}
+            activeOpacity={onVenuePress ? 0.7 : 1}>
+            <MaterialIcons name="place" size={20} color={colors.accent} style={styles.icon} />
+            <Text style={[styles.metaText, { color: colors.accent }, styles.venueName]}>
+              {venueName}
+            </Text>
+          </TouchableOpacity>
+        )}
+
+        {instructorInfo && (
+          <View style={styles.metaRow}>
+            <MaterialIcons
+              name="person"
+              size={20}
+              color={colors.textSecondary}
+              style={styles.icon}
+            />
+            <Text style={[styles.metaText, { color: colors.textSecondary }]}>{instructorInfo}</Text>
+          </View>
+        )}
+      </View>
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   container: {
@@ -94,4 +79,4 @@ const styles = StyleSheet.create({
   venueName: {
     fontWeight: '600',
   },
-}); 
+});

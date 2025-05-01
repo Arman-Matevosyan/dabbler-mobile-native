@@ -1,5 +1,5 @@
-import {useState, useEffect} from 'react';
-import {PermissionsAndroid, Platform} from 'react-native';
+import { useState, useEffect } from 'react';
+import { PermissionsAndroid, Platform } from 'react-native';
 
 export const usePermissions = () => {
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
@@ -11,9 +11,7 @@ export const usePermissions = () => {
   const checkCameraPermission = async () => {
     if (Platform.OS === 'android') {
       try {
-        const granted = await PermissionsAndroid.check(
-          PermissionsAndroid.PERMISSIONS.CAMERA,
-        );
+        const granted = await PermissionsAndroid.check(PermissionsAndroid.PERMISSIONS.CAMERA);
         setHasCameraPermission(granted);
       } catch (error) {
         console.error('Error checking camera permission:', error);
@@ -26,16 +24,13 @@ export const usePermissions = () => {
   const requestCameraPermission = async () => {
     if (Platform.OS === 'android') {
       try {
-        const granted = await PermissionsAndroid.request(
-          PermissionsAndroid.PERMISSIONS.CAMERA,
-          {
-            title: 'Camera Permission',
-            message: 'This app needs access to your camera to scan QR codes',
-            buttonNeutral: 'Ask Me Later',
-            buttonNegative: 'Cancel',
-            buttonPositive: 'OK',
-          },
-        );
+        const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA, {
+          title: 'Camera Permission',
+          message: 'This app needs access to your camera to scan QR codes',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        });
         setHasCameraPermission(granted === PermissionsAndroid.RESULTS.GRANTED);
         return granted === PermissionsAndroid.RESULTS.GRANTED;
       } catch (error) {

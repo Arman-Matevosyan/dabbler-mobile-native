@@ -1,15 +1,10 @@
-import React, {useState} from 'react';
-import {
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  ActivityIndicator,
-} from 'react-native';
-import {useTheme, Text} from '@design-system';
-import {Camera, CameraType} from 'react-native-camera-kit';
-import {usePermissions} from '../hooks/usePermissions';
+import React, { useState } from 'react';
+import { View, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { useTheme, Text } from '@design-system';
+import { Camera, CameraType } from 'react-native-camera-kit';
+import { usePermissions } from '../hooks/usePermissions';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 interface QrScannerProps {
   onQrCodeScanned: (data: string) => void;
@@ -17,15 +12,11 @@ interface QrScannerProps {
   isLoading?: boolean;
 }
 
-export const QrScanner = ({
-  onQrCodeScanned,
-  onClose,
-  isLoading = false,
-}: QrScannerProps) => {
-  const {colors} = useTheme();
-  const {hasCameraPermission, requestCameraPermission} = usePermissions();
+export const QrScanner = ({ onQrCodeScanned, onClose, isLoading = false }: QrScannerProps) => {
+  const { colors } = useTheme();
+  const { hasCameraPermission, requestCameraPermission } = usePermissions();
   const [scanning, setScanning] = useState(true);
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   const handleQrCodeDetected = (event: any) => {
     if (!scanning || !event.nativeEvent.codeStringValue) return;
@@ -37,13 +28,13 @@ export const QrScanner = ({
   if (!hasCameraPermission) {
     return (
       <View style={styles.container}>
-        <Text style={[styles.permissionText, {color: colors.textPrimary}]}>
+        <Text style={[styles.permissionText, { color: colors.textPrimary }]}>
           {t('checkin.cameraPermission')}
         </Text>
         <TouchableOpacity
-          style={[styles.button, {backgroundColor: colors.accent}]}
+          style={[styles.button, { backgroundColor: colors.accent }]}
           onPress={requestCameraPermission}>
-          <Text style={[styles.buttonText, {color: 'white'}]}>
+          <Text style={[styles.buttonText, { color: 'white' }]}>
             {t('checkin.grantPermission')}
           </Text>
         </TouchableOpacity>
@@ -79,7 +70,7 @@ export const QrScanner = ({
       </Camera>
 
       <TouchableOpacity
-        style={[styles.closeButton, {backgroundColor: colors.accent}]}
+        style={[styles.closeButton, { backgroundColor: colors.accent }]}
         onPress={onClose}
         activeOpacity={0.8}>
         <MaterialIcons name="close" size={24} color="white" />

@@ -1,7 +1,7 @@
-import {ClassQueryKeys} from '@/constants/queryKeys';
-import {ContentAPI} from '@/services/api';
-import {IDiscoverClassSearchResponse} from '@/types/class.interfaces';
-import {useQuery} from '@tanstack/react-query';
+import { ClassQueryKeys } from '@/constants/queryKeys';
+import { ContentAPI } from '@/services/api';
+import { IDiscoverClassSearchResponse } from '@/types/class.interfaces';
+import { useQuery } from '@tanstack/react-query';
 
 export interface DiscoverClassSearchParams {
   q?: string;
@@ -15,11 +15,9 @@ export interface DiscoverClassSearchParams {
   offset?: number;
 }
 
-export const useDiscoverClassSearch = (
-  params: DiscoverClassSearchParams = {},
-) => {
-  const formattedParams = {...params};
-  
+export const useDiscoverClassSearch = (params: DiscoverClassSearchParams = {}) => {
+  const formattedParams = { ...params };
+
   if (Array.isArray(formattedParams.category)) {
     if (formattedParams.category.length === 0) {
       formattedParams.category = undefined;

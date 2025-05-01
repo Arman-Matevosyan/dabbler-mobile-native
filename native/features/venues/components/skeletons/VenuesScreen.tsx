@@ -1,19 +1,19 @@
 import React from 'react';
-import {View, StyleSheet} from 'react-native';
-import {useTheme, Skeleton} from '@/design-system';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {SearchSkeleton} from '@/components/skeletons';
+import { View, StyleSheet } from 'react-native';
+import { useTheme, Skeleton } from '@/design-system';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SearchSkeleton } from '@/components/skeletons';
 
 export const MapSkeleton = () => {
   return (
     <View style={styles.mapSkeleton}>
-      <Skeleton width="100%" height="100%" style={{borderRadius: 0}} />
+      <Skeleton width="100%" height="100%" style={{ borderRadius: 0 }} />
     </View>
   );
 };
 
 export const BottomSheetSkeleton = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const insets = useSafeAreaInsets();
 
   return (
@@ -25,7 +25,7 @@ export const BottomSheetSkeleton = () => {
           borderTopColor: colors.border,
           borderTopWidth: 1,
           shadowColor: '#000',
-          shadowOffset: {width: 0, height: -3},
+          shadowOffset: { width: 0, height: -3 },
           shadowOpacity: 0.1,
           shadowRadius: 3,
           elevation: 3,
@@ -33,12 +33,8 @@ export const BottomSheetSkeleton = () => {
         },
       ]}>
       <View style={styles.bottomSheetHeader}>
-        <View style={[styles.handle, {backgroundColor: colors.border}]} />
-        <Skeleton
-          width={120}
-          height={22}
-          style={{borderRadius: 4, marginBottom: 4}}
-        />
+        <View style={[styles.handle, { backgroundColor: colors.border }]} />
+        <Skeleton width={120} height={22} style={{ borderRadius: 4, marginBottom: 4 }} />
       </View>
       <View style={styles.bottomSheetContentPreview}></View>
     </View>
@@ -46,7 +42,7 @@ export const BottomSheetSkeleton = () => {
 };
 
 export const VenueBottomSheetContentSkeleton = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
 
   return (
     <View
@@ -64,30 +60,30 @@ export const VenueBottomSheetContentSkeleton = () => {
 };
 
 export const VenueSkeletonItem = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   return (
     <View
       style={[
         styles.venueCardSkeleton,
-        {backgroundColor: colors.background, borderBottomColor: colors.border},
+        { backgroundColor: colors.background, borderBottomColor: colors.border },
       ]}>
       <View style={styles.venueCardContent}>
         <View style={styles.venueImageContainer}>
-          <Skeleton width={70} height={70} style={{borderRadius: 8}} />
+          <Skeleton width={70} height={70} style={{ borderRadius: 8 }} />
         </View>
         <View style={styles.venueDetailsContainer}>
-          <Skeleton width={180} height={18} style={{marginBottom: 8}} />
-          <Skeleton width={120} height={14} style={{marginBottom: 8}} />
+          <Skeleton width={180} height={18} style={{ marginBottom: 8 }} />
+          <Skeleton width={120} height={14} style={{ marginBottom: 8 }} />
           <Skeleton width={100} height={14} />
         </View>
       </View>
-      <View style={[styles.separator, {backgroundColor: colors.border}]} />
+      <View style={[styles.separator, { backgroundColor: colors.border }]} />
     </View>
   );
 };
 
 export const VenuesScreenSkeleton = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const insets = useSafeAreaInsets();
 
   return (
@@ -134,7 +130,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
     elevation: 5,

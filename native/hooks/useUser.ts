@@ -1,10 +1,10 @@
-import {useQuery} from '@tanstack/react-query';
-import {UserAPI} from '@/services/api';
-import {UserQueryKeys} from '@/constants/queryKeys';
-import {useAuthStore} from '@/stores/authStore';
+import { useQuery } from '@tanstack/react-query';
+import { UserAPI } from '@/services/api';
+import { UserQueryKeys } from '@/constants/queryKeys';
+import { useAuthStore } from '@/stores/authStore';
 
 export const useUser = () => {
-  const {isAuthenticated} = useAuthStore();
+  const { isAuthenticated } = useAuthStore();
 
   return useQuery({
     queryKey: [UserQueryKeys.userData],

@@ -1,17 +1,11 @@
 import React from 'react';
-import {
-  FlatList,
-  Image,
-  TouchableOpacity,
-  StyleSheet,
-  View,
-} from 'react-native';
-import {useTheme, Text} from '@design-system';
-import {useTranslation} from 'react-i18next';
-import {ClassListSkeleton} from '@/components/classes';
+import { FlatList, Image, TouchableOpacity, StyleSheet, View } from 'react-native';
+import { useTheme, Text } from '@design-system';
+import { useTranslation } from 'react-i18next';
+import { ClassListSkeleton } from '@/components/classes';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import ClassListEmptyState from './ClassListEmptyState';
 
 interface Class {
@@ -23,8 +17,8 @@ interface Class {
   date: string | null;
   scheduledSpots: number;
   totalSpots: number;
-  covers: Array<{url: string}>;
-  venue: {name: string};
+  covers: Array<{ url: string }>;
+  venue: { name: string };
   categories: string[];
 }
 
@@ -33,20 +27,16 @@ interface FreeClassesListProps {
   isLoading?: boolean;
 }
 
-const FreeClassesList = ({
-  classes,
-  isLoading = false,
-}: FreeClassesListProps) => {
-  const {colors} = useTheme();
-  const {t} = useTranslation();
+const FreeClassesList = ({ classes, isLoading = false }: FreeClassesListProps) => {
+  const { colors } = useTheme();
+  const { t } = useTranslation();
   const navigation = useNavigation();
 
   const navigateToClassDetails = (classItem: Class) => {
-    // Replace with your actual navigation logic
     console.log('Navigate to class details:', classItem.id);
   };
 
-  const renderClassItem = ({item}: {item: Class}) => {
+  const renderClassItem = ({ item }: { item: Class }) => {
     const coverImage =
       item.covers && item.covers.length > 0
         ? item.covers[0]?.url
@@ -54,16 +44,14 @@ const FreeClassesList = ({
 
     return (
       <TouchableOpacity
-        style={[styles.classCard, {backgroundColor: colors.background}]}
+        style={[styles.classCard, { backgroundColor: colors.background }]}
         onPress={() => navigateToClassDetails(item)}
         activeOpacity={0.7}>
         <View style={styles.imageContainer}>
-          <Image source={{uri: coverImage}} style={styles.image} />
+          <Image source={{ uri: coverImage }} style={styles.image} />
         </View>
         <View style={styles.detailsContainer}>
-          <Text style={[styles.className, {color: colors.textPrimary}]}>
-            {item.name}
-          </Text>
+          <Text style={[styles.className, { color: colors.textPrimary }]}>{item.name}</Text>
 
           <View style={styles.infoRow}>
             <Ionicons
@@ -72,7 +60,7 @@ const FreeClassesList = ({
               color={colors.textSecondary}
               style={styles.icon}
             />
-            <Text style={[styles.infoText, {color: colors.textSecondary}]}>
+            <Text style={[styles.infoText, { color: colors.textSecondary }]}>
               {item.duration} {t('classes.minutes')}
             </Text>
           </View>
@@ -84,7 +72,7 @@ const FreeClassesList = ({
               color={colors.textSecondary}
               style={styles.icon}
             />
-            <Text style={[styles.infoText, {color: colors.textSecondary}]}>
+            <Text style={[styles.infoText, { color: colors.textSecondary }]}>
               {item.instructorInfo}
             </Text>
           </View>
@@ -97,9 +85,7 @@ const FreeClassesList = ({
                 color={colors.textSecondary}
                 style={styles.icon}
               />
-              <Text
-                style={[styles.infoText, {color: colors.textSecondary}]}
-                numberOfLines={1}>
+              <Text style={[styles.infoText, { color: colors.textSecondary }]} numberOfLines={1}>
                 {item.venue.name}
               </Text>
             </View>
@@ -116,7 +102,7 @@ const FreeClassesList = ({
                       backgroundColor: colors.card,
                     },
                   ]}>
-                  <Text style={[styles.tagText, {color: colors.textSecondary}]}>
+                  <Text style={[styles.tagText, { color: colors.textSecondary }]}>
                     {typeof category === 'string' ? category : t('classes.category')}
                   </Text>
                 </View>
@@ -125,11 +111,7 @@ const FreeClassesList = ({
         </View>
 
         <View style={styles.arrowContainer}>
-          <MaterialIcons
-            name="chevron-right"
-            size={24}
-            color={colors.textSecondary}
-          />
+          <MaterialIcons name="chevron-right" size={24} color={colors.textSecondary} />
         </View>
       </TouchableOpacity>
     );

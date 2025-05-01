@@ -1,7 +1,7 @@
-import {ClassQueryKeys} from '@/constants/queryKeys';
-import {ContentAPI} from '@/services/api';
-import {ClassDetailResponse, IClass} from '@/types/class.interfaces';
-import {useQuery} from '@tanstack/react-query';
+import { ClassQueryKeys } from '@/constants/queryKeys';
+import { ContentAPI } from '@/services/api';
+import { ClassDetailResponse, IClass } from '@/types/class.interfaces';
+import { useQuery } from '@tanstack/react-query';
 interface UseDetailedClassProps {
   id: string;
   date?: string;
@@ -17,21 +17,28 @@ const mapResponseToClassDetail = (apiData: any, id: string): ClassDetailResponse
     duration: apiData.duration,
     instructorName: apiData.instructor || '',
     instructorInfo: apiData.instructor || apiData.instructorName || '',
-    categories: Array.isArray(apiData.category) 
-      ? apiData.category 
-      : (apiData.category ? [apiData.category] : []),
-    venue: apiData.venue ? {
-      id: apiData.venue.id,
-      name: apiData.venue.name,
-      address: apiData.venue.address,
-      openingHours: apiData.venue.openingHours,
-      websiteUrl: apiData.venue.websiteUrl,
-      coordinates: apiData.venue.coordinates || 
-        (apiData.location ? {
-          latitude: apiData.location.latitude,
-          longitude: apiData.location.longitude
-        } : undefined)
-    } : undefined,
+    categories: Array.isArray(apiData.category)
+      ? apiData.category
+      : apiData.category
+        ? [apiData.category]
+        : [],
+    venue: apiData.venue
+      ? {
+          id: apiData.venue.id,
+          name: apiData.venue.name,
+          address: apiData.venue.address,
+          openingHours: apiData.venue.openingHours,
+          websiteUrl: apiData.venue.websiteUrl,
+          coordinates:
+            apiData.venue.coordinates ||
+            (apiData.location
+              ? {
+                  latitude: apiData.location.latitude,
+                  longitude: apiData.location.longitude,
+                }
+              : undefined),
+        }
+      : undefined,
     scheduledSpots: apiData.attendees || apiData.scheduledSpots || 0,
     totalSpots: apiData.capacity || apiData.totalSpots || 0,
     covers: apiData.covers || [],
@@ -40,13 +47,11 @@ const mapResponseToClassDetail = (apiData: any, id: string): ClassDetailResponse
     location: apiData.location,
     importantInfo: apiData.importantInfo,
     isFree: !apiData.startDate,
-    cancelDate: apiData.cancelDate || null
+    cancelDate: apiData.cancelDate || null,
   };
 };
 
-const fetchClassDetails = async (
-  params: UseDetailedClassProps,
-): Promise<ClassDetailResponse> => {
+const fetchClassDetails = async (params: UseDetailedClassProps): Promise<ClassDetailResponse> => {
   try {
     const requestParams: Record<string, any> = {};
 
@@ -56,7 +61,7 @@ const fetchClassDetails = async (
 
     const response = await ContentAPI.getClassDetails(params.id, requestParams);
     const apiData = response || {};
-    
+
     return mapResponseToClassDetail(apiData, params.id);
   } catch (error) {
     console.error('Error fetching class details:', error);
@@ -66,7 +71,7 @@ const fetchClassDetails = async (
 
 export function useClassDetailsData(params: UseDetailedClassProps) {
   const queryKey = [ClassQueryKeys.classDetails, params.id, params.date];
-  const {data, isLoading, error, refetch} = useQuery({
+  const { data, isLoading, error, refetch } = useQuery({
     queryKey,
     queryFn: () => fetchClassDetails(params),
     enabled: Boolean(params.id),

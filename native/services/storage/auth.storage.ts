@@ -1,4 +1,4 @@
-import {MMKVLoader} from 'react-native-mmkv-storage';
+import { MMKVLoader } from 'react-native-mmkv-storage';
 
 export const ACCESS_TOKEN_KEY = 'access_token';
 export const REFRESH_TOKEN_KEY = 'refresh_token';
@@ -16,6 +16,5 @@ export const Storage = {
     storage.removeItem(ACCESS_TOKEN_KEY);
     storage.removeItem(REFRESH_TOKEN_KEY);
   },
-  storeRefreshToken: (refreshToken: string) =>
-    storage.setString(REFRESH_TOKEN_KEY, refreshToken),
+  storeRefreshToken: (refreshToken: string) => storage.setString(REFRESH_TOKEN_KEY, refreshToken),
 };

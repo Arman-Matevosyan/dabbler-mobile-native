@@ -1,20 +1,14 @@
-import React, {useState, useEffect} from 'react';
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  ViewStyle,
-  TouchableOpacity,
-} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useNavigation} from '@react-navigation/native';
-import {Text, useTheme} from '@/design-system';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, ScrollView, ViewStyle, TouchableOpacity } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import { Text, useTheme } from '@/design-system';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {ProfileScreenProps} from '../../ProfileNavigator';
-import {useTranslation} from 'react-i18next';
-import {changeLanguage} from '@/services/i18n';
-import {MMKVLoader} from 'react-native-mmkv-storage';
-import {LANGUAGE_KEY} from '@/services/i18n';
+import { ProfileScreenProps } from '../../ProfileNavigator';
+import { useTranslation } from 'react-i18next';
+import { changeLanguage } from '@/services/i18n';
+import { MMKVLoader } from 'react-native-mmkv-storage';
+import { LANGUAGE_KEY } from '@/services/i18n';
 
 interface LanguageOption {
   id: string;
@@ -23,27 +17,12 @@ interface LanguageOption {
   icon: string;
 }
 
-const RadioButton = ({
-  selected,
-  onPress,
-}: {
-  selected: boolean;
-  onPress: () => void;
-}) => {
-  const {colors} = useTheme();
+const RadioButton = ({ selected, onPress }: { selected: boolean; onPress: () => void }) => {
+  const { colors } = useTheme();
   return (
-    <TouchableOpacity
-      activeOpacity={1}
-      onPress={onPress}
-      style={styles.radioButton}>
-      <View
-        style={[
-          styles.radioOuter,
-          {borderColor: selected ? colors.accent : colors.border},
-        ]}>
-        {selected && (
-          <View style={[styles.radioInner, {backgroundColor: colors.accent}]} />
-        )}
+    <TouchableOpacity activeOpacity={1} onPress={onPress} style={styles.radioButton}>
+      <View style={[styles.radioOuter, { borderColor: selected ? colors.accent : colors.border }]}>
+        {selected && <View style={[styles.radioInner, { backgroundColor: colors.accent }]} />}
       </View>
     </TouchableOpacity>
   );
@@ -53,12 +32,10 @@ type LanguageScreenNavigationProps = ProfileScreenProps<'Language'>;
 
 const LanguageScreen: React.FC<LanguageScreenNavigationProps> = () => {
   const insets = useSafeAreaInsets();
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const navigation = useNavigation();
-  const {i18n, t} = useTranslation();
-  const [selectedLanguage, setSelectedLanguage] = useState<string>(
-    i18n.language,
-  );
+  const { i18n, t } = useTranslation();
+  const [selectedLanguage, setSelectedLanguage] = useState<string>(i18n.language);
 
   const storage = new MMKVLoader().withEncryption().initialize();
 
@@ -104,22 +81,15 @@ const LanguageScreen: React.FC<LanguageScreenNavigationProps> = () => {
 
   return (
     <View
-      style={[
-        styles.container,
-        {backgroundColor: colors.background, paddingTop: insets.top},
-      ]}>
+      style={[styles.container, { backgroundColor: colors.background, paddingTop: insets.top }]}>
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.backButton}
           activeOpacity={1}
           onPress={() => navigation.goBack()}>
-          <MaterialIcons
-            name="arrow-back"
-            size={24}
-            color={colors.textPrimary}
-          />
+          <MaterialIcons name="arrow-back" size={24} color={colors.textPrimary} />
         </TouchableOpacity>
-        <Text variant="heading1" style={{color: colors.textPrimary}}>
+        <Text variant="heading1" style={{ color: colors.textPrimary }}>
           {t('profile.language.title')}
         </Text>
       </View>
@@ -129,9 +99,7 @@ const LanguageScreen: React.FC<LanguageScreenNavigationProps> = () => {
         contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}>
         <View style={styles.content}>
-          <Text
-            variant="heading2"
-            style={[styles.screenTitle, {color: colors.textPrimary}]}>
+          <Text variant="heading2" style={[styles.screenTitle, { color: colors.textPrimary }]}>
             {t('profile.settings.languageSettings')}
           </Text>
 
@@ -172,9 +140,7 @@ const LanguageScreen: React.FC<LanguageScreenNavigationProps> = () => {
                     onPress={() => handleLanguageChange(language.id)}
                   />
                 </View>
-                <View
-                  style={[styles.separator, {backgroundColor: colors.border}]}
-                />
+                <View style={[styles.separator, { backgroundColor: colors.border }]} />
               </TouchableOpacity>
             ))}
           </View>
@@ -185,7 +151,7 @@ const LanguageScreen: React.FC<LanguageScreenNavigationProps> = () => {
 };
 
 // Export both named and default exports
-export {LanguageScreen};
+export { LanguageScreen };
 export default LanguageScreen;
 
 const styles = StyleSheet.create({

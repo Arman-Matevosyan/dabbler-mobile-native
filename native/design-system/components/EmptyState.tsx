@@ -1,6 +1,6 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {useTheme} from '../theme/ThemeContext';
+import { StyleSheet, Text, View } from 'react-native';
+import { useTheme } from '../theme/ThemeContext';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 interface EmptyStateProps {
@@ -18,7 +18,7 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   isOffline = false,
   isNetworkError = false,
 }) => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
 
   let displayTitle = title;
   let displayMessage = message;
@@ -36,17 +36,9 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
 
   return (
     <View style={styles.container}>
-      <MaterialIcons
-        name={displayIcon}
-        size={60}
-        color={colors.textSecondary}
-      />
-      <Text style={[styles.title, {color: colors.textPrimary}]}>
-        {displayTitle}
-      </Text>
-      <Text style={[styles.message, {color: colors.textSecondary}]}>
-        {displayMessage}
-      </Text>
+      <MaterialIcons name={displayIcon} size={60} color={colors.textSecondary} />
+      <Text style={[styles.title, { color: colors.textPrimary }]}>{displayTitle}</Text>
+      <Text style={[styles.message, { color: colors.textSecondary }]}>{displayMessage}</Text>
     </View>
   );
 };

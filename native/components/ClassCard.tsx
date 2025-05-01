@@ -1,8 +1,8 @@
-import {Card, useTheme} from '@/design-system';
-import {useNavigation} from '@react-navigation/native';
-import {format} from 'date-fns';
+import { Card, useTheme } from '@/design-system';
+import { useNavigation } from '@react-navigation/native';
+import { format } from 'date-fns';
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 const t = (key: string) => key;
@@ -11,10 +11,10 @@ interface ClassCardProps {
   classItem: {
     id: string;
     name: string;
-    covers: Array<{url: string}>;
+    covers: Array<{ url: string }>;
     date?: string;
     duration: number;
-    venue: {name: string};
+    venue: { name: string };
     instructorInfo: string;
     categories: string[];
     scheduled: boolean;
@@ -24,16 +24,12 @@ interface ClassCardProps {
   isFreeClass?: boolean;
 }
 
-export const ClassCard: React.FC<ClassCardProps> = ({
-  classItem,
-  isFreeClass = false,
-}) => {
-  const {colors} = useTheme();
+export const ClassCard: React.FC<ClassCardProps> = ({ classItem, isFreeClass = false }) => {
+  const { colors } = useTheme();
   const navigation = useNavigation<any>();
   const spotsLeft = classItem.totalSpots - classItem.scheduledSpots;
   const coverUrl =
-    classItem.covers?.[0]?.url ||
-    'https://images.unsplash.com/photo-1518611012118-696072aa579a';
+    classItem.covers?.[0]?.url || 'https://images.unsplash.com/photo-1518611012118-696072aa579a';
 
   const getFormattedDateTime = () => {
     if (!classItem.date) {
@@ -49,17 +45,22 @@ export const ClassCard: React.FC<ClassCardProps> = ({
   };
 
   const handleClassPress = () => {
-    navigation.navigate('ClassDetails', {
-      id: classItem.id,
-      date: classItem.date,
-    });
+    navigation.navigate('MainTabs', {
+        screen: 'Classes',
+        params: {
+          screen: 'ClassDetails',
+          params: {  id: classItem.id,
+      date: classItem.date, },
+        },
+      });
+   
   };
 
   const renderFreeTag = () => {
     if (!isFreeClass) return null;
 
     return (
-      <View style={[styles.freeTag, {backgroundColor: colors.accent}]}>
+      <View style={[styles.freeTag, { backgroundColor: colors.accent }]}>
         <Text style={styles.freeTagText}>{t('classes.free')}</Text>
       </View>
     );
@@ -67,40 +68,34 @@ export const ClassCard: React.FC<ClassCardProps> = ({
 
   const renderScheduledClassContent = () => (
     <View style={styles.classDetails}>
-      <Text style={[styles.classTitle, {color: colors.textPrimary}]}>
-        {classItem.name}
-      </Text>
-      <Text style={[styles.classTime, {color: colors.textSecondary}]}>
+      <Text style={[styles.classTitle, { color: colors.textPrimary }]}>{classItem.name}</Text>
+      <Text style={[styles.classTime, { color: colors.textSecondary }]}>
         {getFormattedDateTime()}
       </Text>
 
       <View style={styles.classDetailsContainer}>
         <View style={styles.classDetail}>
           <MaterialIcons name="flash-on" size={18} color={colors.accent} />
-          <Text style={[styles.classDetailText, {color: colors.textSecondary}]}>
+          <Text style={[styles.classDetailText, { color: colors.textSecondary }]}>
             {classItem.venue.name}
           </Text>
         </View>
 
         <View style={styles.classDetail}>
           <MaterialIcons name="person" size={18} color={colors.textSecondary} />
-          <Text style={[styles.classDetailText, {color: colors.textSecondary}]}>
+          <Text style={[styles.classDetailText, { color: colors.textSecondary }]}>
             {classItem.instructorInfo}
           </Text>
         </View>
 
         <View style={styles.classDetail}>
-          <MaterialIcons
-            name="local-offer"
-            size={18}
-            color={colors.textSecondary}
-          />
-          <Text style={[styles.classDetailText, {color: colors.textSecondary}]}>
+          <MaterialIcons name="local-offer" size={18} color={colors.textSecondary} />
+          <Text style={[styles.classDetailText, { color: colors.textSecondary }]}>
             {classItem.categories[0]}
           </Text>
         </View>
 
-        <Text style={[styles.spotsText, {color: colors.textSecondary}]}>
+        <Text style={[styles.spotsText, { color: colors.textSecondary }]}>
           {spotsLeft}/{classItem.totalSpots} {t('classes.spotsLeft')}
         </Text>
       </View>
@@ -109,23 +104,16 @@ export const ClassCard: React.FC<ClassCardProps> = ({
 
   const renderUnscheduledClassContent = () => (
     <View>
-      <Text style={[styles.unscheduledTitle, {color: colors.textPrimary}]}>
-        {classItem.name}
-      </Text>
-      <Text style={[styles.unscheduledTime, {color: colors.textSecondary}]}>
+      <Text style={[styles.unscheduledTitle, { color: colors.textPrimary }]}>{classItem.name}</Text>
+      <Text style={[styles.unscheduledTime, { color: colors.textSecondary }]}>
         {getFormattedDateTime()}
       </Text>
-      <Text style={[styles.unscheduledVenue, {color: colors.textSecondary}]}>
+      <Text style={[styles.unscheduledVenue, { color: colors.textSecondary }]}>
         {classItem.venue.name}
       </Text>
       <View style={styles.unscheduledTag}>
-        <MaterialIcons
-          name="local-offer"
-          size={16}
-          color={colors.textSecondary}
-        />
-        <Text
-          style={[styles.unscheduledTagText, {color: colors.textSecondary}]}>
+        <MaterialIcons name="local-offer" size={16} color={colors.textSecondary} />
+        <Text style={[styles.unscheduledTagText, { color: colors.textSecondary }]}>
           {classItem.categories[0]}
         </Text>
       </View>
@@ -137,12 +125,8 @@ export const ClassCard: React.FC<ClassCardProps> = ({
       imageUrl={coverUrl}
       onPress={handleClassPress}
       badge={isFreeClass ? renderFreeTag() : undefined}
-      style={
-        classItem.scheduled ? styles.scheduledCard : styles.unscheduledCard
-      }>
-      {classItem.scheduled
-        ? renderScheduledClassContent()
-        : renderUnscheduledClassContent()}
+      style={classItem.scheduled ? styles.scheduledCard : styles.unscheduledCard}>
+      {classItem.scheduled ? renderScheduledClassContent() : renderUnscheduledClassContent()}
     </Card>
   );
 };

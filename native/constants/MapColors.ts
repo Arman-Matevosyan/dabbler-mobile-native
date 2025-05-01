@@ -1,92 +1,159 @@
 export const darkMapStyle = [
-  // Base map background
   {
     elementType: 'geometry',
-    stylers: [{color: '#2E3742'}], // Midnight
+    stylers: [{ color: '#023e59' }],
   },
   {
     featureType: 'landscape',
     elementType: 'geometry',
-    stylers: [{color: '#1A2632'}], // Deep blue-gray
+    stylers: [{ color: '#1b2c4e' }],
   },
-
-  // Labels styling
   {
     elementType: 'labels.text.fill',
-    stylers: [{color: '#8C9BB0'}], // Grey Dark
+    stylers: [{ color: '#7a93b2' }],
   },
   {
     elementType: 'labels.text.stroke',
-    stylers: [{color: '#2E3742'}], // Midnight
+    stylers: [{ color: '#1b2c4e' }],
   },
-
-  // Roads styling
   {
     featureType: 'road',
     elementType: 'geometry.fill',
-    stylers: [{color: '#38414E'}], // Dark slate
+    stylers: [{ color: '#386577' }],
   },
   {
     featureType: 'road',
     elementType: 'geometry.stroke',
-    stylers: [{color: '#212A37'}], // Darker gray
+    stylers: [{ color: '#274c5e' }],
   },
   {
     featureType: 'road.highway',
     elementType: 'geometry.fill',
-    stylers: [{color: '#337BE2'}], // Respect Blue
+    stylers: [{ color: '#4c8ddf' }],
   },
   {
     featureType: 'road.highway',
     elementType: 'geometry.stroke',
-    stylers: [{color: '#1A60C3'}], // Darker Respect Blue
+    stylers: [{ color: '#3769a9' }],
   },
-
-  // Parks styling
   {
     featureType: 'poi.park',
     elementType: 'geometry',
-    stylers: [{color: '#1D8F6D'}], // Freedom Green
+    stylers: [{ color: '#1d6152' }],
   },
   {
     featureType: 'poi.park',
     elementType: 'labels.text.fill',
-    stylers: [{color: '#93DBC5'}], // Light Freedom Green
+    stylers: [{ color: '#7ec8b0' }],
   },
-
-  // Water bodies styling
   {
     featureType: 'water',
     elementType: 'geometry',
-    stylers: [{color: '#161E21'}], // Dark teal
+    stylers: [{ color: '#011f2a' }],
   },
   {
     featureType: 'water',
     elementType: 'labels.text.fill',
-    stylers: [{color: '#3D3D3D'}], // Gray
+    stylers: [{ color: '#3d5b68' }],
   },
-
-  // Points of Interest styling
   {
     featureType: 'poi',
     elementType: 'geometry',
-    stylers: [{color: '#2B2B2B'}], // Dark gray
+    stylers: [{ color: '#1f2a3d' }],
   },
   {
     featureType: 'poi',
     elementType: 'labels.text.fill',
-    stylers: [{color: '#8C9BB0'}], // Grey Dark
+    stylers: [{ color: '#7a93b2' }],
   },
-
-  // Administrative areas styling
   {
     featureType: 'administrative',
     elementType: 'geometry',
-    stylers: [{color: '#8C9BB0'}], // Grey Dark
+    stylers: [{ color: '#466789' }],
   },
   {
     featureType: 'administrative.country',
     elementType: 'labels.text.fill',
-    stylers: [{color: '#FFFFFF'}], // White Pure
+    stylers: [{ color: '#ffffff' }],
+  },
+];
+
+export const lightMapStyle = [
+  {
+    elementType: 'geometry',
+    stylers: [{ color: '#f6f1e7' }],
+  },
+  {
+    featureType: 'landscape',
+    elementType: 'geometry',
+    stylers: [{ color: '#f6f1e7' }],
+  },
+  {
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#5f6d66' }],
+  },
+  {
+    elementType: 'labels.text.stroke',
+    stylers: [{ color: '#ffffff' }],
+  },
+  {
+    featureType: 'road',
+    elementType: 'geometry.fill',
+    stylers: [{ color: '#ffffff' }],
+  },
+  {
+    featureType: 'road',
+    elementType: 'geometry.stroke',
+    stylers: [{ color: '#d6d6d6' }],
+  },
+  {
+    featureType: 'road.highway',
+    elementType: 'geometry.fill',
+    stylers: [{ color: '#f1e8dd' }],
+  },
+  {
+    featureType: 'road.highway',
+    elementType: 'geometry.stroke',
+    stylers: [{ color: '#ded6cc' }],
+  },
+  {
+    featureType: 'poi.park',
+    elementType: 'geometry',
+    stylers: [{ color: '#d1f6df' }],
+  },
+  {
+    featureType: 'poi.park',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#709e8d' }],
+  },
+  {
+    featureType: 'water',
+    elementType: 'geometry',
+    stylers: [{ color: '#cdebf9' }],
+  },
+  {
+    featureType: 'water',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#6b90a8' }],
+  },
+  {
+    featureType: 'poi',
+    elementType: 'geometry',
+    stylers: [{ color: '#e7e0d8' }],
+  },
+  {
+    featureType: 'poi',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#5f6d66' }],
+  },
+  {
+    featureType: 'administrative',
+    elementType: 'geometry',
+    stylers: [{ color: '#c7c7c7' }],
+  },
+  {
+    featureType: 'administrative.country',
+    elementType: 'labels.text.fill',
+    stylers: [{ color: '#444444' }],
   },
 ];

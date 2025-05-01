@@ -1,24 +1,18 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  ScrollView,
-} from 'react-native';
+import { SafeAreaView, StyleSheet, TouchableOpacity, View, ScrollView } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {useNavigation} from '@react-navigation/native';
-import {useTheme} from '@/design-system';
-import {Text} from '@/design-system/components/Text';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useTranslation} from 'react-i18next';
+import { useNavigation } from '@react-navigation/native';
+import { useTheme } from '@/design-system';
+import { Text } from '@/design-system/components/Text';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 
 const UnauthenticatedProfile: React.FC = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const navigation = useNavigation<any>();
   const insets = useSafeAreaInsets();
-  const {t} = useTranslation();
-  
+  const { t } = useTranslation();
+
   const handleLogin = () => {
     navigation.navigate('Auth', {
       screen: 'Login',
@@ -41,16 +35,12 @@ const UnauthenticatedProfile: React.FC = () => {
         },
       ]}>
       <ScrollView
-        style={{flex: 1}}
-        contentContainerStyle={{paddingHorizontal: 16, paddingBottom: 24}}
+        style={{ flex: 1 }}
+        contentContainerStyle={{ paddingHorizontal: 16, paddingBottom: 24 }}
         showsVerticalScrollIndicator={false}>
         <View style={styles.authContainer}>
-          <View style={{alignItems: 'center', marginBottom: 24}}>
-            <View
-              style={[
-                styles.avatarPlaceholder,
-                {backgroundColor: colors.border},
-              ]}>
+          <View style={{ alignItems: 'center', marginBottom: 24 }}>
+            <View style={[styles.avatarPlaceholder, { backgroundColor: colors.border }]}>
               <Icon name="person" size={60} color={colors.textSecondary} />
             </View>
 
@@ -88,23 +78,14 @@ const UnauthenticatedProfile: React.FC = () => {
             onPress={handleLogin}
             activeOpacity={1}>
             <View style={styles.authButtonContent}>
-              <View
-                style={[
-                  styles.authButtonIcon,
-                  {backgroundColor: colors.background},
-                ]}>
+              <View style={[styles.authButtonIcon, { backgroundColor: colors.background }]}>
                 <Icon name="login" size={20} color={colors.textPrimary} />
               </View>
               <View style={styles.authButtonTextContainer}>
-                <Text
-                  style={[styles.authButtonText, {color: colors.textPrimary}]}>
+                <Text style={[styles.authButtonText, { color: colors.textPrimary }]}>
                   {t('profile.unAuth.signIn')}
                 </Text>
-                <Text
-                  style={[
-                    styles.authButtonSubtext,
-                    {color: colors.textSecondary},
-                  ]}>
+                <Text style={[styles.authButtonSubtext, { color: colors.textSecondary }]}>
                   {t('auth.login.signInAccount')}
                 </Text>
               </View>
@@ -123,23 +104,14 @@ const UnauthenticatedProfile: React.FC = () => {
             onPress={handleSignup}
             activeOpacity={1}>
             <View style={styles.authButtonContent}>
-              <View
-                style={[
-                  styles.authButtonIcon,
-                  {backgroundColor: colors.background},
-                ]}>
+              <View style={[styles.authButtonIcon, { backgroundColor: colors.background }]}>
                 <Icon name="person-add" size={20} color={colors.textPrimary} />
               </View>
               <View style={styles.authButtonTextContainer}>
-                <Text
-                  style={[styles.authButtonText, {color: colors.textPrimary}]}>
+                <Text style={[styles.authButtonText, { color: colors.textPrimary }]}>
                   {t('profile.unAuth.signUp')}
                 </Text>
-                <Text
-                  style={[
-                    styles.authButtonSubtext,
-                    {color: colors.textSecondary},
-                  ]}>
+                <Text style={[styles.authButtonSubtext, { color: colors.textSecondary }]}>
                   {t('auth.signup.createAccount')}
                 </Text>
               </View>

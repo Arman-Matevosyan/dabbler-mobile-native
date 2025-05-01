@@ -4,10 +4,10 @@ import axios, {
   AxiosRequestConfig,
   InternalAxiosRequestConfig,
 } from 'axios';
-import {Platform} from 'react-native';
-import {Storage} from '../storage';
-import {MMKVLoader} from 'react-native-mmkv-storage';
-import {LANGUAGE_KEY} from '../i18n';
+import { Platform } from 'react-native';
+import { Storage } from '../storage';
+import { MMKVLoader } from 'react-native-mmkv-storage';
+import { LANGUAGE_KEY } from '../i18n';
 
 const DEV_API_URL = 'https://dev-api.dabblerclub.com/';
 const PROD_API_URL = 'https://api.dabblerclub.com/';
@@ -67,10 +67,10 @@ baseClient.interceptors.response.use(
         if (!refreshToken) throw new Error('No refresh token available');
 
         const response = await baseClient.get('/auth/refresh', {
-          headers: {Authorization: `Bearer ${refreshToken}`},
+          headers: { Authorization: `Bearer ${refreshToken}` },
         });
 
-        const {accessToken, refreshToken: newRefreshToken} = response.data;
+        const { accessToken, refreshToken: newRefreshToken } = response.data;
         Storage.storeTokens(accessToken, newRefreshToken);
 
         refreshSubscribers.forEach(cb => cb(accessToken));
@@ -101,7 +101,7 @@ export const client = {
     data?: any,
     options: ApiOptions = {},
   ): Promise<T> {
-    const {withAuth = false, ...config} = options;
+    const { withAuth = false, ...config } = options;
     if (withAuth && !Storage.getAccessToken()) {
       throw new Error('Authentication required');
     }
@@ -110,17 +110,15 @@ export const client = {
       const response = await baseClient.request<T>({
         method,
         url,
-        ...(method === 'GET' || method === 'DELETE' ? {params: data} : {data}),
+        ...(method === 'GET' || method === 'DELETE' ? { params: data } : { data }),
         ...config,
       });
-
       return response.data;
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const axiosError = error as AxiosError;
-        type ErrorResponseData = {message?: string};
-        const errorResponseData =
-          (axiosError.response?.data as ErrorResponseData) || {};
+        type ErrorResponseData = { message?: string };
+        const errorResponseData = (axiosError.response?.data as ErrorResponseData) || {};
         const errorMessage = errorResponseData?.message || axiosError.message;
         throw new Error(errorMessage || 'An error occurred');
       }

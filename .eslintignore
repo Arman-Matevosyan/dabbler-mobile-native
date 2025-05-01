@@ -1,0 +1,32 @@
+# Build artifacts
+android/
+ios/
+build/
+dist/
+
+# Dependencies
+node_modules/
+.pnp/
+.pnp.js
+
+# Config files
+*.config.js
+metro.config.js
+babel.config.js
+
+# Coverage
+coverage/
+
+# Assets
+assets/
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.ttf
+*.woff
+*.woff2
+
+# Other
+.DS_Store 

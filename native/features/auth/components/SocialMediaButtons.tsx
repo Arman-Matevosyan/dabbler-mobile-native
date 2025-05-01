@@ -1,7 +1,7 @@
-import {Text, useTheme} from '@/design-system';
-import {useAuthStore} from '@/stores/authStore';
-import {CommonActions, useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
+import { Text, useTheme } from '@/design-system';
+import { useAuthStore } from '@/stores/authStore';
+import { CommonActions, useNavigation } from '@react-navigation/native';
+import React, { useState } from 'react';
 import {
   ActivityIndicator,
   Animated,
@@ -11,7 +11,7 @@ import {
   Platform,
 } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 interface SocialLoginButtonsProps {
   containerStyle?: object;
@@ -24,17 +24,15 @@ export const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({
   showApple = Platform.OS === 'ios',
   buttonSize = 'medium',
 }) => {
-  const {colors, mode} = useTheme();
-  const {socialLogin, isLoading} = useAuthStore();
-  const [activeProvider, setActiveProvider] = useState<
-    'google' | 'facebook' | 'apple' | null
-  >(null);
+  const { mode } = useTheme();
+  const { socialLogin, isLoading } = useAuthStore();
+  const [activeProvider, setActiveProvider] = useState<'google' | 'facebook' | 'apple' | null>(
+    null,
+  );
   const navigation = useNavigation();
-  const {t} = useTranslation();
 
   const [facebookScale] = useState(new Animated.Value(1));
   const [googleScale] = useState(new Animated.Value(1));
-  const [appleScale] = useState(new Animated.Value(1));
 
   const animateButton = (animatedValue: Animated.Value) => {
     Animated.sequence([
@@ -76,7 +74,7 @@ export const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({
                   {
                     name: 'Profile',
                     state: {
-                      routes: [{name: 'AuthUser'}],
+                      routes: [{ name: 'AuthUser' }],
                     },
                   },
                 ],
@@ -118,12 +116,7 @@ export const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({
     }
   };
 
-  const {
-    buttonSize: btnSize,
-    iconSize,
-    borderRadius,
-    containerGap,
-  } = getSizes();
+  const { buttonSize: btnSize, iconSize, borderRadius, containerGap } = getSizes();
 
   const isDark = mode === 'dark';
 
@@ -170,7 +163,7 @@ export const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({
 
   return (
     <View style={[styles.container, containerStyle]}>
-      <Animated.View style={{transform: [{scale: facebookScale}]}}>
+      <Animated.View style={{ transform: [{ scale: facebookScale }] }}>
         <TouchableOpacity
           activeOpacity={1}
           style={[styles.socialButton, styles.facebookButton]}
@@ -185,7 +178,7 @@ export const SocialLoginButtons: React.FC<SocialLoginButtonsProps> = ({
         </TouchableOpacity>
       </Animated.View>
 
-      <Animated.View style={{transform: [{scale: googleScale}]}}>
+      <Animated.View style={{ transform: [{ scale: googleScale }] }}>
         <TouchableOpacity
           activeOpacity={1}
           style={[styles.socialButton, styles.googleButton]}

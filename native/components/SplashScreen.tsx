@@ -1,44 +1,31 @@
-import React, {useRef, useEffect} from 'react';
-import {
-  Animated, 
-  StyleSheet, 
-  useColorScheme, 
-  View, 
-  Dimensions,
-  Easing
-} from 'react-native';
-import {useTheme} from '@design-system';
+import React, { useRef, useEffect } from 'react';
+import { Animated, StyleSheet, useColorScheme, View, Dimensions, Easing } from 'react-native';
+import { useTheme } from '@design-system';
 
 interface SplashScreenProps {
   onReady: () => void;
   startAnimation: boolean;
 }
 
-export const SplashScreen: React.FC<SplashScreenProps> = ({
-  onReady,
-  startAnimation,
-}) => {
+export const SplashScreen: React.FC<SplashScreenProps> = ({ onReady, startAnimation }) => {
   const systemPreference = useColorScheme();
-  const {mode, colors} = useTheme();
-  const {width, height} = Dimensions.get('window');
+  const { mode, colors } = useTheme();
+  const { width } = Dimensions.get('window');
 
-  // Animation values
   const fadeAnim = useRef(new Animated.Value(1)).current;
   const logoOpacity = useRef(new Animated.Value(0)).current;
   const logoScale = useRef(new Animated.Value(0.5)).current;
   const logoTranslateY = useRef(new Animated.Value(0)).current;
   const rotation = useRef(new Animated.Value(0)).current;
   const pulse = useRef(new Animated.Value(1)).current;
-  
-  // Create derived animations
+
   const spin = rotation.interpolate({
     inputRange: [0, 1],
     outputRange: ['0deg', '360deg'],
   });
 
   const isDarkMode =
-    mode === 'dark' ||
-    ((mode as string) === 'system' && systemPreference === 'dark');
+    mode === 'dark' || ((mode as string) === 'system' && systemPreference === 'dark');
 
   const logo = isDarkMode
     ? require('../assets/logo/logo_light.png')
@@ -49,7 +36,6 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
 
   useEffect(() => {
     if (startAnimation) {
-      // Create a pulsing effect
       Animated.loop(
         Animated.sequence([
           Animated.timing(pulse, {
@@ -65,28 +51,23 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
             useNativeDriver: true,
           }),
         ]),
-        { iterations: 2 }
+        { iterations: 2 },
       ).start();
 
-      // Main animation sequence
       Animated.sequence([
-        // Initial rotation and fade-in
         Animated.parallel([
-          // Rotate logo
           Animated.timing(rotation, {
             toValue: 1,
             duration: 1200,
             easing: Easing.out(Easing.cubic),
             useNativeDriver: true,
           }),
-          // Fade in logo
           Animated.timing(logoOpacity, {
             toValue: 1,
             duration: 800,
             easing: Easing.inOut(Easing.cubic),
             useNativeDriver: true,
           }),
-          // Scale logo up
           Animated.spring(logoScale, {
             toValue: 1,
             friction: 7,
@@ -94,8 +75,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
             useNativeDriver: true,
           }),
         ]),
-        
-        // Bounce effect
+
         Animated.spring(logoTranslateY, {
           toValue: -30,
           friction: 3,
@@ -108,11 +88,9 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
           tension: 40,
           useNativeDriver: true,
         }),
-        
-        // Hold for a moment
+
         Animated.delay(500),
-        
-        // Final fade out
+
         Animated.timing(fadeAnim, {
           toValue: 0,
           duration: 500,
@@ -125,7 +103,6 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
     }
   }, [fadeAnim, logoOpacity, logoScale, logoTranslateY, pulse, rotation, onReady, startAnimation]);
 
-  // Outer glow style for the logo
   const glowStyle = {
     shadowColor: accentColor,
     shadowOffset: { width: 0, height: 0 },
@@ -146,7 +123,6 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
           opacity: fadeAnim,
         },
       ]}>
-      {/* Logo container with shadow */}
       <View style={[glowStyle, { borderRadius: width * 0.3 }]}>
         <Animated.Image
           source={logo}
@@ -157,7 +133,7 @@ export const SplashScreen: React.FC<SplashScreenProps> = ({
             transform: [
               { scale: Animated.multiply(logoScale, pulse) },
               { translateY: logoTranslateY },
-              { rotate: spin }
+              { rotate: spin },
             ],
           }}
           resizeMode="contain"

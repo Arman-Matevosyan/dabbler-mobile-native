@@ -1,13 +1,12 @@
-import React, {lazy, Suspense} from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import React, { lazy, Suspense } from 'react';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ClassesScreen from './ClassesScreen';
-import {useTheme} from '@/design-system';
-import {ClassesScreenSkeleton} from './components/ClassesScreenSkeleton';
-import {ClassDetailsScreenSkeleton} from './screens/details/components/ClassDetailsScreenSkeleton';
+import { useTheme } from '@/design-system';
+import { ClassesScreenSkeleton } from './components';
 
 const ClassDetailsScreen = lazy(() =>
   import('./screens/details/ClassDetailsScreen').then(module => {
-    return {default: module.default || module};
+    return { default: module.default || module };
   }),
 );
 
@@ -29,20 +28,20 @@ const ClassesScreenWrapper = (props: any) => (
 );
 
 const ClassDetailsScreenWrapper = (props: any) => (
-  <Suspense fallback={<ClassDetailsScreenSkeleton />}>
+  <Suspense fallback={<ClassesScreenSkeleton />}>
     <ClassDetailsScreen {...props} />
   </Suspense>
 );
 
 export const ClassesNavigator = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
 
   return (
     <Stack.Navigator
       initialRouteName="ClassScreen"
       screenOptions={{
         headerShown: false,
-        contentStyle: {backgroundColor: colors.background},
+        contentStyle: { backgroundColor: colors.background },
       }}>
       <Stack.Screen name="ClassScreen" component={ClassesScreenWrapper} />
       <Stack.Screen name="ClassDetails" component={ClassDetailsScreenWrapper} />

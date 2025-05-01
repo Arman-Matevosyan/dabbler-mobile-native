@@ -1,18 +1,18 @@
-import React, {useState, useMemo} from 'react';
-import {View, StyleSheet, ScrollView} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {RootStackParamList} from '@/navigation/types';
-import {Text, Button, useTheme, Skeleton} from '@/design-system';
+import React, { useState, useMemo } from 'react';
+import { View, StyleSheet, ScrollView } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '@/navigation/types';
+import { Text, Button, useTheme, Skeleton } from '@/design-system';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {useSubscriptions} from '@/hooks/useSubscriptions';
-import {IPlan, ISubscription} from '@/types/payment.interfaces';
-import Animated, {FadeInUp} from 'react-native-reanimated';
-import {usePlans} from '@/hooks/usePlans';
+import { useSubscriptions } from '@/hooks/useSubscriptions';
+import { IPlan, ISubscription } from '@/types/payment.interfaces';
+import Animated, { FadeInUp } from 'react-native-reanimated';
+import { usePlans } from '@/hooks/usePlans';
 
 const PlanSkeleton = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
 
   return (
     <View
@@ -27,8 +27,8 @@ const PlanSkeleton = () => {
           padding: 16,
         },
       ]}>
-      <Skeleton width="40%" height={24} style={{marginBottom: 12}} />
-      <Skeleton width="70%" height={16} style={{marginBottom: 16}} />
+      <Skeleton width="40%" height={24} style={{ marginBottom: 12 }} />
+      <Skeleton width="70%" height={16} style={{ marginBottom: 16 }} />
 
       <View
         style={{
@@ -36,51 +36,37 @@ const PlanSkeleton = () => {
           alignItems: 'baseline',
           marginBottom: 16,
         }}>
-        <Skeleton width={30} height={18} style={{marginRight: 8}} />
-        <Skeleton width={50} height={32} style={{marginRight: 8}} />
+        <Skeleton width={30} height={18} style={{ marginRight: 8 }} />
+        <Skeleton width={50} height={32} style={{ marginRight: 8 }} />
         <Skeleton width={60} height={16} />
       </View>
 
-      <View style={{gap: 8, marginBottom: 20}}>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <Skeleton
-            width={20}
-            height={20}
-            style={{marginRight: 8, borderRadius: 10}}
-          />
+      <View style={{ gap: 8, marginBottom: 20 }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Skeleton width={20} height={20} style={{ marginRight: 8, borderRadius: 10 }} />
           <Skeleton width="60%" height={14} />
         </View>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <Skeleton
-            width={20}
-            height={20}
-            style={{marginRight: 8, borderRadius: 10}}
-          />
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Skeleton width={20} height={20} style={{ marginRight: 8, borderRadius: 10 }} />
           <Skeleton width="70%" height={14} />
         </View>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
-          <Skeleton
-            width={20}
-            height={20}
-            style={{marginRight: 8, borderRadius: 10}}
-          />
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Skeleton width={20} height={20} style={{ marginRight: 8, borderRadius: 10 }} />
           <Skeleton width="50%" height={14} />
         </View>
       </View>
 
-      <Skeleton width="100%" height={44} style={{borderRadius: 22}} />
+      <Skeleton width="100%" height={44} style={{ borderRadius: 22 }} />
     </View>
   );
 };
 
 export default function PlansScreen() {
   const insets = useSafeAreaInsets();
-  const {colors} = useTheme();
-  const navigation =
-    useNavigation<NativeStackNavigationProp<RootStackParamList>>();
-  const {data: plans, isLoading: plansLoading} = usePlans();
-  const {data: subscriptionData, isLoading: subscriptionLoading} =
-    useSubscriptions();
+  const { colors } = useTheme();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const { data: plans, isLoading: plansLoading } = usePlans();
+  const { data: subscriptionData, isLoading: subscriptionLoading } = useSubscriptions();
   const [showAllPlans, setShowAllPlans] = useState(false);
 
   const subscription = subscriptionData as ISubscription | undefined;
@@ -105,17 +91,11 @@ export default function PlansScreen() {
   }, [plans, subscription, hasActivePlan, showAllPlans]);
 
   const renderHeader = () => (
-    <View style={[styles.header, {borderBottomColor: colors.border}]}>
+    <View style={[styles.header, { borderBottomColor: colors.border }]}>
       <Button
         variant="ghost"
         onPress={() => navigation.goBack()}
-        icon={
-          <MaterialIcons
-            name="arrow-back"
-            size={24}
-            color={colors.textPrimary}
-          />
-        }
+        icon={<MaterialIcons name="arrow-back" size={24} color={colors.textPrimary} />}
         style={styles.backButton}
       />
       <Text variant="heading1">Membership Plans</Text>
@@ -134,14 +114,12 @@ export default function PlansScreen() {
         key={planId}>
         <View style={styles.badgesContainer}>
           {isPopular && (
-            <View
-              style={[styles.popularBadge, {backgroundColor: colors.accent}]}>
+            <View style={[styles.popularBadge, { backgroundColor: colors.accent }]}>
               <Text style={styles.popularText}>Most Popular</Text>
             </View>
           )}
           {isActive && (
-            <View
-              style={[styles.activeBadge, {backgroundColor: colors.success}]}>
+            <View style={[styles.activeBadge, { backgroundColor: colors.success }]}>
               <Text style={styles.activeText}>Current Plan</Text>
             </View>
           )}
@@ -154,27 +132,21 @@ export default function PlansScreen() {
               backgroundColor: colors.background,
             },
             isPopular
-              ? {borderWidth: 2, borderColor: colors.accent}
-              : {borderWidth: 1, borderColor: colors.border},
-            isActive && {borderColor: colors.success},
+              ? { borderWidth: 2, borderColor: colors.accent }
+              : { borderWidth: 1, borderColor: colors.border },
+            isActive && { borderColor: colors.success },
           ]}>
-          <Text style={[styles.planName, {color: colors.textPrimary}]}>
-            {plan.name}
-          </Text>
-          <Text style={[styles.planDescription, {color: colors.textSecondary}]}>
+          <Text style={[styles.planName, { color: colors.textPrimary }]}>{plan.name}</Text>
+          <Text style={[styles.planDescription, { color: colors.textSecondary }]}>
             {plan.description || 'No description available'}
           </Text>
 
           <View style={styles.priceContainer}>
-            <Text style={[styles.currency, {color: colors.textPrimary}]}>
+            <Text style={[styles.currency, { color: colors.textPrimary }]}>
               {plan.currencyIsoCode}
             </Text>
-            <Text style={[styles.price, {color: colors.textPrimary}]}>
-              {plan.price}
-            </Text>
-            <Text style={[styles.period, {color: colors.textSecondary}]}>
-              /month
-            </Text>
+            <Text style={[styles.price, { color: colors.textPrimary }]}>{plan.price}</Text>
+            <Text style={[styles.period, { color: colors.textSecondary }]}>/month</Text>
           </View>
 
           <View style={styles.featuresContainer}>
@@ -185,14 +157,8 @@ export default function PlansScreen() {
               'API Access',
             ].map((feature, idx) => (
               <View key={idx} style={styles.featureRow}>
-                <MaterialIcons
-                  name="check-circle"
-                  size={20}
-                  color={colors.accent}
-                />
-                <Text style={[styles.featureText, {color: colors.textPrimary}]}>
-                  {feature}
-                </Text>
+                <MaterialIcons name="check-circle" size={20} color={colors.accent} />
+                <Text style={[styles.featureText, { color: colors.textPrimary }]}>{feature}</Text>
               </View>
             ))}
           </View>
@@ -204,7 +170,7 @@ export default function PlansScreen() {
               !isActive &&
               navigation.navigate('PaymentScreens', {
                 screen: 'ProcessPayment',
-                params: {plan: planId},
+                params: { plan: planId },
               })
             }
             style={styles.button}
@@ -218,11 +184,7 @@ export default function PlansScreen() {
   const renderLoadingState = () => (
     <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
       <View style={styles.content}>
-        <Skeleton
-          width="70%"
-          height={24}
-          style={{marginBottom: 24, alignSelf: 'center'}}
-        />
+        <Skeleton width="70%" height={24} style={{ marginBottom: 24, alignSelf: 'center' }} />
 
         <PlanSkeleton />
         <PlanSkeleton />
@@ -233,12 +195,7 @@ export default function PlansScreen() {
 
   const renderNoPlans = () => (
     <View style={styles.emptyContainer}>
-      <MaterialIcons
-        name="category"
-        size={90}
-        color={colors.accent}
-        style={{marginBottom: 20}}
-      />
+      <MaterialIcons name="category" size={90} color={colors.accent} style={{ marginBottom: 20 }} />
 
       <Text
         variant="heading2"
@@ -274,9 +231,7 @@ export default function PlansScreen() {
       <View style={styles.content}>
         <View style={styles.titleContainer}>
           <Text variant="heading2" style={styles.screenTitle}>
-            {hasActivePlan && !showAllPlans
-              ? 'Your Current Plan'
-              : 'Choose Your Plan'}
+            {hasActivePlan && !showAllPlans ? 'Your Current Plan' : 'Choose Your Plan'}
           </Text>
 
           {hasActivePlan && (
@@ -290,9 +245,7 @@ export default function PlansScreen() {
         </View>
 
         <View style={styles.plansContainer}>
-          {plansToDisplay.map((plan, index) =>
-            renderPlanCard(plan as IPlan, index),
-          )}
+          {plansToDisplay.map((plan, index) => renderPlanCard(plan as IPlan, index))}
         </View>
       </View>
     </ScrollView>
@@ -312,10 +265,7 @@ export default function PlansScreen() {
 
   return (
     <View
-      style={[
-        styles.container,
-        {backgroundColor: colors.background, paddingTop: insets.top},
-      ]}>
+      style={[styles.container, { backgroundColor: colors.background, paddingTop: insets.top }]}>
       {renderHeader()}
       {renderContent()}
     </View>

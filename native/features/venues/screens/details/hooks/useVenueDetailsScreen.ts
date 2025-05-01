@@ -1,6 +1,6 @@
-import {useVenueDetails} from '@/features/venues/hooks';
-import {useState, useCallback, useRef} from 'react';
-import {Animated} from 'react-native';
+import { useVenueDetails } from '@/features/venues/hooks';
+import { useState, useCallback, useRef } from 'react';
+import { Animated } from 'react-native';
 
 export const useVenueDetailsScreen = (venueId: string) => {
   const scrollY = useRef(new Animated.Value(0)).current;
@@ -9,12 +9,7 @@ export const useVenueDetailsScreen = (venueId: string) => {
   const [showImportantInfo, setShowImportantInfo] = useState(false);
   const [isFavorite, setIsFavorite] = useState(false);
 
-  const {
-    data: venueResponse,
-    isLoading,
-    error,
-    refetch,
-  } = useVenueDetails(venueId);
+  const { data: venueResponse, isLoading, error, refetch } = useVenueDetails(venueId);
 
   const venueDetails = venueResponse?.response;
 
@@ -42,7 +37,7 @@ export const useVenueDetailsScreen = (venueId: string) => {
 
   const getVenueCoordinates = useCallback(() => {
     if (!venueDetails?.location?.coordinates) {
-      return {latitude: 0, longitude: 0};
+      return { latitude: 0, longitude: 0 };
     }
 
     const coordinates = venueDetails.location.coordinates;
@@ -58,7 +53,7 @@ export const useVenueDetailsScreen = (venueId: string) => {
     }
 
     const address = venueDetails.address;
-    const {street, houseNumber, city, stateOrProvince} = address;
+    const { street, houseNumber, city, stateOrProvince } = address;
     return `${street || ''} ${houseNumber || ''}, ${city || ''} ${
       stateOrProvince ? `- ${stateOrProvince}` : ''
     }`.trim();

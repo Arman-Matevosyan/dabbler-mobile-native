@@ -1,24 +1,24 @@
-import React, {useCallback, useMemo, Suspense, lazy} from 'react';
-import {StyleSheet, View} from 'react-native';
-import {useTheme, Text} from '@/design-system';
-import {useDateTimeFilters} from './hooks/useDateTimeFilters';
-import {useClassSearchFilters} from '@/stores/searchStore';
-import {ClassesListSkeleton} from './components/ClassSkeleton';
-import {useClassesData} from './hooks/useClassData';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {SearchWithCategories} from '@/components/SearchWithCategories';
-import {ClassList, TimeRangeSlider} from './components';
-import {DateSelector} from '@/components/DateSelector';
-import {useTranslation} from 'react-i18next';
+import React, { useCallback, useMemo, Suspense, lazy } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { useTheme, Text } from '@/design-system';
+import { useDateTimeFilters } from './hooks/useDateTimeFilters';
+import { useClassSearchFilters } from '@/stores/searchStore';
+import { useClassesData } from './hooks/useClassData';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { SearchWithCategories } from '@/components/SearchWithCategories';
+import { ClassesListSkeleton, ClassList, TimeRangeSlider } from './components';
+import { DateSelector } from '@/components/DateSelector';
+import { useTranslation } from 'react-i18next';
+import { SearchSkeleton } from '@/components/skeletons';
 
 const ClassCard = lazy(async () => {
   const module = await import('@/components/ClassCard');
-  return {default: module.ClassCard};
+  return { default: module.ClassCard };
 });
 
 const generateDateRange = (days: number) => {
   const today = new Date();
-  return Array.from({length: days}, (_, i) => {
+  return Array.from({ length: days }, (_, i) => {
     const date = new Date(today);
     date.setDate(date.getDate() + i);
     date.setHours(0, 0, 0, 0);
@@ -29,10 +29,10 @@ const generateDateRange = (days: number) => {
 interface ClassItem {
   id: string;
   name: string;
-  covers: Array<{url: string}>;
+  covers: Array<{ url: string }>;
   date?: string;
   duration: number;
-  venue: {name: string};
+  venue: { name: string };
   instructorInfo: string;
   categories: string[];
   scheduled: boolean;
@@ -41,31 +41,28 @@ interface ClassItem {
 }
 
 export default function ClassesScreen() {
-  const {t} = useTranslation();
-  const {colors} = useTheme();
-  const {timeRange, setTimeRange, selectedDate, setSelectedDate, classParams} =
+  const { t } = useTranslation();
+  const { colors } = useTheme();
+  const { timeRange, setTimeRange, selectedDate, setSelectedDate, classParams } =
     useDateTimeFilters();
 
-  const {query, category, setQuery, setCategory} = useClassSearchFilters();
-  const {classes, isLoading, refetch} = useClassesData(classParams);
+  const { query, category, setQuery, setCategory } = useClassSearchFilters();
+  const { classes, isLoading, refetch } = useClassesData(classParams);
   const dateRange = useMemo(() => generateDateRange(14), []);
   const insets = useSafeAreaInsets();
 
   const renderItem = useCallback(
-    ({item}: {item: ClassItem}) => <ClassCard classItem={item} />,
+    ({ item }: { item: ClassItem }) => <ClassCard classItem={item} />,
     [],
   );
 
-  const keyExtractor = useCallback(
-    (item: ClassItem) => `${item.id}-${item.date}`,
-    [],
-  );
+  const keyExtractor = useCallback((item: ClassItem) => `${item.id}-${item.date}`, []);
 
   const ListEmptyComponent = useMemo(() => {
     if (!classes?.length && !isLoading) {
       return (
         <View style={styles.emptyContainer}>
-          <Text style={[styles.emptyText, {color: colors.textSecondary}]}>
+          <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
             {t('classes.noClassesFound')}
           </Text>
         </View>
@@ -81,51 +78,29 @@ export default function ClassesScreen() {
         {
           backgroundColor: colors.background,
           paddingTop: insets.top,
-          paddingBottom: insets.bottom,
         },
       ]}>
-      <Suspense
-        fallback={
-          <View
-            style={[styles.searchPlaceholder, {backgroundColor: colors.card}]}
-          />
-        }>
-        <View style={styles.searchWrapper}>
-          <SearchWithCategories
-            searchValue={query}
-            onSearchChange={setQuery}
-            selectedCategories={category}
-            onCategoryToggle={setCategory}
-            placeholder={t('classes.searchClasses')}
-            isLoading={isLoading}
-          />
-        </View>
-      </Suspense>
-
-      <Suspense
-        fallback={
-          <View
-            style={[
-              styles.timeSelectorPlaceholder,
-              {backgroundColor: colors.card},
-            ]}
-          />
-        }>
-        <TimeRangeSlider
-          timeRange={timeRange}
-          onTimeChange={setTimeRange}
-          colors={colors}
+      <Suspense fallback={<SearchSkeleton />}>
+        <SearchWithCategories
+          searchValue={query}
+          onSearchChange={setQuery}
+          selectedCategories={category}
+          onCategoryToggle={setCategory}
+          placeholder={t('classes.searchClasses')}
+          isLoading={isLoading}
         />
       </Suspense>
 
       <Suspense
         fallback={
-          <View
-            style={[
-              styles.dateSelectorPlaceholder,
-              {backgroundColor: colors.card},
-            ]}
-          />
+          <View style={[styles.timeSelectorPlaceholder, { backgroundColor: colors.card }]} />
+        }>
+        <TimeRangeSlider timeRange={timeRange} onTimeChange={setTimeRange} colors={colors} />
+      </Suspense>
+
+      <Suspense
+        fallback={
+          <View style={[styles.dateSelectorPlaceholder, { backgroundColor: colors.card }]} />
         }>
         <DateSelector
           dates={dateRange}
@@ -156,9 +131,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  searchWrapper: {
-    paddingHorizontal: 16,
+  dateSelector: {
+    flexDirection: 'row',
     paddingVertical: 12,
+    paddingHorizontal: 8,
+    marginBottom: 16,
+  },
+  dateItem: {
+    alignItems: 'center',
+    marginHorizontal: 8,
   },
   searchPlaceholder: {
     height: 48,

@@ -1,16 +1,12 @@
-import {useState, useMemo, useEffect, useCallback} from 'react';
-import {
-  useClassSearchFilters,
-  useLocationParams,
-  useSearchStore,
-} from '@/stores/searchStore';
+import { useState, useMemo, useEffect, useCallback } from 'react';
+import { useClassSearchFilters, useLocationParams, useSearchStore } from '@/stores/searchStore';
 
 export const useDateTimeFilters = () => {
-  const {updateClassParams, resetClassDates} = useSearchStore();
-  const [timeRange, setTimeRange] = useState({start: '05:00', end: '23:00'});
+  const { updateClassParams, resetClassDates } = useSearchStore();
+  const [timeRange, setTimeRange] = useState({ start: '05:00', end: '23:00' });
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
-  const {query, category} = useClassSearchFilters();
-  const {locationLat, locationLng, radius} = useLocationParams();
+  const { query, category } = useClassSearchFilters();
+  const { locationLat, locationLng, radius } = useLocationParams();
 
   const from_date = useMemo(() => {
     const [startH, startM] = timeRange.start.split(':').map(Number);
@@ -28,16 +24,16 @@ export const useDateTimeFilters = () => {
 
   useEffect(() => {
     if (from_date > to_date) {
-      setTimeRange(prev => ({...prev, end: '23:59'}));
+      setTimeRange(prev => ({ ...prev, end: '23:59' }));
     }
   }, [from_date, to_date]);
 
   useEffect(() => {
-    updateClassParams({from_date, to_date});
+    updateClassParams({ from_date, to_date });
   }, [from_date, to_date, updateClassParams]);
 
   const resetDateTimeFilters = useCallback(() => {
-    setTimeRange({start: '05:00', end: '23:00'});
+    setTimeRange({ start: '05:00', end: '23:00' });
     setSelectedDate(new Date());
     resetClassDates();
   }, [resetClassDates]);

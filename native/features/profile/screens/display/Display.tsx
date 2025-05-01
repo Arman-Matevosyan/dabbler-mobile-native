@@ -1,16 +1,10 @@
-import React, {useCallback, useState} from 'react';
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  Alert,
-} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useNavigation} from '@react-navigation/native';
-import {Text, useTheme} from '@/design-system';
+import React, { useCallback, useState } from 'react';
+import { View, StyleSheet, ScrollView, TouchableOpacity, Alert } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import { Text, useTheme } from '@/design-system';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 type ThemeOption = 'light' | 'dark';
 
@@ -30,22 +24,15 @@ const RadioButton = ({
   onPress: () => void;
   disabled?: boolean;
 }) => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   return (
-    <TouchableOpacity 
+    <TouchableOpacity
       activeOpacity={1}
       onPress={onPress}
       disabled={disabled}
-      style={[styles.radioButton, disabled && {opacity: 0.5}]}
-    >
-      <View
-        style={[
-          styles.radioOuter,
-          {borderColor: selected ? colors.accent : colors.border},
-        ]}>
-        {selected && (
-          <View style={[styles.radioInner, {backgroundColor: colors.accent}]} />
-        )}
+      style={[styles.radioButton, disabled && { opacity: 0.5 }]}>
+      <View style={[styles.radioOuter, { borderColor: selected ? colors.accent : colors.border }]}>
+        {selected && <View style={[styles.radioInner, { backgroundColor: colors.accent }]} />}
       </View>
     </TouchableOpacity>
   );
@@ -53,10 +40,10 @@ const RadioButton = ({
 
 export const DisplayScreen = () => {
   const insets = useSafeAreaInsets();
-  const {colors, mode, setMode, systemTheme} = useTheme();
+  const { colors, mode, setMode, systemTheme } = useTheme();
   const navigation = useNavigation();
   const [isChangingTheme, setIsChangingTheme] = useState(false);
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   const themeOptions: ThemeOptionItem[] = [
     {
@@ -73,41 +60,37 @@ export const DisplayScreen = () => {
     },
   ];
 
-  const handleThemeChange = useCallback((themeMode: ThemeOption) => {
-    if (mode === themeMode || isChangingTheme) {
-      return;
-    }
-    
-    setIsChangingTheme(true);
-    
-    try {
-      setMode(themeMode);
-      setTimeout(() => setIsChangingTheme(false), 300);
-    } catch (error) {
-      console.error('Error changing theme:', error);
-      setIsChangingTheme(false);
-      Alert.alert('Theme Change Failed', 'Please try again later.');
-    }
-  }, [mode, setMode, isChangingTheme]);
+  const handleThemeChange = useCallback(
+    (themeMode: ThemeOption) => {
+      if (mode === themeMode || isChangingTheme) {
+        return;
+      }
+
+      setIsChangingTheme(true);
+
+      try {
+        setMode(themeMode);
+        setTimeout(() => setIsChangingTheme(false), 300);
+      } catch (error) {
+        console.error('Error changing theme:', error);
+        setIsChangingTheme(false);
+        Alert.alert('Theme Change Failed', 'Please try again later.');
+      }
+    },
+    [mode, setMode, isChangingTheme],
+  );
 
   return (
     <View
-      style={[
-        styles.container,
-        {backgroundColor: colors.background, paddingTop: insets.top},
-      ]}>
+      style={[styles.container, { backgroundColor: colors.background, paddingTop: insets.top }]}>
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.backButton}
           activeOpacity={1}
           onPress={() => navigation.goBack()}>
-          <MaterialIcons
-            name="arrow-back"
-            size={24}
-            color={colors.textPrimary}
-          />
+          <MaterialIcons name="arrow-back" size={24} color={colors.textPrimary} />
         </TouchableOpacity>
-        <Text variant="heading1" style={{color: colors.textPrimary}}>
+        <Text variant="heading1" style={{ color: colors.textPrimary }}>
           {t('profile.settings.display')}
         </Text>
       </View>
@@ -117,10 +100,10 @@ export const DisplayScreen = () => {
         contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}>
         <View style={styles.content}>
-          <Text variant="heading2" style={[styles.screenTitle, {color: colors.textPrimary}]}>
+          <Text variant="heading2" style={[styles.screenTitle, { color: colors.textPrimary }]}>
             {t('profile.settings.displaySettings')}
           </Text>
-          
+
           <View style={styles.systemInfo}>
             <MaterialIcons
               name="info-outline"
@@ -128,8 +111,9 @@ export const DisplayScreen = () => {
               color={colors.textSecondary}
               style={styles.infoIcon}
             />
-            <Text style={{color: colors.textSecondary, fontSize: 13}}>
-              {t('profile.settings.systemTheme')} {systemTheme === 'dark' ? t('profile.settings.dark') : t('profile.settings.light')}
+            <Text style={{ color: colors.textSecondary, fontSize: 13 }}>
+              {t('profile.settings.systemTheme')}{' '}
+              {systemTheme === 'dark' ? t('profile.settings.dark') : t('profile.settings.light')}
             </Text>
           </View>
 
@@ -138,10 +122,7 @@ export const DisplayScreen = () => {
               <TouchableOpacity
                 key={option.id}
                 activeOpacity={1}
-                style={[
-                  styles.themeOption,
-                  isChangingTheme && {opacity: 0.7}
-                ]}
+                style={[styles.themeOption, isChangingTheme && { opacity: 0.7 }]}
                 disabled={isChangingTheme}
                 onPress={() => handleThemeChange(option.id)}>
                 <View style={styles.themeOptionContent}>
@@ -152,18 +133,20 @@ export const DisplayScreen = () => {
                     style={styles.themeIcon}
                   />
                   <View style={styles.themeTextContainer}>
-                    <Text style={{
-                      fontSize: 14,
-                      fontWeight: 'bold',
-                      color: colors.textPrimary,
-                      marginBottom: 2
-                    }}>
+                    <Text
+                      style={{
+                        fontSize: 14,
+                        fontWeight: 'bold',
+                        color: colors.textPrimary,
+                        marginBottom: 2,
+                      }}>
                       {option.label}
                     </Text>
-                    <Text style={{
-                      fontSize: 13,
-                      color: colors.textSecondary
-                    }}>
+                    <Text
+                      style={{
+                        fontSize: 13,
+                        color: colors.textSecondary,
+                      }}>
                       {option.description}
                     </Text>
                   </View>
@@ -173,12 +156,12 @@ export const DisplayScreen = () => {
                     disabled={isChangingTheme}
                   />
                 </View>
-                <View style={[styles.separator, {backgroundColor: colors.border}]} />
+                <View style={[styles.separator, { backgroundColor: colors.border }]} />
               </TouchableOpacity>
             ))}
           </View>
-          
-          <View style={{height: 100}} />
+
+          <View style={{ height: 100 }} />
         </View>
       </ScrollView>
     </View>

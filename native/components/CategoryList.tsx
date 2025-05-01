@@ -1,21 +1,14 @@
-import {useTheme} from '@/design-system';
-import {useCategories} from '@/hooks/useCategories';
+import { useTheme } from '@/design-system';
+import { useCategories } from '@/hooks/useCategories';
 import {
   BottomSheetBackdrop,
   BottomSheetModal,
   BottomSheetScrollView,
   BottomSheetView,
 } from '@gorhom/bottom-sheet';
-import {useCallback, useEffect, useMemo, useRef, useState} from 'react';
-import {
-  Pressable,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
 interface Category {
@@ -37,9 +30,9 @@ export const CategoryList = ({
   selectedCategories: initialSelectedCategories,
   onConfirm,
 }: CategoryListProps) => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const insets = useSafeAreaInsets();
-  const {categories, isLoading: isCategoriesLoading} = useCategories();
+  const { categories, isLoading: isCategoriesLoading } = useCategories();
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const searchInputRef = useRef<TextInput>(null);
   const isManualDismiss = useRef<boolean>(false);
@@ -48,9 +41,8 @@ export const CategoryList = ({
   const insect = useSafeAreaInsets();
 
   const [categorySearchValue, setCategorySearchValue] = useState('');
-  const [localSelectedCategories, setLocalSelectedCategories] = useState<
-    string[]
-  >(initialSelectedCategories);
+  const [localSelectedCategories, setLocalSelectedCategories] =
+    useState<string[]>(initialSelectedCategories);
   const [isSheetReady, setIsSheetReady] = useState(false);
   const [localIsVisible, setLocalIsVisible] = useState(isVisible);
 
@@ -85,11 +77,7 @@ export const CategoryList = ({
       }
 
       isManualDismiss.current = false;
-    } else if (
-      isSheetReady &&
-      hasBeenVisible.current &&
-      isManualDismiss.current
-    ) {
+    } else if (isSheetReady && hasBeenVisible.current && isManualDismiss.current) {
       bottomSheetRef.current?.dismiss();
     }
   }, [localIsVisible, initialSelectedCategories, isSheetReady]);
@@ -132,9 +120,7 @@ export const CategoryList = ({
   const handleSelectAll = () => {
     if (!categories || !Array.isArray(categories)) return;
     setLocalSelectedCategories(prev =>
-      prev.length === categories.length
-        ? []
-        : categories.map((cat: Category) => cat.name),
+      prev.length === categories.length ? [] : categories.map((cat: Category) => cat.name),
     );
   };
 
@@ -170,35 +156,24 @@ export const CategoryList = ({
     <BottomSheetModal
       ref={bottomSheetRef}
       snapPoints={snapPoints}
-      backgroundStyle={[
-        styles.bottomSheet,
-        {backgroundColor: colors.background},
-      ]}
-      style={{paddingTop: insect.top}}
-      handleIndicatorStyle={{backgroundColor: colors.border}}
+      backgroundStyle={[styles.bottomSheet, { backgroundColor: colors.background }]}
+      style={{ paddingTop: insect.top }}
+      handleIndicatorStyle={{ backgroundColor: colors.border }}
       backdropComponent={renderBackdrop}
       enableOverDrag={false}
       onDismiss={handleSheetDismiss}>
-      <BottomSheetScrollView
-        style={(styles.bottomSheetContent, {paddingBottom: insect.bottom})}>
-        <View
-          style={[
-            styles.bottomSheetHeader,
-            {borderBottomColor: colors.border},
-          ]}>
+      <BottomSheetScrollView style={(styles.bottomSheetContent, { paddingBottom: insect.bottom })}>
+        <View style={[styles.bottomSheetHeader, { borderBottomColor: colors.border }]}>
           <View style={styles.headerLeft}>
-            <TouchableOpacity
-              onPress={handleDismissModal}
-              style={styles.closeButton}>
+            <TouchableOpacity onPress={handleDismissModal} style={styles.closeButton}>
               <Icon name="close" size={24} color={colors.textSecondary} />
             </TouchableOpacity>
-            <Text
-              style={[styles.bottomSheetTitle, {color: colors.textPrimary}]}>
+            <Text style={[styles.bottomSheetTitle, { color: colors.textPrimary }]}>
               {'venues.categories'}
             </Text>
           </View>
           <TouchableOpacity onPress={handleSelectAll}>
-            <Text style={[styles.selectAllText, {color: colors.accent}]}>
+            <Text style={[styles.selectAllText, { color: colors.accent }]}>
               {localSelectedCategories.length === categoriesLength
                 ? 'venues.deselectAll'
                 : 'venues.selectAll'}
@@ -207,7 +182,7 @@ export const CategoryList = ({
         </View>
 
         <BottomSheetScrollView
-          style={(styles.categoriesList, {paddingBottom: insect.bottom})}
+          style={(styles.categoriesList, { paddingBottom: insect.bottom })}
           contentContainerStyle={styles.categoriesListContent}
           showsVerticalScrollIndicator={false}>
           {isCategoriesLoading || !categories || !Array.isArray(categories)
@@ -216,35 +191,24 @@ export const CategoryList = ({
                 .map((_, index) => (
                   <View
                     key={index}
-                    style={[
-                      styles.categoryItem,
-                      {backgroundColor: colors.background},
-                    ]}>
-                    <View
-                      style={[
-                        styles.skeletonItem,
-                        {backgroundColor: colors.accent},
-                      ]}
-                    />
+                    style={[styles.categoryItem, { backgroundColor: colors.background }]}>
+                    <View style={[styles.skeletonItem, { backgroundColor: colors.accent }]} />
                   </View>
                 ))
             : filteredCategories.map((category: Category) => (
                 <Pressable
                   key={category.id}
-                  style={[
-                    styles.categoryItem,
-                    {backgroundColor: colors.background},
-                  ]}
+                  style={[styles.categoryItem, { backgroundColor: colors.background }]}
                   onPress={() => handleToggleCategory(category.name)}>
                   <View style={styles.categoryInfoContainer}>
-                    <Icon 
-                      name="category" 
-                      size={20} 
-                      color={colors.textSecondary} 
-                      style={styles.categoryIcon} 
+                    <Icon
+                      name="category"
+                      size={20}
+                      color={colors.textSecondary}
+                      style={styles.categoryIcon}
                     />
                     <Text
-                      style={[styles.categoryText, {color: colors.textPrimary}]}
+                      style={[styles.categoryText, { color: colors.textPrimary }]}
                       numberOfLines={1}>
                       {category.name}
                     </Text>
@@ -254,14 +218,11 @@ export const CategoryList = ({
                       styles.checkbox,
                       {
                         borderColor: colors.border,
-                        backgroundColor: localSelectedCategories.includes(
-                          category.name,
-                        )
+                        backgroundColor: localSelectedCategories.includes(category.name)
                           ? colors.accent
                           : 'transparent',
                       },
-                      localSelectedCategories.includes(category.name) &&
-                        styles.checkboxSelected,
+                      localSelectedCategories.includes(category.name) && styles.checkboxSelected,
                     ]}>
                     {localSelectedCategories.includes(category.name) && (
                       <Icon name="check" size={16} color="#fff" />
@@ -280,12 +241,10 @@ export const CategoryList = ({
             },
           ]}>
           <TouchableOpacity onPress={() => setLocalSelectedCategories([])}>
-            <Text style={[styles.resetText, {color: colors.accent}]}>
-              {'venues.resetAll'}
-            </Text>
+            <Text style={[styles.resetText, { color: colors.accent }]}>{'venues.resetAll'}</Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.confirmButton, {backgroundColor: colors.accent}]}
+            style={[styles.confirmButton, { backgroundColor: colors.accent }]}
             onPress={handleConfirm}>
             <Text style={styles.confirmButtonText}>{'venues.confirm'}</Text>
           </TouchableOpacity>
@@ -300,7 +259,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: -4},
+    shadowOffset: { width: 0, height: -4 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 5,

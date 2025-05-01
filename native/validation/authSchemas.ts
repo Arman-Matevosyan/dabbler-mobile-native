@@ -1,13 +1,10 @@
-import {z} from 'zod';
+import { z } from 'zod';
 import i18next from 'i18next';
 
 const t = (key: string) => i18next.t(key);
 
 export const loginSchema = z.object({
-  loginEmail: z
-    .string()
-    .min(1, t('auth.errors.invalidEmail'))
-    .email(t('auth.errors.invalidEmail')),
+  loginEmail: z.string().min(1, t('auth.errors.invalidEmail')).email(t('auth.errors.invalidEmail')),
   loginPassword: z
     .string()
     .min(1, t('auth.errors.passwordRequired'))
@@ -18,10 +15,7 @@ export const loginSchema = z.object({
 });
 
 export const forgotPasswordSchema = z.object({
-  email: z
-    .string()
-    .min(1, t('auth.errors.invalidEmail'))
-    .email(t('auth.errors.invalidEmail')),
+  email: z.string().min(1, t('auth.errors.invalidEmail')).email(t('auth.errors.invalidEmail')),
 });
 
 export const signupSchema = z
@@ -32,9 +26,7 @@ export const signupSchema = z
       .string()
       .min(1, t('auth.errors.invalidEmail'))
       .email(t('auth.errors.invalidEmail')),
-    confirmPassword: z
-      .string()
-      .min(1, t('auth.errors.passwordRequired')),
+    confirmPassword: z.string().min(1, t('auth.errors.passwordRequired')),
     signupPassword: z
       .string()
       .min(1, t('auth.errors.passwordRequired'))

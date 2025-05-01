@@ -1,23 +1,12 @@
 import React from 'react';
-import {
-  Text as RNText,
-  TextProps as RNTextProps,
-  StyleSheet,
-} from 'react-native';
-import {useTheme} from '@design-system';
+import { Text as RNText, TextProps as RNTextProps, StyleSheet } from 'react-native';
+import { useTheme } from '@design-system';
 
-export type TextVariant =
-  | 'heading1'
-  | 'heading2'
-  | 'heading3'
-  | 'body'
-  | 'bodySmall'
-  | 'caption';
+export type TextVariant = 'heading1' | 'heading2' | 'heading3' | 'body' | 'bodySmall' | 'caption';
 
-// New preset types to align with common usage throughout the app
-export type TextPreset = 
-  | 'headingLarge' 
-  | 'headingMedium' 
+export type TextPreset =
+  | 'headingLarge'
+  | 'headingMedium'
   | 'headingSmall'
   | 'titleLarge'
   | 'titleMedium'
@@ -40,7 +29,6 @@ interface TextProps extends RNTextProps {
   semiBold?: boolean;
 }
 
-// Mapping from preset to styles
 const presetToStyles: Record<TextPreset, any> = {
   headingLarge: {
     fontSize: 28,
@@ -112,7 +100,7 @@ export const Text = ({
   children,
   ...rest
 }: TextProps) => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
 
   const getColorByType = (): string => {
     switch (color) {
@@ -131,7 +119,7 @@ export const Text = ({
     <RNText
       style={[
         preset ? presetToStyles[preset] : styles[variant],
-        {color: getColorByType()},
+        { color: getColorByType() },
         center && styles.center,
         bold && styles.bold,
         semiBold && styles.semiBold,

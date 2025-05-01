@@ -1,19 +1,12 @@
 import GirlDoingYoga from '@/assets/svg/GirlYoga';
-import {Skeleton, useTheme, Text} from '@/design-system';
-import {useMyschedules} from '@/hooks/useSchedules';
-import {useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {RootStackParamList} from '@/navigation/types';
-import {format} from 'date-fns';
-import {useEffect} from 'react';
-import {
-  Image,
-  Linking,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { Skeleton, useTheme, Text } from '@/design-system';
+import { useMyschedules } from '@/hooks/useSchedules';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { RootStackParamList } from '@/navigation/types';
+import { format } from 'date-fns';
+import { useEffect } from 'react';
+import { Image, Linking, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 interface ScheduleItem {
   id: string;
@@ -43,8 +36,8 @@ interface ScheduleItem {
 }
 
 export const MySchedules = () => {
-  const {data, isLoading, refetch} = useMyschedules();
-  const {colors} = useTheme();
+  const { data, isLoading, refetch } = useMyschedules();
+  const { colors } = useTheme();
   const router = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
   useEffect(() => {
     refetch();
@@ -68,8 +61,8 @@ export const MySchedules = () => {
                 </View>
 
                 <View style={styles.classDetails}>
-                  <Skeleton width={150} height={18} style={{marginBottom: 8}} />
-                  <Skeleton width={180} height={14} style={{marginBottom: 8}} />
+                  <Skeleton width={150} height={18} style={{ marginBottom: 8 }} />
+                  <Skeleton width={180} height={14} style={{ marginBottom: 8 }} />
 
                   <View
                     style={{
@@ -101,7 +94,7 @@ export const MySchedules = () => {
                     />
                   </View>
 
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <View
                       style={{
                         width: 16,
@@ -131,13 +124,9 @@ export const MySchedules = () => {
       <View style={styles.emptyStateContainer}>
         <GirlDoingYoga width={200} height={200} />
 
-        <Text style={styles.noClassesTitle}>
-          {'schedule.noUpcomingClasses'}
-        </Text>
+        <Text style={styles.noClassesTitle}>{'schedule.noUpcomingClasses'}</Text>
 
-        <Text style={styles.noClassesMessage}>
-          {'schedule.emptyStateMessage'}
-        </Text>
+        <Text style={styles.noClassesMessage}>{'schedule.emptyStateMessage'}</Text>
       </View>
     );
   }
@@ -147,27 +136,20 @@ export const MySchedules = () => {
       screen: 'Classes',
       params: {
         screen: 'ClassDetails',
-        params: {id: schedule.id, date: schedule.date},
+        params: { id: schedule.id, date: schedule.date },
       },
     });
   };
 
   const openGoogleMaps = (schedule: ScheduleItem) => {
-    if (
-      schedule.location?.coordinates &&
-      schedule.location.coordinates.length === 2
-    ) {
+    if (schedule.location?.coordinates && schedule.location.coordinates.length === 2) {
       const [longitude, latitude] = schedule.location.coordinates;
       const url = `https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`;
-      Linking.openURL(url).catch(err =>
-        console.error('Error opening Google Maps:', err),
-      );
+      Linking.openURL(url).catch(err => console.error('Error opening Google Maps:', err));
     } else if (schedule.venue?.name) {
       const venueQuery = encodeURIComponent(schedule.venue.name);
       const url = `https://www.google.com/maps/search/?api=1&query=${venueQuery}`;
-      Linking.openURL(url).catch(err =>
-        console.error('Error opening Google Maps:', err),
-      );
+      Linking.openURL(url).catch(err => console.error('Error opening Google Maps:', err));
     }
   };
 
@@ -199,16 +181,9 @@ export const MySchedules = () => {
                 activeOpacity={1}>
                 <View style={styles.imageContainer}>
                   {schedule.covers && schedule.covers.length > 0 ? (
-                    <Image
-                      source={{uri: schedule.covers[0]?.url}}
-                      style={styles.classImage}
-                    />
+                    <Image source={{ uri: schedule.covers[0]?.url }} style={styles.classImage} />
                   ) : (
-                    <View
-                      style={[
-                        styles.fallbackImage,
-                        {backgroundColor: colors.accent},
-                      ]}>
+                    <View style={[styles.fallbackImage, { backgroundColor: colors.accent }]}>
                       <Icon name="fitness-center" size={30} color="#FFF" />
                     </View>
                   )}
@@ -225,9 +200,7 @@ export const MySchedules = () => {
                   </Text>
 
                   <View style={styles.venueContainer}>
-                    <Text style={styles.venue}>
-                      {schedule.venue?.name || ''}
-                    </Text>
+                    <Text style={styles.venue}>{schedule.venue?.name || ''}</Text>
 
                     <TouchableOpacity
                       style={styles.mapButton}
@@ -241,37 +214,23 @@ export const MySchedules = () => {
 
                   {schedule.instructorInfo && (
                     <View style={styles.instructorContainer}>
-                      <Icon
-                        name="person"
-                        size={16}
-                        color={colors.textSecondary}
-                      />
+                      <Icon name="person" size={16} color={colors.textSecondary} />
                       <Text style={styles.instructor}>
-                        {schedule.instructorInfo ||
-                          schedule.instructorName ||
-                          'classes.instructor'}
+                        {schedule.instructorInfo || schedule.instructorName || 'classes.instructor'}
                       </Text>
                     </View>
                   )}
 
                   {schedule.categories && schedule.categories.length > 0 && (
                     <View style={styles.categoryContainer}>
-                      <Icon
-                        name="label"
-                        size={16}
-                        color={colors.textSecondary}
-                      />
-                      <Text style={styles.category}>
-                        {schedule.categories.join(' ')}
-                      </Text>
+                      <Icon name="label" size={16} color={colors.textSecondary} />
+                      <Text style={styles.category}>{schedule.categories.join(' ')}</Text>
                     </View>
                   )}
 
                   <View style={styles.statusContainer}>
                     <View style={styles.bookedStatusDot} />
-                    <Text style={styles.bookedStatusText}>
-                      {'schedule.booked'}
-                    </Text>
+                    <Text style={styles.bookedStatusText}>{'schedule.booked'}</Text>
                   </View>
                 </View>
               </TouchableOpacity>

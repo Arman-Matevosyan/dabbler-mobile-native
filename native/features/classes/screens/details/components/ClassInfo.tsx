@@ -11,13 +11,11 @@ interface ClassInfoProps {
 
 export const ClassInfo = React.memo(({ title, formattedDate, formattedTime }: ClassInfoProps) => {
   const { colors } = useTheme();
-  
+
   return (
     <View style={styles.headerContainer}>
-      <Text style={[styles.title, { color: colors.textPrimary }]}>
-        {title}
-      </Text>
-      
+      <Text style={[styles.title, { color: colors.textPrimary }]}>{title}</Text>
+
       {formattedDate && formattedTime && (
         <View style={styles.dateTimeContainer}>
           <MaterialIcons
@@ -26,18 +24,14 @@ export const ClassInfo = React.memo(({ title, formattedDate, formattedTime }: Cl
             color={colors.textPrimary}
             style={styles.dateTimeIcon}
           />
-          <Text style={[styles.dateTimeText, { color: colors.textPrimary }]}>
-            {formattedDate}
-          </Text>
+          <Text style={[styles.dateTimeText, { color: colors.textPrimary }]}>{formattedDate}</Text>
           <MaterialIcons
             name="schedule"
             size={22}
             color={colors.textPrimary}
             style={styles.dateTimeIcon}
           />
-          <Text style={[styles.dateTimeText, { color: colors.textPrimary }]}>
-            {formattedTime}
-          </Text>
+          <Text style={[styles.dateTimeText, { color: colors.textPrimary }]}>{formattedTime}</Text>
         </View>
       )}
     </View>
@@ -66,4 +60,4 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     marginRight: 12,
   },
-}); 
+});

@@ -1,50 +1,44 @@
-import React, {useCallback, useState} from 'react';
-import {Pressable, StyleSheet, View} from 'react-native';
-import {useTheme, Text} from '@design-system';
-import {useTranslation} from 'react-i18next';
+import React, { useCallback, useState } from 'react';
+import { Pressable, StyleSheet, View } from 'react-native';
+import { useTheme, Text } from '@design-system';
+import { useTranslation } from 'react-i18next';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {CheckinTabs} from './components';
+import { CheckinTabs } from './components';
 import FreeClassesList from './components/FreeClassesList';
 import ScheduledClassesList from './components/ScheduledClassesList';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {CheckInStackParamList} from '../CheckInNavigator';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { CheckInStackParamList } from '../CheckInNavigator';
 
-const HeaderBackButton = ({onPress}: {onPress: () => void}) => {
-  const {colors} = useTheme();
+const HeaderBackButton = ({ onPress }: { onPress: () => void }) => {
+  const { colors } = useTheme();
 
   return (
     <Pressable
       style={styles.backButton}
       onPress={onPress}
-      android_ripple={{color: 'transparent'}}>
+      android_ripple={{ color: 'transparent' }}>
       <MaterialIcons name="arrow-back" size={24} color={colors.textPrimary} />
     </Pressable>
   );
 };
 
-type CheckInListScreenProps = NativeStackScreenProps<
-  CheckInStackParamList,
-  'CheckInListScreen'
->;
+type CheckInListScreenProps = NativeStackScreenProps<CheckInStackParamList, 'CheckInListScreen'>;
 
-const CheckInListScreen = ({
-  route,
-  navigation,
-}: CheckInListScreenProps) => {
-  const {colors} = useTheme();
-  const {t} = useTranslation();
+const CheckInListScreen = ({ route, navigation }: CheckInListScreenProps) => {
+  const { colors } = useTheme();
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState<'free' | 'scheduled'>('free');
-  const {data, isLoading = false} = route.params;
+  const { data, isLoading = false } = route.params;
 
   const handleGoBack = useCallback(() => {
     navigation.goBack();
   }, [navigation]);
 
   return (
-    <View style={[styles.container, {backgroundColor: colors.background}]}>
-      <View style={[styles.header, {backgroundColor: colors.background}]}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <View style={[styles.header, { backgroundColor: colors.background }]}>
         <HeaderBackButton onPress={handleGoBack} />
-        <Text style={[styles.headerTitle, {color: colors.textPrimary}]}>
+        <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>
           {t('checkin.checkins')}
         </Text>
         <View style={styles.headerRight} />
@@ -59,15 +53,9 @@ const CheckInListScreen = ({
 
       <View style={styles.content}>
         {activeTab === 'free' ? (
-          <FreeClassesList
-            classes={data?.freeClasses || []}
-            isLoading={isLoading}
-          />
+          <FreeClassesList classes={data?.freeClasses || []} isLoading={isLoading} />
         ) : (
-          <ScheduledClassesList
-            classes={data?.scheduledClasses || []}
-            isLoading={isLoading}
-          />
+          <ScheduledClassesList classes={data?.scheduledClasses || []} isLoading={isLoading} />
         )}
       </View>
     </View>

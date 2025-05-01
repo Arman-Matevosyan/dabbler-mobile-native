@@ -1,5 +1,5 @@
-import {useCallback, useEffect, useState} from 'react';
-import {firebaseMessaging} from '@/services/firebase/messaging';
+import { useCallback, useEffect, useState } from 'react';
+import { firebaseMessaging } from '@/services/firebase/messaging';
 
 export const useNotifications = () => {
   const [loading, setLoading] = useState(false);

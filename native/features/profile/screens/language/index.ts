@@ -1,1 +1,1 @@
-export { LanguageScreen } from './LanguageScreen'; 
+export { LanguageScreen } from './LanguageScreen';

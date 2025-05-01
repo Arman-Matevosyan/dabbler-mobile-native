@@ -1,8 +1,8 @@
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {BottomTabNavigationProp} from '@react-navigation/bottom-tabs';
-import {StackNavigationProp} from '@react-navigation/stack';
-import {RouteProp} from '@react-navigation/native';
-import {IDiscoverClass} from '@/types/class.interfaces';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { RouteProp } from '@react-navigation/native';
+import { IDiscoverClass } from '@/types/class.interfaces';
 
 export type AuthStackParamList = {
   Login: undefined;
@@ -94,22 +94,13 @@ export type TabNavigatorParamList = {
   Profile: undefined;
 };
 
-export type RootStackNavigationProp =
-  NativeStackNavigationProp<RootStackParamList>;
+export type RootStackNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 export type AuthStackNavigationProp = StackNavigationProp<AuthStackParamList>;
-export type VenuesStackNavigationProp =
-  NativeStackNavigationProp<VenuesStackParamList>;
-export type ClassesStackNavigationProp =
-  NativeStackNavigationProp<ClassesStackParamList>;
-export type CheckInStackNavigationProp =
-  StackNavigationProp<CheckInStackParamList>;
-export type ProfileStackNavigationProp =
-  StackNavigationProp<ProfileStackParamList>;
-export type PaymentStackNavigationProp =
-  NativeStackNavigationProp<PaymentStackParamList>;
+export type VenuesStackNavigationProp = NativeStackNavigationProp<VenuesStackParamList>;
+export type ClassesStackNavigationProp = NativeStackNavigationProp<ClassesStackParamList>;
+export type CheckInStackNavigationProp = StackNavigationProp<CheckInStackParamList>;
+export type ProfileStackNavigationProp = StackNavigationProp<ProfileStackParamList>;
+export type PaymentStackNavigationProp = NativeStackNavigationProp<PaymentStackParamList>;
 export type TabNavigationProp = BottomTabNavigationProp<TabNavigatorParamList>;
 
-export type PaymentResultRouteProp = RouteProp<
-  PaymentStackParamList,
-  'PaymentResult'
->;
+export type PaymentResultRouteProp = RouteProp<PaymentStackParamList, 'PaymentResult'>;

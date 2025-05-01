@@ -1,7 +1,7 @@
-import {Skeleton, Text, useTheme} from '@/design-system';
-import {useNavigation} from '@react-navigation/native';
-import {format, parseISO} from 'date-fns';
-import React, {useLayoutEffect, useState} from 'react';
+import { Skeleton, Text, useTheme } from '@/design-system';
+import { useNavigation } from '@react-navigation/native';
+import { format, parseISO } from 'date-fns';
+import React, { useLayoutEffect, useState } from 'react';
 import {
   FlatList,
   Image,
@@ -13,18 +13,21 @@ import {
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import { CheckinDetailsBottomSheet, CheckinDetailsStatus } from '@/design-system/components/CheckinDetailsBottomSheet';
-import {useTranslation} from 'react-i18next';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import {
+  CheckinDetailsBottomSheet,
+  CheckinDetailsStatus,
+} from '@/design-system/components/CheckinDetailsBottomSheet';
+import { useTranslation } from 'react-i18next';
 
-const HeaderBackButton = ({onPress}: {onPress: () => void}) => {
-  const {colors} = useTheme();
+const HeaderBackButton = ({ onPress }: { onPress: () => void }) => {
+  const { colors } = useTheme();
 
   return (
     <Pressable
       style={styles.backButton}
       onPress={onPress}
-      android_ripple={{color: 'transparent'}}>
+      android_ripple={{ color: 'transparent' }}>
       <MaterialIcons name="arrow-back" size={24} color={colors.textPrimary} />
     </Pressable>
   );
@@ -37,8 +40,8 @@ const HeaderTabs = ({
   activeTab: 'history' | 'limits';
   onChangeTab: (tab: 'history' | 'limits') => void;
 }) => {
-  const {colors} = useTheme();
-  const {t} = useTranslation();
+  const { colors } = useTheme();
+  const { t } = useTranslation();
 
   return (
     <View style={styles.headerTabsContainer}>
@@ -46,44 +49,38 @@ const HeaderTabs = ({
         <Pressable
           style={styles.tabTextContainer}
           onPress={() => onChangeTab('history')}
-          android_ripple={{color: 'transparent'}}
-          pressRetentionOffset={{top: 10, left: 10, bottom: 10, right: 10}}>
+          android_ripple={{ color: 'transparent' }}
+          pressRetentionOffset={{ top: 10, left: 10, bottom: 10, right: 10 }}>
           <Text
             style={[
               styles.tabText,
               {
-                color:
-                  activeTab === 'history' ? colors.accent : colors.textSecondary,
+                color: activeTab === 'history' ? colors.accent : colors.textSecondary,
               },
             ]}>
             {t('profile.history.title')}
           </Text>
           {activeTab === 'history' && (
-            <View
-              style={[styles.tabIndicator, {backgroundColor: colors.accent}]}
-            />
+            <View style={[styles.tabIndicator, { backgroundColor: colors.accent }]} />
           )}
         </Pressable>
 
         <Pressable
           style={styles.tabTextContainer}
           onPress={() => onChangeTab('limits')}
-          android_ripple={{color: 'transparent'}}
-          pressRetentionOffset={{top: 10, left: 10, bottom: 10, right: 10}}>
+          android_ripple={{ color: 'transparent' }}
+          pressRetentionOffset={{ top: 10, left: 10, bottom: 10, right: 10 }}>
           <Text
             style={[
               styles.tabText,
               {
-                color:
-                  activeTab === 'limits' ? colors.accent : colors.textSecondary,
+                color: activeTab === 'limits' ? colors.accent : colors.textSecondary,
               },
             ]}>
             {t('profile.history.checkinHistory')}
           </Text>
           {activeTab === 'limits' && (
-            <View
-              style={[styles.tabIndicator, {backgroundColor: colors.accent}]}
-            />
+            <View style={[styles.tabIndicator, { backgroundColor: colors.accent }]} />
           )}
         </Pressable>
       </View>
@@ -92,26 +89,23 @@ const HeaderTabs = ({
 };
 
 const CheckinSkeleton = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
 
   return (
-    <View
-      style={[styles.contentContainer, {backgroundColor: colors.background}]}>
+    <View style={[styles.contentContainer, { backgroundColor: colors.background }]}>
       <View style={styles.monthHeader}>
         <Skeleton width={120} height={24} style={styles.skeletonHeader} />
       </View>
 
       {[1, 2, 3].map((_, index) => (
-        <View
-          key={index}
-          style={[styles.classCard, {backgroundColor: colors.background}]}>
+        <View key={index} style={[styles.classCard, { backgroundColor: colors.background }]}>
           <View style={styles.imageContainer}>
             <Skeleton width={80} height={80} borderRadius={6} />
           </View>
 
           <View style={styles.detailsContainer}>
-            <Skeleton width={150} height={18} style={{marginBottom: 8}} />
-            <Skeleton width={180} height={14} style={{marginBottom: 8}} />
+            <Skeleton width={150} height={18} style={{ marginBottom: 8 }} />
+            <Skeleton width={180} height={14} style={{ marginBottom: 8 }} />
 
             <View
               style={{
@@ -151,7 +145,7 @@ const CheckinSkeleton = () => {
               <Skeleton width={120} height={14} />
             </View>
 
-            <View style={{flexDirection: 'row', alignItems: 'center'}}>
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <View
                 style={{
                   width: 14,
@@ -172,15 +166,13 @@ const CheckinSkeleton = () => {
 };
 
 const EmptyState = () => {
-  const {t} = useTranslation();
-  
+  const { t } = useTranslation();
+
   return (
     <View style={styles.emptyStateContainer}>
       <Text style={styles.noCheckinsTitle}>{t('profile.history.noCheckins')}</Text>
 
-      <Text style={styles.noCheckinsMessage}>
-        {t('profile.history.emptyStateMessage')}
-      </Text>
+      <Text style={styles.noCheckinsMessage}>{t('profile.history.emptyStateMessage')}</Text>
     </View>
   );
 };
@@ -201,9 +193,9 @@ interface ClassHistoryItemProps {
 }
 
 const ClassHistoryItem = ({ item, onPress }: ClassHistoryItemProps) => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const [showBottomSheet, setShowBottomSheet] = useState(false);
-  
+
   const coverImage =
     item.covers && item.covers.length > 0 && item.covers[0]?.url
       ? item.covers[0].url
@@ -245,16 +237,14 @@ const ClassHistoryItem = ({ item, onPress }: ClassHistoryItemProps) => {
   return (
     <>
       <TouchableOpacity
-        style={[styles.classCard, {backgroundColor: colors.card}]}
+        style={[styles.classCard, { backgroundColor: colors.card }]}
         activeOpacity={0.7}
         onPress={handleItemPress}>
         <View style={styles.imageContainer}>
-          <Image source={{uri: coverImage}} style={styles.image} />
+          <Image source={{ uri: coverImage }} style={styles.image} />
         </View>
         <View style={styles.detailsContainer}>
-          <Text style={[styles.className, {color: colors.textPrimary}]}>
-            {item.name}
-          </Text>
+          <Text style={[styles.className, { color: colors.textPrimary }]}>{item.name}</Text>
 
           <View style={styles.infoContainer}>
             <View style={styles.infoRow}>
@@ -264,9 +254,7 @@ const ClassHistoryItem = ({ item, onPress }: ClassHistoryItemProps) => {
                 color={colors.textSecondary}
                 style={styles.icon}
               />
-              <Text style={[styles.dateText, {color: colors.textSecondary}]}>
-                {dateTimeStr}
-              </Text>
+              <Text style={[styles.dateText, { color: colors.textSecondary }]}>{dateTimeStr}</Text>
             </View>
 
             <View style={styles.infoRow}>
@@ -276,7 +264,7 @@ const ClassHistoryItem = ({ item, onPress }: ClassHistoryItemProps) => {
                 color={colors.textSecondary}
                 style={styles.icon}
               />
-              <Text style={[styles.venueText, {color: colors.textSecondary}]}>
+              <Text style={[styles.venueText, { color: colors.textSecondary }]}>
                 {item.venue?.name || ''}
               </Text>
             </View>
@@ -288,8 +276,7 @@ const ClassHistoryItem = ({ item, onPress }: ClassHistoryItemProps) => {
                 color={colors.textSecondary}
                 style={styles.icon}
               />
-              <Text
-                style={[styles.instructorText, {color: colors.textSecondary}]}>
+              <Text style={[styles.instructorText, { color: colors.textSecondary }]}>
                 {item.instructorInfo || item.instructorName || ''}
               </Text>
             </View>
@@ -297,10 +284,8 @@ const ClassHistoryItem = ({ item, onPress }: ClassHistoryItemProps) => {
 
           {item.status === 'confirmed' && (
             <View style={styles.statusContainer}>
-              <View style={[styles.statusIndicator, {backgroundColor: colors.success}]} />
-              <Text style={[styles.statusText, {color: colors.success}]}>
-                Booking Confirmed
-              </Text>
+              <View style={[styles.statusIndicator, { backgroundColor: colors.success }]} />
+              <Text style={[styles.statusText, { color: colors.success }]}>Booking Confirmed</Text>
             </View>
           )}
         </View>
@@ -325,10 +310,10 @@ const renderClassItem = ({ item, handleClassPress }: RenderClassItemProps) => {
   return <ClassHistoryItem item={item} onPress={handleClassPress} />;
 };
 
-const HistoryContent = ({checkIn}: {checkIn: ClassHistoryItemProps['item'][]}) => {
-  const {colors} = useTheme();
+const HistoryContent = ({ checkIn }: { checkIn: ClassHistoryItemProps['item'][] }) => {
+  const { colors } = useTheme();
   const navigation = useNavigation<any>();
-  
+
   const handleClassPress = (classId: string, date?: string) => {
     // We'll keep this navigation function but it won't be called directly now
     // since we're showing the bottom sheet instead
@@ -342,7 +327,7 @@ const HistoryContent = ({checkIn}: {checkIn: ClassHistoryItemProps['item'][]}) =
   return (
     <FlatList
       data={checkIn}
-      renderItem={({item}) => renderClassItem({item, handleClassPress})}
+      renderItem={({ item }) => renderClassItem({ item, handleClassPress })}
       keyExtractor={item => item.id}
       contentContainerStyle={styles.listContentContainer}
       showsVerticalScrollIndicator={false}
@@ -352,38 +337,29 @@ const HistoryContent = ({checkIn}: {checkIn: ClassHistoryItemProps['item'][]}) =
 
 // Limits tab content
 const LimitsContent = () => {
-  const {colors, mode} = useTheme();
+  const { colors, mode } = useTheme();
 
   const username = 'Vahan!';
 
   return (
-    <View
-      style={[styles.contentContainer, {backgroundColor: colors.background}]}>
+    <View style={[styles.contentContainer, { backgroundColor: colors.background }]}>
       <Text style={styles.welcomeTitle}>Hi {username}</Text>
 
-      <Text style={[styles.welcomeDescription, {color: colors.textSecondary}]}>
+      <Text style={[styles.welcomeDescription, { color: colors.textSecondary }]}>
         {'checkin.trackLimits'}
       </Text>
 
       <View style={styles.limitSection}>
         <View style={styles.limitHeader}>
-          <Ionicons
-            name="time-outline"
-            size={20}
-            color={colors.textSecondary}
-          />
+          <Ionicons name="time-outline" size={20} color={colors.textSecondary} />
           <Text style={styles.limitHeaderText}>{'checkin.resetDates'}</Text>
         </View>
 
-        <Text style={[styles.limitText, {color: colors.textSecondary}]}>
+        <Text style={[styles.limitText, { color: colors.textSecondary }]}>
           {'checkin.totalCheckinsReset'}
         </Text>
 
-        <Text
-          style={[
-            styles.limitText,
-            {color: colors.textSecondary, marginTop: 16},
-          ]}>
+        <Text style={[styles.limitText, { color: colors.textSecondary, marginTop: 16 }]}>
           {'checkin.allVenueLimits'}
         </Text>
       </View>
@@ -391,12 +367,9 @@ const LimitsContent = () => {
       <Text style={styles.monthSection}>March</Text>
 
       <View
-        style={[
-          styles.venueCard,
-          {backgroundColor: mode === 'dark' ? '#222429' : '#F7F7F7'},
-        ]}>
+        style={[styles.venueCard, { backgroundColor: mode === 'dark' ? '#222429' : '#F7F7F7' }]}>
         <Text style={styles.venueCardTitle}>{'checkin.venueCheckins'}</Text>
-        <Text style={[styles.visitCount, {color: colors.textSecondary}]}>
+        <Text style={[styles.visitCount, { color: colors.textSecondary }]}>
           3 {'checkin.visitsInMarch'}
         </Text>
 
@@ -410,9 +383,7 @@ const LimitsContent = () => {
           <Text style={styles.venueName}>Chimosa</Text>
 
           <View style={styles.progressContainer}>
-            <View
-              style={[styles.progressBar, {backgroundColor: colors.accent}]}
-            />
+            <View style={[styles.progressBar, { backgroundColor: colors.accent }]} />
             <View
               style={[
                 styles.progressBackground,
@@ -424,8 +395,8 @@ const LimitsContent = () => {
           </View>
 
           <View style={styles.limitNumbers}>
-            <Text style={{color: colors.accent}}>3</Text>
-            <Text style={{color: colors.textSecondary}}>4</Text>
+            <Text style={{ color: colors.accent }}>3</Text>
+            <Text style={{ color: colors.textSecondary }}>4</Text>
           </View>
         </View>
       </View>
@@ -434,7 +405,7 @@ const LimitsContent = () => {
 };
 
 export default function ProfileCheckinScreen() {
-  const {colors, mode} = useTheme();
+  const { colors, mode } = useTheme();
   const [activeTab, setActiveTab] = useState<'history' | 'limits'>('history');
   const checkInData: ClassHistoryItemProps['item'][] = [];
   const isLoading = false;
@@ -451,8 +422,8 @@ export default function ProfileCheckinScreen() {
   };
 
   return (
-    <View style={[styles.container, {backgroundColor: colors.background}]}>
-      <View style={[styles.header, {backgroundColor: colors.background}]}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <View style={[styles.header, { backgroundColor: colors.background }]}>
         <HeaderBackButton onPress={handleGoBack} />
         <Text style={styles.headerTitle}>{'checkin.checkins'}</Text>
         <View style={styles.headerRight} />
@@ -549,7 +520,7 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     elevation: 2,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
   },

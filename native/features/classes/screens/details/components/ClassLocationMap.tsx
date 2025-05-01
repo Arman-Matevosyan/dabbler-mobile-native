@@ -1,7 +1,8 @@
 import React from 'react';
-import { StyleSheet, View, Text, Dimensions } from 'react-native';
-import MapView, { Marker } from 'react-native-maps';
+import { StyleSheet, View, Text, Dimensions, Platform } from 'react-native';
+import MapView, { Marker, PROVIDER_DEFAULT, PROVIDER_GOOGLE } from 'react-native-maps';
 import { useTheme } from '@/design-system';
+import { darkMapStyle, lightMapStyle } from '@/constants/MapColors';
 
 interface Coordinates {
   latitude: number;
@@ -13,40 +14,42 @@ interface ClassLocationMapProps {
   venueName?: string;
 }
 
-export const ClassLocationMap = React.memo(({ coordinates, venueName = 'Venue' }: ClassLocationMapProps) => {
-  const { colors } = useTheme();
-  
-  if (!coordinates?.latitude || !coordinates?.longitude) {
-    return null;
-  }
+export const ClassLocationMap = React.memo(
+  ({ coordinates, venueName = 'Venue' }: ClassLocationMapProps) => {
+    const { colors, mode } = useTheme();
 
-  return (
-    <View style={styles.container}>
-      <Text style={[styles.sectionTitle, {color: colors.textPrimary}]}>
-        Location
-      </Text>
-      
-      <View style={[styles.mapContainer, {backgroundColor: colors.border}]}>
-        <MapView
-          style={styles.map}
-          initialRegion={{
-            latitude: coordinates.latitude,
-            longitude: coordinates.longitude,
-            latitudeDelta: 0.01,
-            longitudeDelta: 0.01,
-          }}>
-          <Marker
-            coordinate={{
+    if (!coordinates?.latitude || !coordinates?.longitude) {
+      return null;
+    }
+
+    return (
+      <View style={styles.container}>
+        <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Location</Text>
+
+        <View style={[styles.mapContainer, { backgroundColor: colors.border }]}>
+          <MapView
+            customMapStyle={mode === 'dark' ? darkMapStyle : lightMapStyle}
+            style={styles.map}
+            provider={Platform.OS === 'android' ? PROVIDER_GOOGLE : PROVIDER_DEFAULT}
+            initialRegion={{
               latitude: coordinates.latitude,
               longitude: coordinates.longitude,
-            }}
-            title={venueName}
-          />
-        </MapView>
+              latitudeDelta: 0.01,
+              longitudeDelta: 0.01,
+            }}>
+            <Marker
+              coordinate={{
+                latitude: coordinates.latitude,
+                longitude: coordinates.longitude,
+              }}
+              title={venueName}
+            />
+          </MapView>
+        </View>
       </View>
-    </View>
-  );
-});
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   container: {
@@ -66,4 +69,4 @@ const styles = StyleSheet.create({
     width: Dimensions.get('window').width - 32,
     height: 200,
   },
-}); 
+});

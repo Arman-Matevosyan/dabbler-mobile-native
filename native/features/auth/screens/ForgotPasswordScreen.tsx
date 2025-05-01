@@ -9,32 +9,29 @@ import {
   Platform,
   ActivityIndicator,
 } from 'react-native';
-import {useTheme, Input, Button} from '@design-system';
-import {zodResolver} from '@hookform/resolvers/zod';
-import {useForm, Controller} from 'react-hook-form';
-import {
-  forgotPasswordSchema,
-  ForgotPasswordFormData,
-} from '@/validation/authSchemas';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import { useTheme, Input, Button } from '@design-system';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm, Controller } from 'react-hook-form';
+import { forgotPasswordSchema, ForgotPasswordFormData } from '@/validation/authSchemas';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {useAuthStore} from '@/stores/authStore';
-import {useNavigation} from '@react-navigation/native';
-import {AuthStackNavigationProp} from '@/navigation/types';
-import {useTranslation} from 'react-i18next';
+import { useAuthStore } from '@/stores/authStore';
+import { useNavigation } from '@react-navigation/native';
+import { AuthStackNavigationProp } from '@/navigation/types';
+import { useTranslation } from 'react-i18next';
 
 export const ForgotPasswordScreen = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const insets = useSafeAreaInsets();
-  const {forgotPassword, isLoading, error, clearError} = useAuthStore();
+  const { forgotPassword, isLoading, error, clearError } = useAuthStore();
   const [success, setSuccess] = React.useState(false);
   const navigation = useNavigation<AuthStackNavigationProp>();
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   const {
     control,
     handleSubmit,
-    formState: {errors},
+    formState: { errors },
   } = useForm<ForgotPasswordFormData>({
     resolver: zodResolver(forgotPasswordSchema),
     defaultValues: {
@@ -54,29 +51,21 @@ export const ForgotPasswordScreen = () => {
 
   return (
     <KeyboardAvoidingView
-      style={[
-        styles.container,
-        {backgroundColor: colors.background, paddingTop: insets.top},
-      ]}
+      style={[styles.container, { backgroundColor: colors.background, paddingTop: insets.top }]}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ScrollView
         style={styles.scrollView}
-        contentContainerStyle={[
-          styles.scrollViewContent,
-          {paddingBottom: insets.bottom},
-        ]}
+        contentContainerStyle={[styles.scrollViewContent, { paddingBottom: insets.bottom }]}
         keyboardShouldPersistTaps="handled">
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}>
+        <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
           <Icon name="arrow-back" size={24} color={colors.textPrimary} />
         </TouchableOpacity>
 
         <View style={styles.header}>
-          <Text style={[styles.title, {color: colors.textPrimary}]}>
+          <Text style={[styles.title, { color: colors.textPrimary }]}>
             {t('auth.forgotPassword.resetPassword')}
           </Text>
-          <Text style={[styles.subtitle, {color: colors.textSecondary}]}>
+          <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
             {t('auth.forgotPassword.instructions')}
           </Text>
         </View>
@@ -85,11 +74,9 @@ export const ForgotPasswordScreen = () => {
           <View
             style={[
               styles.errorContainer,
-              {backgroundColor: colors.background, borderColor: colors.accent},
+              { backgroundColor: colors.background, borderColor: colors.accent },
             ]}>
-            <Text style={[styles.errorText, {color: colors.accent}]}>
-              {error}
-            </Text>
+            <Text style={[styles.errorText, { color: colors.accent }]}>{error}</Text>
           </View>
         )}
 
@@ -105,11 +92,10 @@ export const ForgotPasswordScreen = () => {
               ]}>
               <Icon name="check-circle" size={48} color={colors.accent} />
             </View>
-            <Text style={[styles.successTitle, {color: colors.textPrimary}]}>
+            <Text style={[styles.successTitle, { color: colors.textPrimary }]}>
               {t('auth.forgotPassword.emailSent')}
             </Text>
-            <Text
-              style={[styles.successMessage, {color: colors.textSecondary}]}>
+            <Text style={[styles.successMessage, { color: colors.textSecondary }]}>
               {t('auth.forgotPassword.emailSentMessage')}
             </Text>
             <Button
@@ -123,7 +109,7 @@ export const ForgotPasswordScreen = () => {
             <Controller
               control={control}
               name="email"
-              render={({field: {onChange, onBlur, value}}) => (
+              render={({ field: { onChange, onBlur, value } }) => (
                 <Input
                   label={t('auth.forgotPassword.email')}
                   placeholder={t('auth.forgotPassword.emailPlaceholder')}
@@ -150,11 +136,7 @@ export const ForgotPasswordScreen = () => {
             />
 
             {isLoading && (
-              <ActivityIndicator
-                size="small"
-                color={colors.accent}
-                style={styles.loader}
-              />
+              <ActivityIndicator size="small" color={colors.accent} style={styles.loader} />
             )}
           </View>
         )}

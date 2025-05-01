@@ -1,18 +1,12 @@
 import React from 'react';
-import {
-  FlatList,
-  Image,
-  TouchableOpacity,
-  StyleSheet,
-  View,
-} from 'react-native';
-import {useTheme, Text} from '@design-system';
-import {useTranslation} from 'react-i18next';
-import {ClassListSkeleton} from '@/components/classes';
+import { FlatList, Image, TouchableOpacity, StyleSheet, View } from 'react-native';
+import { useTheme, Text } from '@design-system';
+import { useTranslation } from 'react-i18next';
+import { ClassListSkeleton } from '@/components/classes';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import {useNavigation} from '@react-navigation/native';
-import {format, parseISO} from 'date-fns';
+import { useNavigation } from '@react-navigation/native';
+import { format, parseISO } from 'date-fns';
 import ClassListEmptyState from './ClassListEmptyState';
 
 interface Class {
@@ -24,8 +18,8 @@ interface Class {
   date: string | null;
   scheduledSpots: number;
   totalSpots: number;
-  covers: Array<{url: string}>;
-  venue: {name: string};
+  covers: Array<{ url: string }>;
+  venue: { name: string };
   categories: string[];
 }
 
@@ -34,20 +28,16 @@ interface ScheduledClassesListProps {
   isLoading?: boolean;
 }
 
-const ScheduledClassesList = ({
-  classes,
-  isLoading = false,
-}: ScheduledClassesListProps) => {
-  const {colors} = useTheme();
-  const {t} = useTranslation();
+const ScheduledClassesList = ({ classes, isLoading = false }: ScheduledClassesListProps) => {
+  const { colors } = useTheme();
+  const { t } = useTranslation();
   const navigation = useNavigation();
 
   const navigateToClassDetails = (classItem: Class) => {
-    // Replace with your actual navigation logic
     console.log('Navigate to class details:', classItem.id, classItem.date);
   };
 
-  const renderClassItem = ({item}: {item: Class}) => {
+  const renderClassItem = ({ item }: { item: Class }) => {
     const coverImage =
       item.covers && item.covers.length > 0
         ? item.covers[0]?.url
@@ -70,16 +60,14 @@ const ScheduledClassesList = ({
 
     return (
       <TouchableOpacity
-        style={[styles.classCard, {backgroundColor: colors.background}]}
+        style={[styles.classCard, { backgroundColor: colors.background }]}
         onPress={() => navigateToClassDetails(item)}
         activeOpacity={0.7}>
         <View style={styles.imageContainer}>
-          <Image source={{uri: coverImage}} style={styles.image} />
+          <Image source={{ uri: coverImage }} style={styles.image} />
         </View>
         <View style={styles.detailsContainer}>
-          <Text style={[styles.className, {color: colors.textPrimary}]}>
-            {item.name}
-          </Text>
+          <Text style={[styles.className, { color: colors.textPrimary }]}>{item.name}</Text>
 
           {formattedDate && formattedTime && (
             <View style={styles.infoRow}>
@@ -89,7 +77,7 @@ const ScheduledClassesList = ({
                 color={colors.textSecondary}
                 style={styles.icon}
               />
-              <Text style={[styles.infoText, {color: colors.textSecondary}]}>
+              <Text style={[styles.infoText, { color: colors.textSecondary }]}>
                 {formattedDate} - {formattedTime}
               </Text>
             </View>
@@ -103,9 +91,7 @@ const ScheduledClassesList = ({
                 color={colors.textSecondary}
                 style={styles.icon}
               />
-              <Text
-                style={[styles.infoText, {color: colors.textSecondary}]}
-                numberOfLines={1}>
+              <Text style={[styles.infoText, { color: colors.textSecondary }]} numberOfLines={1}>
                 {item.venue.name}
               </Text>
             </View>
@@ -118,29 +104,21 @@ const ScheduledClassesList = ({
               color={colors.textSecondary}
               style={styles.icon}
             />
-            <Text style={[styles.infoText, {color: colors.textSecondary}]}>
+            <Text style={[styles.infoText, { color: colors.textSecondary }]}>
               {item.instructorInfo}
             </Text>
           </View>
 
           {isNoShow && (
             <View style={styles.noShowContainer}>
-              <View
-                style={[styles.noShowIndicator, {backgroundColor: '#FF6B6B'}]}
-              />
-              <Text style={[styles.noShowText, {color: '#FF6B6B'}]}>
-                {t('checkin.noShow')}
-              </Text>
+              <View style={[styles.noShowIndicator, { backgroundColor: '#FF6B6B' }]} />
+              <Text style={[styles.noShowText, { color: '#FF6B6B' }]}>{t('checkin.noShow')}</Text>
             </View>
           )}
         </View>
 
         <View style={styles.arrowContainer}>
-          <MaterialIcons
-            name="chevron-right"
-            size={24}
-            color={colors.textSecondary}
-          />
+          <MaterialIcons name="chevron-right" size={24} color={colors.textSecondary} />
         </View>
       </TouchableOpacity>
     );

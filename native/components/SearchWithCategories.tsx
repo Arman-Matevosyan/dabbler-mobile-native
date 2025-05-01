@@ -1,5 +1,5 @@
-import {useTheme} from '@/design-system';
-import {useRef, useState} from 'react';
+import { useTheme } from '@/design-system';
+import { useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Animated,
@@ -10,8 +10,8 @@ import {
   View,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {CategoryList} from './CategoryList';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import { CategoryList } from './CategoryList';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface SearchWithCategoriesProps {
   searchValue?: string;
@@ -31,7 +31,7 @@ export const SearchWithCategories = ({
   onSearchChange,
   isLoading = false,
 }: SearchWithCategoriesProps) => {
-  const {colors, mode} = useTheme();
+  const { colors, mode } = useTheme();
   const [isFocused, setIsFocused] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
 
@@ -59,22 +59,10 @@ export const SearchWithCategories = ({
   return (
     <View style={[styles.container]}>
       <View style={[styles.innerContainer, backgroundStyle]}>
-        <Animated.View
-          style={[
-            styles.searchContainer,
-            getContainerStyles(colors, isFocused),
-          ]}>
-          <Icon
-            name="search"
-            size={20}
-            color={colors.textSecondary}
-            style={styles.searchIcon}
-          />
+        <Animated.View style={[styles.searchContainer, getContainerStyles(colors, isFocused)]}>
+          <Icon name="search" size={20} color={colors.textSecondary} style={styles.searchIcon} />
           <TextInput
-            style={[
-              styles.searchInput,
-              {color: mode === 'dark' ? '#fff' : colors.textPrimary},
-            ]}
+            style={[styles.searchInput, { color: mode === 'dark' ? '#fff' : colors.textPrimary }]}
             placeholder={placeholder}
             placeholderTextColor={colors.textSecondary}
             value={searchValue}
@@ -96,19 +84,15 @@ export const SearchWithCategories = ({
           <View style={styles.categoriesContainer}>
             <TouchableOpacity
               activeOpacity={1}
-              style={[
-                styles.categoriesButton,
-                {backgroundColor: colors.accent},
-              ]}
+              style={[styles.categoriesButton, { backgroundColor: colors.accent }]}
               onPress={() => setIsModalVisible(true)}>
-              <Text style={[styles.categoriesButtonText, {color: '#fff'}]}>
+              <Text style={[styles.categoriesButtonText, { color: '#fff' }]}>
                 {'venues.categories'}
               </Text>
               <Icon name="arrow-drop-up" size={20} color="#fff" />
             </TouchableOpacity>
             {selectedCategories.length > 0 && (
-              <Text
-                style={[styles.selectedCount, {color: colors.textSecondary}]}>
+              <Text style={[styles.selectedCount, { color: colors.textSecondary }]}>
                 {selectedCategories.length} {'venues.selected'}
               </Text>
             )}
@@ -130,7 +114,7 @@ const getContainerStyles = (colors: any, isFocused: boolean) => ({
   backgroundColor: colors.background,
   borderWidth: 1,
   shadowColor: '#000',
-  shadowOffset: {width: 0, height: 4},
+  shadowOffset: { width: 0, height: 4 },
   shadowOpacity: 0.15,
   shadowRadius: 12,
   elevation: 8,

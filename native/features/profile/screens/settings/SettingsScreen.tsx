@@ -1,17 +1,11 @@
-import React, {useState, useEffect} from 'react';
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  ViewStyle,
-  TouchableOpacity,
-} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useNavigation} from '@react-navigation/native';
-import {Text, Button, useTheme, Skeleton} from '@/design-system';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, ScrollView, ViewStyle, TouchableOpacity } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import { Text, Button, useTheme, Skeleton } from '@/design-system';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {useAuthStore} from '@/stores/authStore';
-import {useTranslation} from 'react-i18next';
+import { useAuthStore } from '@/stores/authStore';
+import { useTranslation } from 'react-i18next';
 
 interface SettingItem {
   label: string;
@@ -27,10 +21,10 @@ interface SettingSection {
 
 export const SettingsScreen = () => {
   const insets = useSafeAreaInsets();
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const navigation = useNavigation();
-  const {logout, isLoading} = useAuthStore();
-  const {t} = useTranslation();
+  const { logout, isLoading } = useAuthStore();
+  const { t } = useTranslation();
 
   const handleLogout = async () => {
     try {
@@ -97,32 +91,22 @@ export const SettingsScreen = () => {
   if (isLoading) {
     return (
       <View
-        style={[
-          styles.container,
-          {backgroundColor: colors.background, paddingTop: insets.top},
-        ]}>
+        style={[styles.container, { backgroundColor: colors.background, paddingTop: insets.top }]}>
         <View style={styles.header}>
-          <Skeleton width={24} height={24} style={{marginRight: 16}} />
+          <Skeleton width={24} height={24} style={{ marginRight: 16 }} />
           <Skeleton width="50%" height={24} />
         </View>
         <ScrollView style={styles.scrollView}>
           {[1, 2, 3].map(section => (
-            <View key={section} style={{marginBottom: 24, padding: 16}}>
-              <Skeleton width="40%" height={20} style={{marginBottom: 16}} />
+            <View key={section} style={{ marginBottom: 24, padding: 16 }}>
+              <Skeleton width="40%" height={20} style={{ marginBottom: 16 }} />
               {[1, 2].map(item => (
                 <View
                   key={item}
-                  style={[
-                    styles.settingItemSkeleton,
-                    {backgroundColor: colors.card},
-                  ]}>
-                  <Skeleton width={24} height={24} style={{marginRight: 16}} />
-                  <View style={{flex: 1}}>
-                    <Skeleton
-                      width="60%"
-                      height={16}
-                      style={{marginBottom: 4}}
-                    />
+                  style={[styles.settingItemSkeleton, { backgroundColor: colors.card }]}>
+                  <Skeleton width={24} height={24} style={{ marginRight: 16 }} />
+                  <View style={{ flex: 1 }}>
+                    <Skeleton width="60%" height={16} style={{ marginBottom: 4 }} />
                     <Skeleton width="80%" height={14} />
                   </View>
                   <Skeleton width={16} height={16} />
@@ -137,20 +121,13 @@ export const SettingsScreen = () => {
 
   return (
     <View
-      style={[
-        styles.container,
-        {backgroundColor: colors.background, paddingTop: insets.top},
-      ]}>
+      style={[styles.container, { backgroundColor: colors.background, paddingTop: insets.top }]}>
       <View style={styles.header}>
         <TouchableOpacity
           style={styles.backButton}
           activeOpacity={1}
           onPress={() => navigation.goBack()}>
-          <MaterialIcons
-            name="arrow-back"
-            size={24}
-            color={colors.textPrimary}
-          />
+          <MaterialIcons name="arrow-back" size={24} color={colors.textPrimary} />
         </TouchableOpacity>
         <Text variant="heading1" color="primary">
           {t('profile.settings.title')}
@@ -164,11 +141,7 @@ export const SettingsScreen = () => {
         <View style={styles.content}>
           {settingsOptions.map((section, index) => (
             <View key={index} style={styles.section}>
-              <Text
-                variant="heading3"
-                color="primary"
-                bold
-                style={styles.sectionTitle}>
+              <Text variant="heading3" color="primary" bold style={styles.sectionTitle}>
                 {section.title}
               </Text>
 
@@ -176,17 +149,10 @@ export const SettingsScreen = () => {
                 <TouchableOpacity
                   key={itemIndex}
                   activeOpacity={1}
-                  style={[
-                    styles.settingItemContainer,
-                    {backgroundColor: colors.background},
-                  ]}
+                  style={[styles.settingItemContainer, { backgroundColor: colors.background }]}
                   onPress={item.onPress}>
                   <View style={styles.settingItemContent}>
-                    <MaterialIcons
-                      name={item.icon}
-                      size={24}
-                      color={colors.accent}
-                    />
+                    <MaterialIcons name={item.icon} size={24} color={colors.accent} />
                     <View style={styles.settingInfo}>
                       <Text
                         style={{
@@ -205,25 +171,16 @@ export const SettingsScreen = () => {
                         {item.description}
                       </Text>
                     </View>
-                    <MaterialIcons
-                      name="chevron-right"
-                      size={20}
-                      color={colors.accent}
-                    />
+                    <MaterialIcons name="chevron-right" size={20} color={colors.accent} />
                   </View>
-                  <View
-                    style={[styles.separator, {backgroundColor: colors.border}]}
-                  />
+                  <View style={[styles.separator, { backgroundColor: colors.border }]} />
                 </TouchableOpacity>
               ))}
             </View>
           ))}
 
           <TouchableOpacity
-            style={[
-              styles.settingItemContainer,
-              {backgroundColor: colors.background},
-            ]}
+            style={[styles.settingItemContainer, { backgroundColor: colors.background }]}
             activeOpacity={1}
             onPress={handleLogout}>
             <View style={styles.settingItemContent}>
@@ -247,12 +204,10 @@ export const SettingsScreen = () => {
                 </Text>
               </View>
             </View>
-            <View
-              style={[styles.separator, {backgroundColor: colors.border}]}
-            />
+            <View style={[styles.separator, { backgroundColor: colors.border }]} />
           </TouchableOpacity>
 
-          <View style={{height: 100}} />
+          <View style={{ height: 100 }} />
         </View>
       </ScrollView>
     </View>

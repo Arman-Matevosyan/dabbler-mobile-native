@@ -1,17 +1,16 @@
-import {Skeleton, useTheme} from '@/design-system';
-import {useSubscriptions} from '@/hooks/useSubscriptions';
-import {ISubscription} from '@/types/payment.interfaces';
-import {useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {ProfileStackParamList} from '@/navigation/types';
+import { Skeleton, useTheme } from '@/design-system';
+import { useSubscriptions } from '@/hooks/useSubscriptions';
+import { ISubscription } from '@/types/payment.interfaces';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { ProfileStackParamList } from '@/navigation/types';
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 export const MembershipStatus: React.FC = () => {
-  const {colors} = useTheme();
-  const {data: subscription, isLoading} = useSubscriptions();
-  const router =
-    useNavigation<NativeStackNavigationProp<ProfileStackParamList>>();
+  const { colors } = useTheme();
+  const { data: subscription, isLoading } = useSubscriptions();
+  const router = useNavigation<NativeStackNavigationProp<ProfileStackParamList>>();
 
   if (isLoading) {
     return (
@@ -30,9 +29,7 @@ export const MembershipStatus: React.FC = () => {
   const isActive = typedSubscription && typedSubscription.plan?.planId;
 
   const planName =
-    isActive && typedSubscription?.plan
-      ? typedSubscription.plan.name
-      : 'profile.inactive';
+    isActive && typedSubscription?.plan ? typedSubscription.plan.name : 'profile.inactive';
 
   return (
     <View style={styles.container}>

@@ -1,4 +1,4 @@
-import {client} from '../client';
+import { client } from '../client';
 
 export const NotificationApi = {
   registerDevice: async (token: string, deviceId: string) => {
@@ -8,7 +8,7 @@ export const NotificationApi = {
         deviceToken: token,
         deviceId: deviceId,
       },
-      {withAuth: true},
+      { withAuth: true },
     );
   },
 };

@@ -1,6 +1,6 @@
-import {Platform} from 'react-native';
-import {getApp, getApps} from '@react-native-firebase/app';
-import {getMessaging} from '@react-native-firebase/messaging';
+import { Platform } from 'react-native';
+import { getApp, getApps } from '@react-native-firebase/app';
+import { getMessaging } from '@react-native-firebase/messaging';
 import PushNotification from 'react-native-push-notification';
 
 export const initializeFirebase = async () => {

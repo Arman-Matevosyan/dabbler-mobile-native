@@ -3,12 +3,11 @@ import {
   AuthorizationStatus,
   FirebaseMessagingTypes,
 } from '@react-native-firebase/messaging';
-import {Platform, PermissionsAndroid, Alert} from 'react-native';
+import { Platform, PermissionsAndroid, Alert } from 'react-native';
 import DeviceInfo from 'react-native-device-info';
 import PushNotification from 'react-native-push-notification';
-import {NotificationApi} from '../api/notification';
+import { NotificationApi } from '../api/notification';
 
-// Add type safety for notification channels
 type AndroidChannel = {
   channelId: string;
   channelName: string;
@@ -25,7 +24,7 @@ export const initializeNotificationChannels = () => {
       channelName: 'Default Channel',
       channelDescription: 'Default notifications channel',
       soundName: 'default',
-      importance: 4, // IMPORTANCE_HIGH
+      importance: 4,
       vibrate: true,
     };
 
@@ -37,7 +36,6 @@ export const initializeNotificationChannels = () => {
 
 export const requestNotificationPermissions = async (): Promise<boolean> => {
   try {
-    // Android 13+ specific permission
     if (Platform.OS === 'android' && Platform.Version >= 33) {
       const granted = await PermissionsAndroid.request(
         PermissionsAndroid.PERMISSIONS.POST_NOTIFICATIONS,
@@ -56,10 +54,8 @@ export const requestNotificationPermissions = async (): Promise<boolean> => {
       }
     }
 
-    // iOS and general Firebase permission
     const messaging = getMessaging();
     const authStatus = await messaging.requestPermission({
-      // Customize permission options
       alert: true,
       badge: true,
       sound: true,
@@ -96,7 +92,6 @@ export const getFCMToken = async (): Promise<string | null> => {
   }
 };
 
-// Add token refresh handler
 const registerTokenRefreshListener = () => {
   const messaging = getMessaging();
   return messaging.onTokenRefresh(async (newToken: string) => {
@@ -119,10 +114,7 @@ export const registerDevice = async (): Promise<boolean> => {
   try {
     const hasPermission = await requestNotificationPermissions();
     if (!hasPermission) {
-      Alert.alert(
-        'Notifications disabled',
-        'Please enable notifications in settings',
-      );
+      Alert.alert('Notifications disabled', 'Please enable notifications in settings');
       return false;
     }
 
@@ -141,10 +133,7 @@ export const registerDevice = async (): Promise<boolean> => {
   }
 };
 
-// Update handleForegroundNotification to show notifications on iOS
-const handleForegroundNotification = (
-  remoteMessage: FirebaseMessagingTypes.RemoteMessage,
-) => {
+const handleForegroundNotification = (remoteMessage: FirebaseMessagingTypes.RemoteMessage) => {
   console.log('Foreground notification:', remoteMessage);
 
   if (Platform.OS === 'ios') {
@@ -176,25 +165,15 @@ export const setupNotificationHandlers = async () => {
 
     const messaging = getMessaging();
 
-    // Foreground messages
-    const unsubscribeForeground = messaging.onMessage(
-      handleForegroundNotification,
-    );
+    const unsubscribeForeground = messaging.onMessage(handleForegroundNotification);
 
-    // Background/Opened notifications
     messaging.onNotificationOpenedApp(remoteMessage => {
       console.log('Notification opened app from background:', remoteMessage);
-      // Add navigation logic here based on remoteMessage.data
     });
 
-    // Initial notification (app opened from quit state)
     const initialNotification = await messaging.getInitialNotification();
     if (initialNotification) {
-      console.log(
-        'App opened from quit state by notification:',
-        initialNotification,
-      );
-      // Handle initial notification navigation
+      console.log('App opened from quit state by notification:', initialNotification);
     }
 
     return () => {

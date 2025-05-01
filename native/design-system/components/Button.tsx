@@ -9,7 +9,7 @@ import {
   PressableProps,
   View,
 } from 'react-native';
-import {useTheme} from '../theme/ThemeContext';
+import { useTheme } from '../theme/ThemeContext';
 
 export type ButtonVariant = 'primary' | 'secondary' | 'outline' | 'text' | 'ghost';
 type ButtonSize = 'small' | 'medium' | 'large';
@@ -38,7 +38,7 @@ export const Button: React.FC<ButtonProps> = ({
   contentContainerStyle,
   ...rest
 }) => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
 
   const buttonStyles: Record<ButtonVariant, ViewStyle> = {
     primary: {
@@ -114,7 +114,7 @@ export const Button: React.FC<ButtonProps> = ({
 
   return (
     <Pressable
-      style={({pressed}) => [
+      style={({ pressed }) => [
         styles.button,
         buttonStyles[variant],
         sizeStyles[size],
@@ -123,7 +123,7 @@ export const Button: React.FC<ButtonProps> = ({
         style,
       ]}
       disabled={disabled || loading}
-      android_ripple={{color: 'rgba(0, 0, 0, 0.1)'}}
+      android_ripple={{ color: 'rgba(0, 0, 0, 0.1)' }}
       {...rest}>
       <View style={[styles.contentContainer, contentContainerStyle]}>
         {icon && <View style={styles.iconContainer}>{icon}</View>}
@@ -131,13 +131,7 @@ export const Button: React.FC<ButtonProps> = ({
           <ActivityIndicator size="small" color={textStyles[variant].color} />
         ) : (
           title && (
-            <Text
-              style={[
-                styles.text,
-                textStyles[variant],
-                textSizeStyles[size],
-                textStyle,
-              ]}>
+            <Text style={[styles.text, textStyles[variant], textSizeStyles[size], textStyle]}>
               {title}
             </Text>
           )

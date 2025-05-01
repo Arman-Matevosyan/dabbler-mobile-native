@@ -1,7 +1,7 @@
 import React from 'react';
-import {StyleSheet, Image, View} from 'react-native';
-import {useTheme} from '@/design-system';
-import {ImageSlider} from '@/design-system/components/ImageSlider';
+import { StyleSheet, Image, View } from 'react-native';
+import { useTheme } from '@/design-system';
+import { ImageSlider } from '@/design-system/components/ImageSlider';
 
 interface Cover {
   url: string;
@@ -15,15 +15,13 @@ interface ClassImageSliderProps {
 }
 
 export const ClassImageSlider = React.memo(
-  ({covers, className, onBackPress}: ClassImageSliderProps) => {
+  ({ covers, className, onBackPress }: ClassImageSliderProps) => {
     const defaultImage = {
       url: 'https://images.unsplash.com/photo-1518611012118-696072aa579a',
     };
 
     const imagesToShow =
-      covers && covers.length > 0
-        ? covers.filter(cover => !!cover.url)
-        : [defaultImage];
+      covers && covers.length > 0 ? covers.filter(cover => !!cover.url) : [defaultImage];
 
     if (!imagesToShow.length) {
       imagesToShow.push(defaultImage);

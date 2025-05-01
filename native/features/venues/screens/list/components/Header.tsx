@@ -1,25 +1,23 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import {useTheme} from '@/design-system';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useTheme } from '@/design-system';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 interface HeaderProps {
   onClose: () => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({onClose}) => {
-  const {colors} = useTheme();
+export const Header: React.FC<HeaderProps> = ({ onClose }) => {
+  const { colors } = useTheme();
 
   return (
-    <View style={[styles.header, {backgroundColor: colors.background}]}>
+    <View style={[styles.header, { backgroundColor: colors.background }]}>
       <TouchableOpacity style={styles.backButton} onPress={onClose}>
         <MaterialIcons name="close" size={24} color={colors.textPrimary} />
       </TouchableOpacity>
 
       <View style={styles.headerTitleContainer}>
-        <Text
-          style={[styles.headerTitle, {color: colors.textPrimary}]}
-          numberOfLines={1}>
+        <Text style={[styles.headerTitle, { color: colors.textPrimary }]} numberOfLines={1}>
           {'classes.availableClasses'}
         </Text>
       </View>

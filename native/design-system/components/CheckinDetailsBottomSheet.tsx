@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -8,12 +8,12 @@ import {
   ScrollView,
   Image,
 } from 'react-native';
-import NativeBottomSheet, {NativeBottomSheetRef} from '../../design-system/NativeBottomSheet';
-import {Text, useTheme} from '..';
+import { Text, useTheme } from '..';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {format, parseISO} from 'date-fns';
+import { format, parseISO } from 'date-fns';
+import BottomSheet from '@gorhom/bottom-sheet';
 
-const {width} = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 export type CheckinDetailsStatus = 'confirmed' | 'cancelled' | 'expired' | 'pending';
 
@@ -41,15 +41,15 @@ export const CheckinDetailsBottomSheet: React.FC<CheckinDetailsProps> = ({
   classDetails,
   autoCloseAfter,
 }) => {
-  const {colors, mode} = useTheme();
-  const bottomSheetRef = useRef<NativeBottomSheetRef>(null);
+  const { colors, mode } = useTheme();
+  const bottomSheetRef = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   // Format the date and time
   const formatDateTime = (dateString?: string, duration?: number) => {
     if (!dateString) return '';
-    
+
     try {
       const scheduleDate = parseISO(dateString);
       const day = format(scheduleDate, 'EEE');
@@ -152,13 +152,13 @@ export const CheckinDetailsBottomSheet: React.FC<CheckinDetailsProps> = ({
           opacity: fadeAnim,
         },
       ]}>
-      <NativeBottomSheet
+      <BottomSheet
         ref={bottomSheetRef}
         snapPoints={['70%']}
         enablePanDownToClose
-        handleIndicatorStyle={{backgroundColor: colors.border}}
-        backgroundStyle={{backgroundColor: colors.background}}
-        handleStyle={{backgroundColor: colors.background}}
+        handleIndicatorStyle={{ backgroundColor: colors.border }}
+        backgroundStyle={{ backgroundColor: colors.background }}
+        handleStyle={{ backgroundColor: colors.background }}
         index={0}>
         <View style={styles.closeButtonContainer}>
           <TouchableOpacity onPress={handleClose} style={styles.closeButton}>
@@ -170,9 +170,8 @@ export const CheckinDetailsBottomSheet: React.FC<CheckinDetailsProps> = ({
           style={styles.scrollView}
           contentContainerStyle={styles.contentContainer}
           showsVerticalScrollIndicator={false}>
-
           <View style={styles.imageContainer}>
-            <Image source={{uri: coverImage}} style={styles.image} />
+            <Image source={{ uri: coverImage }} style={styles.image} />
           </View>
 
           <View style={styles.content}>
@@ -183,9 +182,7 @@ export const CheckinDetailsBottomSheet: React.FC<CheckinDetailsProps> = ({
               </Text>
             </View>
 
-            <Text style={[styles.title, { color: colors.textPrimary }]}>
-              {classDetails.name}
-            </Text>
+            <Text style={[styles.title, { color: colors.textPrimary }]}>{classDetails.name}</Text>
 
             <View style={styles.detailsSection}>
               <View style={styles.detailRow}>
@@ -263,9 +260,9 @@ export const CheckinDetailsBottomSheet: React.FC<CheckinDetailsProps> = ({
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={[
-                    styles.actionButton, 
+                    styles.actionButton,
                     styles.secondaryButton,
-                    { backgroundColor: mode === 'dark' ? '#333' : '#f0f0f0' }
+                    { backgroundColor: mode === 'dark' ? '#333' : '#f0f0f0' },
                   ]}
                   onPress={handleClose}>
                   <Text style={[styles.actionButtonText, { color: colors.textPrimary }]}>
@@ -276,7 +273,7 @@ export const CheckinDetailsBottomSheet: React.FC<CheckinDetailsProps> = ({
             )}
           </View>
         </ScrollView>
-      </NativeBottomSheet>
+      </BottomSheet>
     </Animated.View>
   );
 };
@@ -379,4 +376,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: '600',
   },
-}); 
+});

@@ -1,0 +1,36 @@
+# Build artifacts
+android/
+ios/
+build/
+dist/
+
+# Dependencies
+node_modules/
+.pnp/
+.pnp.js
+
+# Config files - let these be as they are
+*.config.js
+
+# Coverage reports
+coverage/
+
+# Auto-generated files
+*.d.ts
+*.tsbuildinfo
+
+# Assets
+assets/
+*.png
+*.jpg
+*.jpeg
+*.gif
+*.svg
+*.ttf
+*.woff
+*.woff2
+
+# Other
+.DS_Store
+.env*
+!.env.example 

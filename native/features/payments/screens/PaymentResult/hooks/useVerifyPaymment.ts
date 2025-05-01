@@ -1,12 +1,12 @@
-import {PaymentQueryKeys} from '@/constants/queryKeys';
-import {PaymentAPI} from '@/services/api';
-import {useQuery, useQueryClient} from '@tanstack/react-query';
-import {useTranslation} from 'react-i18next';
+import { PaymentQueryKeys } from '@/constants/queryKeys';
+import { PaymentAPI } from '@/services/api';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 
 export const useVerifyPayment = (nonceData?: string) => {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
-  const {data, isLoading, isSuccess} = useQuery({
+  const { data, isLoading, isSuccess } = useQuery({
     queryKey: [PaymentQueryKeys.paymentSuccess, nonceData],
     queryFn: () => {
       try {

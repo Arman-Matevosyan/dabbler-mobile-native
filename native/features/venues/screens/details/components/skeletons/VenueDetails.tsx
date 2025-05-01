@@ -1,13 +1,13 @@
 import React from 'react';
-import {StyleSheet, View, Dimensions, StatusBar, Platform} from 'react-native';
-import {Skeleton, useTheme} from '@/design-system';
+import { StyleSheet, View, Dimensions, StatusBar, Platform } from 'react-native';
+import { Skeleton, useTheme } from '@/design-system';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const {width} = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
-export const HeaderSkeleton = ({onClose}: {onClose?: () => void}) => {
-  const {colors} = useTheme();
+export const HeaderSkeleton = ({ onClose }: { onClose?: () => void }) => {
+  const { colors } = useTheme();
   const insets = useSafeAreaInsets();
 
   return (
@@ -17,12 +17,8 @@ export const HeaderSkeleton = ({onClose}: {onClose?: () => void}) => {
         {
           backgroundColor: colors.background,
           borderBottomColor: colors.border,
-          paddingTop:
-            Platform.OS === 'ios' ? insets.top : StatusBar.currentHeight || 0,
-          height:
-            (Platform.OS === 'ios'
-              ? insets.top
-              : StatusBar.currentHeight || 0) + 60,
+          paddingTop: Platform.OS === 'ios' ? insets.top : StatusBar.currentHeight || 0,
+          height: (Platform.OS === 'ios' ? insets.top : StatusBar.currentHeight || 0) + 60,
         },
       ]}>
       <View style={styles.backButton} onTouchEnd={onClose}></View>
@@ -42,8 +38,7 @@ export const ImageSliderSkeleton = () => {
               style={[
                 styles.dot,
                 {
-                  backgroundColor:
-                    i === 0 ? '#fff' : 'rgba(255, 255, 255, 0.4)',
+                  backgroundColor: i === 0 ? '#fff' : 'rgba(255, 255, 255, 0.4)',
                 },
               ]}
             />
@@ -58,73 +53,69 @@ export const VenueNameSkeleton = () => {
   return (
     <View style={styles.venueNameContainer}>
       <Skeleton width={width * 0.7} height={28} style={styles.venueName} />
-      <Skeleton width={width * 0.5} height={16} style={{marginTop: 8}} />
+      <Skeleton width={width * 0.5} height={16} style={{ marginTop: 8 }} />
     </View>
   );
 };
 
 export const DescriptionSkeleton = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   return (
-    <View style={[styles.section, {borderBottomColor: colors.border}]}>
+    <View style={[styles.section, { borderBottomColor: colors.border }]}>
       <Skeleton width={120} height={24} style={styles.sectionTitle} />
-      <Skeleton width="100%" height={12} style={{marginBottom: 8}} />
-      <Skeleton width="95%" height={12} style={{marginBottom: 8}} />
-      <Skeleton width="90%" height={12} style={{marginBottom: 8}} />
-      <Skeleton width="85%" height={12} style={{marginBottom: 8}} />
+      <Skeleton width="100%" height={12} style={{ marginBottom: 8 }} />
+      <Skeleton width="95%" height={12} style={{ marginBottom: 8 }} />
+      <Skeleton width="90%" height={12} style={{ marginBottom: 8 }} />
+      <Skeleton width="85%" height={12} style={{ marginBottom: 8 }} />
       <Skeleton width="40%" height={12} />
-      <Skeleton
-        width={100}
-        height={16}
-        style={{marginTop: 8, alignSelf: 'flex-start'}}
-      />
+      <Skeleton width={100} height={16} style={{ marginTop: 8, alignSelf: 'flex-start' }} />
     </View>
   );
 };
 
 export const InfoSkeleton = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   return (
-    <View style={[styles.section, {borderBottomColor: colors.border}]}>
+    <View style={[styles.section, { borderBottomColor: colors.border }]}>
       <Skeleton width={100} height={24} style={styles.sectionTitle} />
 
       <View style={styles.infoRow}>
         <View style={styles.infoIconContainer}>
-          <Skeleton width={22} height={22} style={{borderRadius: 11}} />
+          <Skeleton width={22} height={22} style={{ borderRadius: 11 }} />
         </View>
         <View style={styles.infoContent}>
-          <Skeleton width={80} height={16} style={{marginBottom: 4}} />
+          <Skeleton width={80} height={16} style={{ marginBottom: 4 }} />
           <Skeleton width={width * 0.6} height={14} />
         </View>
       </View>
 
       <View style={styles.infoRow}>
         <View style={styles.infoIconContainer}>
-          <Skeleton width={22} height={22} style={{borderRadius: 11}} />
+          <Skeleton width={22} height={22} style={{ borderRadius: 11 }} />
         </View>
         <View style={styles.infoContent}>
-          <Skeleton width={100} height={16} style={{marginBottom: 4}} />
-          <Skeleton width={width * 0.5} height={14} style={{marginBottom: 4}} />
+          <Skeleton width={100} height={16} style={{ marginBottom: 4 }} />
+          <Skeleton width={width * 0.5} height={14} style={{ marginBottom: 4 }} />
           <Skeleton width={width * 0.45} height={14} />
         </View>
       </View>
 
       <View style={styles.infoRow}>
         <View style={styles.infoIconContainer}>
-          <Skeleton width={22} height={22} style={{borderRadius: 11}} />
+          <Skeleton width={22} height={22} style={{ borderRadius: 11 }} />
         </View>
         <View style={styles.infoContent}>
-          <Skeleton width={90} height={16} style={{marginBottom: 4}} />
+          <Skeleton width={90} height={16} style={{ marginBottom: 4 }} />
           <Skeleton width={width * 0.4} height={14} />
         </View>
       </View>
 
       <View style={styles.infoRow}>
         <View style={styles.infoIconContainer}>
-          <Skeleton width={22} height={22} style={{borderRadius: 11}} />
+          <Skeleton width={22} height={22} style={{ borderRadius: 11 }} />
         </View>
         <View style={styles.infoContent}>
-          <Skeleton width={120} height={16} style={{marginBottom: 4}} />
+          <Skeleton width={120} height={16} style={{ marginBottom: 4 }} />
           <Skeleton width={width * 0.5} height={14} />
         </View>
       </View>
@@ -133,15 +124,15 @@ export const InfoSkeleton = () => {
 };
 
 export const AmenitiesSkeleton = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   return (
-    <View style={[styles.section, {borderBottomColor: colors.border}]}>
+    <View style={[styles.section, { borderBottomColor: colors.border }]}>
       <Skeleton width={140} height={24} style={styles.sectionTitle} />
       <View style={styles.amenitiesContainer}>
         {[1, 2, 3, 4, 5, 6].map((_, i) => (
           <View key={i} style={styles.amenityItem}>
             <Skeleton width={40} height={40} style={styles.amenityIcon} />
-            <Skeleton width={60} height={12} style={{marginTop: 8}} />
+            <Skeleton width={60} height={12} style={{ marginTop: 8 }} />
           </View>
         ))}
       </View>
@@ -150,35 +141,31 @@ export const AmenitiesSkeleton = () => {
 };
 
 export const ImportantInfoSkeleton = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   return (
-    <View style={[styles.section, {borderBottomColor: colors.border}]}>
+    <View style={[styles.section, { borderBottomColor: colors.border }]}>
       <Skeleton width={160} height={24} style={styles.sectionTitle} />
-      <Skeleton width="100%" height={12} style={{marginBottom: 8}} />
-      <Skeleton width="95%" height={12} style={{marginBottom: 8}} />
-      <Skeleton width="90%" height={12} style={{marginBottom: 8}} />
+      <Skeleton width="100%" height={12} style={{ marginBottom: 8 }} />
+      <Skeleton width="95%" height={12} style={{ marginBottom: 8 }} />
+      <Skeleton width="90%" height={12} style={{ marginBottom: 8 }} />
       <Skeleton width="40%" height={12} />
-      <Skeleton
-        width={120}
-        height={16}
-        style={{marginTop: 8, alignSelf: 'flex-start'}}
-      />
+      <Skeleton width={120} height={16} style={{ marginTop: 8, alignSelf: 'flex-start' }} />
     </View>
   );
 };
 
 export const VenuePlansSkeleton = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   return (
-    <View style={[styles.section, {borderBottomColor: colors.border}]}>
+    <View style={[styles.section, { borderBottomColor: colors.border }]}>
       <Skeleton width={120} height={24} style={styles.sectionTitle} />
       <View style={styles.plansContainer}>
         {[1, 2].map((_, i) => (
-          <View key={i} style={[styles.planCard, {borderColor: colors.border}]}>
-            <Skeleton width={100} height={20} style={{marginBottom: 8}} />
-            <Skeleton width="80%" height={14} style={{marginBottom: 4}} />
-            <Skeleton width="70%" height={14} style={{marginBottom: 12}} />
-            <Skeleton width={80} height={14} style={{marginBottom: 8}} />
+          <View key={i} style={[styles.planCard, { borderColor: colors.border }]}>
+            <Skeleton width={100} height={20} style={{ marginBottom: 8 }} />
+            <Skeleton width="80%" height={14} style={{ marginBottom: 4 }} />
+            <Skeleton width="70%" height={14} style={{ marginBottom: 12 }} />
+            <Skeleton width={80} height={14} style={{ marginBottom: 8 }} />
             <Skeleton width={60} height={14} />
           </View>
         ))}
@@ -197,7 +184,7 @@ export const MapSectionSkeleton = () => {
 };
 
 export const ActionsSkeleton = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const insets = useSafeAreaInsets();
 
   return (
@@ -211,17 +198,17 @@ export const ActionsSkeleton = () => {
         },
       ]}>
       <View style={styles.actionsWrapper}>
-        <Skeleton width={150} height={44} style={{borderRadius: 4}} />
+        <Skeleton width={150} height={44} style={{ borderRadius: 4 }} />
       </View>
     </View>
   );
 };
 
 export const VenueDetailsScreenSkeleton = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
 
   return (
-    <View style={[styles.container, {backgroundColor: colors.background}]}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <HeaderSkeleton />
 
       <View style={styles.scrollContent}>
@@ -234,7 +221,7 @@ export const VenueDetailsScreenSkeleton = () => {
         <VenuePlansSkeleton />
         <MapSectionSkeleton />
 
-        <View style={{height: 90}} />
+        <View style={{ height: 90 }} />
       </View>
 
       <ActionsSkeleton />

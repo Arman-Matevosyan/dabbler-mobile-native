@@ -1,6 +1,6 @@
-import {create} from 'zustand';
-import {useShallow} from 'zustand/react/shallow';
-import {shallow} from 'zustand/shallow';
+import { create } from 'zustand';
+import { useShallow } from 'zustand/react/shallow';
+import { shallow } from 'zustand/shallow';
 
 interface SearchParams {
   limit: number;
@@ -65,30 +65,24 @@ export const useSearchStore = create<SearchStore>(set => ({
   },
   updateSharedLocation: updates =>
     set(state => {
-      const newLocation = {...state.sharedLocation, ...updates};
-      return shallow(state.sharedLocation, newLocation)
-        ? state
-        : {sharedLocation: newLocation};
+      const newLocation = { ...state.sharedLocation, ...updates };
+      return shallow(state.sharedLocation, newLocation) ? state : { sharedLocation: newLocation };
     }),
   updateVenueParams: updates =>
     set(state => {
-      const newParams = {...state.venueParams, ...updates};
-      return shallow(state.venueParams, newParams)
-        ? state
-        : {venueParams: newParams};
+      const newParams = { ...state.venueParams, ...updates };
+      return shallow(state.venueParams, newParams) ? state : { venueParams: newParams };
     }),
   updateClassParams: updates =>
     set(state => {
-      const newParams = {...state.classParams, ...updates};
-      return shallow(state.classParams, newParams)
-        ? state
-        : {classParams: newParams};
+      const newParams = { ...state.classParams, ...updates };
+      return shallow(state.classParams, newParams) ? state : { classParams: newParams };
     }),
   updateSharedSearchParams: updates =>
     set(state => {
-      const newParams = {...state.sharedSearchParams, ...updates};
-      const newVenueParams = {...state.venueSearchParams, ...updates};
-      const newClassParams = {...state.classSearchParams, ...updates};
+      const newParams = { ...state.sharedSearchParams, ...updates };
+      const newVenueParams = { ...state.venueSearchParams, ...updates };
+      const newClassParams = { ...state.classSearchParams, ...updates };
 
       return shallow(state.sharedSearchParams, newParams)
         ? state
@@ -100,17 +94,13 @@ export const useSearchStore = create<SearchStore>(set => ({
     }),
   updateVenueSearchParams: updates =>
     set(state => {
-      const newParams = {...state.venueSearchParams, ...updates};
-      return shallow(state.venueSearchParams, newParams)
-        ? state
-        : {venueSearchParams: newParams};
+      const newParams = { ...state.venueSearchParams, ...updates };
+      return shallow(state.venueSearchParams, newParams) ? state : { venueSearchParams: newParams };
     }),
   updateClassSearchParams: updates =>
     set(state => {
-      const newParams = {...state.classSearchParams, ...updates};
-      return shallow(state.classSearchParams, newParams)
-        ? state
-        : {classSearchParams: newParams};
+      const newParams = { ...state.classSearchParams, ...updates };
+      return shallow(state.classSearchParams, newParams) ? state : { classSearchParams: newParams };
     }),
   resetClassDates: () =>
     set(state => ({
@@ -123,7 +113,7 @@ export const useSearchStore = create<SearchStore>(set => ({
 }));
 
 export const useSearchFilters = () => {
-  const {query, category} = useSearchStore(
+  const { query, category } = useSearchStore(
     useShallow((state: SearchStore) => ({
       query: state.sharedSearchParams.query,
       category: state.sharedSearchParams.category,
@@ -135,18 +125,18 @@ export const useSearchFilters = () => {
   );
 
   const setQuery = (newQuery: string) => {
-    updateSharedSearchParams({query: newQuery});
+    updateSharedSearchParams({ query: newQuery });
   };
 
   const setCategory = (newCategory: string[]) => {
-    updateSharedSearchParams({category: newCategory});
+    updateSharedSearchParams({ category: newCategory });
   };
 
-  return {query, category, setQuery, setCategory};
+  return { query, category, setQuery, setCategory };
 };
 
 export const useVenueSearchFilters = () => {
-  const {query, category} = useSearchStore(
+  const { query, category } = useSearchStore(
     useShallow((state: SearchStore) => ({
       query: state.venueSearchParams.query,
       category: state.venueSearchParams.category,
@@ -158,18 +148,18 @@ export const useVenueSearchFilters = () => {
   );
 
   const setQuery = (newQuery: string) => {
-    updateVenueSearchParams({query: newQuery});
+    updateVenueSearchParams({ query: newQuery });
   };
 
   const setCategory = (newCategory: string[]) => {
-    updateVenueSearchParams({category: newCategory});
+    updateVenueSearchParams({ category: newCategory });
   };
 
-  return {query, category, setQuery, setCategory};
+  return { query, category, setQuery, setCategory };
 };
 
 export const useClassSearchFilters = () => {
-  const {query, category} = useSearchStore(
+  const { query, category } = useSearchStore(
     useShallow((state: SearchStore) => ({
       query: state.classSearchParams.query,
       category: state.classSearchParams.category,
@@ -181,18 +171,18 @@ export const useClassSearchFilters = () => {
   );
 
   const setQuery = (newQuery: string) => {
-    updateClassSearchParams({query: newQuery});
+    updateClassSearchParams({ query: newQuery });
   };
 
   const setCategory = (newCategory: string[]) => {
-    updateClassSearchParams({category: newCategory});
+    updateClassSearchParams({ category: newCategory });
   };
 
-  return {query, category, setQuery, setCategory};
+  return { query, category, setQuery, setCategory };
 };
 
 export const useLocationParams = () => {
-  const {locationLat, locationLng, radius} = useSearchStore(
+  const { locationLat, locationLng, radius } = useSearchStore(
     useShallow((state: SearchStore) => ({
       locationLat: state.sharedLocation.locationLat,
       locationLng: state.sharedLocation.locationLng,
@@ -200,9 +190,7 @@ export const useLocationParams = () => {
     })),
   );
 
-  const updateSharedLocation = useSearchStore(
-    (state: SearchStore) => state.updateSharedLocation,
-  );
+  const updateSharedLocation = useSearchStore((state: SearchStore) => state.updateSharedLocation);
 
   return {
     locationLat,

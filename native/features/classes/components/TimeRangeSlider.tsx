@@ -1,5 +1,5 @@
-import {Dimensions, StyleSheet, Text, View} from 'react-native';
-import {PanGestureHandler} from 'react-native-gesture-handler';
+import { Dimensions, StyleSheet, Text, View } from 'react-native';
+import { PanGestureHandler } from 'react-native-gesture-handler';
 import Animated, {
   runOnJS,
   useAnimatedGestureHandler,
@@ -7,29 +7,21 @@ import Animated, {
   useSharedValue,
 } from 'react-native-reanimated';
 
-const {width} = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 const KNOB_SIZE = 24;
 const TIME_TEXT_WIDTH = 45;
 const HORIZONTAL_PADDING = 16;
 const SLIDER_MARGIN = 8;
 const SLIDER_TRACK_WIDTH =
-  width -
-  2 * HORIZONTAL_PADDING -
-  2 * TIME_TEXT_WIDTH -
-  2 * SLIDER_MARGIN -
-  KNOB_SIZE;
+  width - 2 * HORIZONTAL_PADDING - 2 * TIME_TEXT_WIDTH - 2 * SLIDER_MARGIN - KNOB_SIZE;
 
 interface TimeRangeSliderProps {
-  timeRange: {start: string; end: string};
-  onTimeChange: (timeRange: {start: string; end: string}) => void;
+  timeRange: { start: string; end: string };
+  onTimeChange: (timeRange: { start: string; end: string }) => void;
   colors: any;
 }
 
-export const TimeRangeSlider = ({
-  timeRange,
-  onTimeChange,
-  colors,
-}: TimeRangeSliderProps) => {
+export const TimeRangeSlider = ({ timeRange, onTimeChange, colors }: TimeRangeSliderProps) => {
   const hourToMinutes = (hour: string) => {
     const [hours, minutes] = hour.split(':').map(Number);
     return (hours - 5) * 60 + minutes;
@@ -39,9 +31,7 @@ export const TimeRangeSlider = ({
     const totalMinutes = minutes + 5 * 60;
     const hours = Math.floor(totalMinutes / 60);
     const mins = totalMinutes % 60;
-    return `${hours.toString().padStart(2, '0')}:${mins
-      .toString()
-      .padStart(2, '0')}`;
+    return `${hours.toString().padStart(2, '0')}:${mins.toString().padStart(2, '0')}`;
   };
 
   const startMinutes = hourToMinutes(timeRange.start);
@@ -61,11 +51,11 @@ export const TimeRangeSlider = ({
     const startTime = minutesToHour(Math.max(0, Math.min(start, totalMinutes)));
     const endTime = minutesToHour(Math.max(0, Math.min(end, totalMinutes)));
 
-    onTimeChange({start: startTime, end: endTime});
+    onTimeChange({ start: startTime, end: endTime });
   };
 
   const leftKnobGestureHandler = useAnimatedGestureHandler({
-    onStart: (_, ctx: {startX: number}) => {
+    onStart: (_, ctx: { startX: number }) => {
       ctx.startX = leftKnobPosition.value;
     },
     onActive: (event, ctx) => {
@@ -76,19 +66,13 @@ export const TimeRangeSlider = ({
       leftKnobPosition.value = newPosition;
     },
     onEnd: () => {
-      leftKnobPosition.value = Math.max(
-        0,
-        Math.min(leftKnobPosition.value, SLIDER_TRACK_WIDTH),
-      );
-      runOnJS(handleTimeUpdate)(
-        leftKnobPosition.value,
-        rightKnobPosition.value,
-      );
+      leftKnobPosition.value = Math.max(0, Math.min(leftKnobPosition.value, SLIDER_TRACK_WIDTH));
+      runOnJS(handleTimeUpdate)(leftKnobPosition.value, rightKnobPosition.value);
     },
   });
 
   const rightKnobGestureHandler = useAnimatedGestureHandler({
-    onStart: (_, ctx: {startX: number}) => {
+    onStart: (_, ctx: { startX: number }) => {
       ctx.startX = rightKnobPosition.value;
     },
     onActive: (event, ctx) => {
@@ -99,23 +83,17 @@ export const TimeRangeSlider = ({
       rightKnobPosition.value = newPosition;
     },
     onEnd: () => {
-      rightKnobPosition.value = Math.min(
-        rightKnobPosition.value,
-        SLIDER_TRACK_WIDTH,
-      );
-      runOnJS(handleTimeUpdate)(
-        leftKnobPosition.value,
-        rightKnobPosition.value,
-      );
+      rightKnobPosition.value = Math.min(rightKnobPosition.value, SLIDER_TRACK_WIDTH);
+      runOnJS(handleTimeUpdate)(leftKnobPosition.value, rightKnobPosition.value);
     },
   });
 
   const animatedStyles = {
     leftKnob: useAnimatedStyle(() => ({
-      transform: [{translateX: leftKnobPosition.value}],
+      transform: [{ translateX: leftKnobPosition.value }],
     })),
     rightKnob: useAnimatedStyle(() => ({
-      transform: [{translateX: rightKnobPosition.value}],
+      transform: [{ translateX: rightKnobPosition.value }],
     })),
     fill: useAnimatedStyle(() => ({
       left: leftKnobPosition.value + KNOB_SIZE / 2,
@@ -126,19 +104,11 @@ export const TimeRangeSlider = ({
   return (
     <View style={styles.timeSelector}>
       <View style={styles.sliderWrapper}>
-        <Text style={[styles.timeText, {color: colors.textPrimary}]}>
-          {timeRange.start}
-        </Text>
+        <Text style={[styles.timeText, { color: colors.textPrimary }]}>{timeRange.start}</Text>
         <View style={styles.sliderContainer}>
-          <View
-            style={[styles.sliderTrack, {backgroundColor: colors.border}]}
-          />
+          <View style={[styles.sliderTrack, { backgroundColor: colors.border }]} />
           <Animated.View
-            style={[
-              styles.sliderFill,
-              {backgroundColor: colors.accent},
-              animatedStyles.fill,
-            ]}
+            style={[styles.sliderFill, { backgroundColor: colors.accent }, animatedStyles.fill]}
           />
           <PanGestureHandler onGestureEvent={leftKnobGestureHandler}>
             <Animated.View
@@ -165,9 +135,7 @@ export const TimeRangeSlider = ({
             />
           </PanGestureHandler>
         </View>
-        <Text style={[styles.timeText, {color: colors.textPrimary}]}>
-          {timeRange.end}
-        </Text>
+        <Text style={[styles.timeText, { color: colors.textPrimary }]}>{timeRange.end}</Text>
       </View>
     </View>
   );

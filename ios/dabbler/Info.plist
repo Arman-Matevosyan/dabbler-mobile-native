@@ -98,7 +98,7 @@
 		<string>fetch</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
-	<string>BootSplash</string>
+	<string>LaunchScreen</string>
 	<key>UIUserInterfaceStyle</key>
 	<string>Automatic</string>
 	<key>UIRequiredDeviceCapabilities</key>

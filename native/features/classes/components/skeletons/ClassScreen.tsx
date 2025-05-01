@@ -1,13 +1,13 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
-import {Skeleton, useTheme} from '@/design-system';
-import {SearchSkeleton} from '@/components/skeletons';
+import { StyleSheet, View } from 'react-native';
+import { Skeleton, useTheme } from '@/design-system';
+import { SearchSkeleton } from '@/components/skeletons';
 
 export const ClassesScreenSkeleton = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
 
   return (
-    <View style={[styles.container, {backgroundColor: colors.background}]}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <SearchSkeleton />
       <TimeRangeSkeleton />
       <DateSelectorSkeleton />
@@ -17,24 +17,20 @@ export const ClassesScreenSkeleton = () => {
 };
 
 export const TimeRangeSkeleton = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
 
-  return (
-    <View
-      style={[styles.timeSelectorPlaceholder, {backgroundColor: colors.card}]}
-    />
-  );
+  return <View style={[styles.timeSelectorPlaceholder, { backgroundColor: colors.card }]} />;
 };
 
 export const DateSelectorSkeleton = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
 
   return (
-    <View style={[styles.dateSelector, {backgroundColor: colors.background}]}>
+    <View style={[styles.dateSelector, { backgroundColor: colors.background }]}>
       {[1, 2, 3, 4, 5, 6, 7].map((_, index) => (
         <View key={index} style={styles.dateItem}>
-          <Skeleton width={40} height={16} style={{marginBottom: 4}} />
-          <Skeleton width={28} height={28} style={{borderRadius: 14}} />
+          <Skeleton width={40} height={16} style={{ marginBottom: 4 }} />
+          <Skeleton width={28} height={28} style={{ borderRadius: 14 }} />
         </View>
       ))}
     </View>
@@ -42,38 +38,34 @@ export const DateSelectorSkeleton = () => {
 };
 
 export const ClassCardSkeleton = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
 
   return (
-    <View style={[styles.card, {backgroundColor: colors.card}]}>
+    <View style={[styles.card, { backgroundColor: colors.card }]}>
       <View style={styles.imageContainer}>
-        <Skeleton
-          width={100}
-          height={100}
-          style={{borderRadius: 8, marginRight: 16}}
-        />
+        <Skeleton width={100} height={100} style={{ borderRadius: 8, marginRight: 16 }} />
       </View>
       <View style={styles.content}>
-        <Skeleton width="80%" height={20} style={{marginBottom: 4}} />
-        <Skeleton width="60%" height={16} style={{marginBottom: 10}} />
+        <Skeleton width="80%" height={20} style={{ marginBottom: 4 }} />
+        <Skeleton width="60%" height={16} style={{ marginBottom: 10 }} />
 
         <View style={styles.details}>
           <View style={styles.detailRow}>
-            <Skeleton width={18} height={18} style={{marginRight: 8}} />
+            <Skeleton width={18} height={18} style={{ marginRight: 8 }} />
             <Skeleton width="70%" height={15} />
           </View>
 
           <View style={styles.detailRow}>
-            <Skeleton width={18} height={18} style={{marginRight: 8}} />
+            <Skeleton width={18} height={18} style={{ marginRight: 8 }} />
             <Skeleton width="60%" height={15} />
           </View>
 
           <View style={styles.detailRow}>
-            <Skeleton width={18} height={18} style={{marginRight: 8}} />
+            <Skeleton width={18} height={18} style={{ marginRight: 8 }} />
             <Skeleton width="50%" height={15} />
           </View>
 
-          <Skeleton width="40%" height={14} style={{marginTop: 10}} />
+          <Skeleton width="40%" height={14} style={{ marginTop: 10 }} />
         </View>
       </View>
     </View>
@@ -100,7 +92,7 @@ const styles = StyleSheet.create({
     marginHorizontal: 16,
     padding: 16,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,

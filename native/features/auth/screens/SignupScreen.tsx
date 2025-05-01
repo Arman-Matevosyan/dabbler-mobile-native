@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text as RNText,
@@ -9,34 +9,31 @@ import {
   Platform,
   ActivityIndicator,
 } from 'react-native';
-import {useTheme, Input, Button, Text} from '@design-system';
-import {zodResolver} from '@hookform/resolvers/zod';
-import {useForm, Controller} from 'react-hook-form';
-import {signupSchema, SignupFormData} from '@/validation/authSchemas';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useAuthStore} from '@/stores/authStore';
-import {CommonActions, useNavigation} from '@react-navigation/native';
-import {SocialLoginButtons} from '../components/SocialMediaButtons';
-import {
-  AuthStackNavigationProp,
-  RootStackNavigationProp,
-} from '@/navigation/types';
-import {useTranslation} from 'react-i18next';
+import { useTheme, Input, Button, Text } from '@design-system';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm, Controller } from 'react-hook-form';
+import { signupSchema, SignupFormData } from '@/validation/authSchemas';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useAuthStore } from '@/stores/authStore';
+import { CommonActions, useNavigation } from '@react-navigation/native';
+import { SocialLoginButtons } from '../components/SocialMediaButtons';
+import { AuthStackNavigationProp, RootStackNavigationProp } from '@/navigation/types';
+import { useTranslation } from 'react-i18next';
 
 export const SignupScreen = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const insets = useSafeAreaInsets();
-  const {signup, isLoading, error, clearError} = useAuthStore();
+  const { signup, isLoading, error, clearError } = useAuthStore();
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const authNavigation = useNavigation<AuthStackNavigationProp>();
   const rootNavigation = useNavigation<RootStackNavigationProp>();
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   const {
     control,
     handleSubmit,
-    formState: {errors},
+    formState: { errors },
   } = useForm<SignupFormData>({
     resolver: zodResolver(signupSchema),
     defaultValues: {
@@ -82,23 +79,17 @@ export const SignupScreen = () => {
 
   return (
     <KeyboardAvoidingView
-      style={[
-        styles.container,
-        {backgroundColor: colors.background, paddingTop: insets.top},
-      ]}
+      style={[styles.container, { backgroundColor: colors.background, paddingTop: insets.top }]}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
       <ScrollView
         style={styles.scrollView}
-        contentContainerStyle={[
-          styles.scrollViewContent,
-          {paddingBottom: insets.bottom},
-        ]}
+        contentContainerStyle={[styles.scrollViewContent, { paddingBottom: insets.bottom }]}
         keyboardShouldPersistTaps="handled">
         <View style={styles.header}>
-          <Text style={[styles.title, {color: colors.textPrimary}]}>
+          <Text style={[styles.title, { color: colors.textPrimary }]}>
             {t('auth.signup.createAccount')}
           </Text>
-          <Text style={[styles.subtitle, {color: colors.textSecondary}]}>
+          <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
             {t('auth.signup.getStarted')}
           </Text>
         </View>
@@ -107,11 +98,9 @@ export const SignupScreen = () => {
           <View
             style={[
               styles.errorContainer,
-              {backgroundColor: colors.background, borderColor: colors.accent},
+              { backgroundColor: colors.background, borderColor: colors.accent },
             ]}>
-            <Text style={[styles.errorText, {color: colors.accent}]}>
-              {error}
-            </Text>
+            <Text style={[styles.errorText, { color: colors.accent }]}>{error}</Text>
           </View>
         )}
 
@@ -119,7 +108,7 @@ export const SignupScreen = () => {
           <Controller
             control={control}
             name="firstName"
-            render={({field: {onChange, onBlur, value}}) => (
+            render={({ field: { onChange, onBlur, value } }) => (
               <Input
                 label={t('auth.signup.firstName')}
                 placeholder={t('auth.signup.firstNamePlaceholder')}
@@ -135,7 +124,7 @@ export const SignupScreen = () => {
           <Controller
             control={control}
             name="lastName"
-            render={({field: {onChange, onBlur, value}}) => (
+            render={({ field: { onChange, onBlur, value } }) => (
               <Input
                 label={t('auth.signup.lastName')}
                 placeholder={t('auth.signup.lastNamePlaceholder')}
@@ -151,7 +140,7 @@ export const SignupScreen = () => {
           <Controller
             control={control}
             name="signupEmail"
-            render={({field: {onChange, onBlur, value}}) => (
+            render={({ field: { onChange, onBlur, value } }) => (
               <Input
                 label={t('auth.signup.email')}
                 placeholder={t('auth.signup.emailPlaceholder')}
@@ -169,7 +158,7 @@ export const SignupScreen = () => {
           <Controller
             control={control}
             name="signupPassword"
-            render={({field: {onChange, onBlur, value}}) => (
+            render={({ field: { onChange, onBlur, value } }) => (
               <Input
                 label={t('auth.signup.password')}
                 placeholder={t('auth.signup.passwordPlaceholder')}
@@ -188,7 +177,7 @@ export const SignupScreen = () => {
           <Controller
             control={control}
             name="confirmPassword"
-            render={({field: {onChange, onBlur, value}}) => (
+            render={({ field: { onChange, onBlur, value } }) => (
               <Input
                 label={t('auth.signup.confirmPassword')}
                 placeholder={t('auth.signup.confirmPasswordPlaceholder')}
@@ -198,9 +187,7 @@ export const SignupScreen = () => {
                 onBlur={onBlur}
                 error={errors.confirmPassword?.message}
                 iconLeft="lock"
-                iconRight={
-                  showConfirmPassword ? 'visibility' : 'visibility-off'
-                }
+                iconRight={showConfirmPassword ? 'visibility' : 'visibility-off'}
                 onIconRightPress={toggleShowConfirmPassword}
               />
             )}
@@ -208,9 +195,7 @@ export const SignupScreen = () => {
 
           <Button
             title={
-              isLoading
-                ? t('auth.signup.creatingAccount')
-                : t('auth.signup.createAccountButton')
+              isLoading ? t('auth.signup.creatingAccount') : t('auth.signup.createAccountButton')
             }
             onPress={handleSubmit(onSubmit)}
             disabled={isLoading}
@@ -218,29 +203,25 @@ export const SignupScreen = () => {
           />
 
           {isLoading && (
-            <ActivityIndicator
-              size="small"
-              color={colors.accent}
-              style={styles.loader}
-            />
+            <ActivityIndicator size="small" color={colors.accent} style={styles.loader} />
           )}
         </View>
 
         <View style={styles.loginContainer}>
-          <Text style={[styles.loginText, {color: colors.textSecondary}]}>
+          <Text style={[styles.loginText, { color: colors.textSecondary }]}>
             {t('auth.signup.alreadyHaveAccount')}
           </Text>
           <TouchableOpacity onPress={() => authNavigation.navigate('Login')}>
-            <Text style={[styles.loginLink, {color: colors.accent}]}>
+            <Text style={[styles.loginLink, { color: colors.accent }]}>
               {' '}
               {t('auth.signup.signIn')}
             </Text>
           </TouchableOpacity>
         </View>
         <View style={styles.dividerContainer}>
-          <View style={[styles.divider, {backgroundColor: colors.border}]} />
+          <View style={[styles.divider, { backgroundColor: colors.border }]} />
           <Text style={styles.dividerText}>{t('auth.signup.or')}</Text>
-          <View style={[styles.divider, {backgroundColor: colors.border}]} />
+          <View style={[styles.divider, { backgroundColor: colors.border }]} />
         </View>
         <SocialLoginButtons />
       </ScrollView>

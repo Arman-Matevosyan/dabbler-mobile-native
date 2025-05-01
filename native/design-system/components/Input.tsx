@@ -1,15 +1,7 @@
 import React from 'react';
-import {
-  View,
-  TextInput,
-  Text,
-  StyleSheet,
-  TextInputProps,
-  TouchableOpacity,
-} from 'react-native';
-import {useTheme} from '@design-system';
+import { View, TextInput, Text, StyleSheet, TextInputProps, TouchableOpacity } from 'react-native';
+import { useTheme } from '@design-system';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {IconProps} from 'react-native-vector-icons/Icon';
 
 interface InputProps extends TextInputProps {
   label?: string;
@@ -28,13 +20,11 @@ export const Input = ({
   secureTextEntry,
   ...rest
 }: InputProps) => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
 
   return (
     <View style={styles.container}>
-      {label && (
-        <Text style={[styles.label, {color: colors.textPrimary}]}>{label}</Text>
-      )}
+      {label && <Text style={[styles.label, { color: colors.textPrimary }]}>{label}</Text>}
       <View
         style={[
           styles.inputContainer,
@@ -44,17 +34,12 @@ export const Input = ({
           },
         ]}>
         {iconLeft && (
-          <Icon
-            name={iconLeft}
-            size={20}
-            color={colors.textSecondary}
-            style={styles.iconLeft}
-          />
+          <Icon name={iconLeft} size={20} color={colors.textSecondary} style={styles.iconLeft} />
         )}
         <TextInput
           style={[
             styles.input,
-            {color: colors.textPrimary},
+            { color: colors.textPrimary },
             iconLeft && styles.inputWithIconLeft,
             iconRight && styles.inputWithIconRight,
           ]}
@@ -63,16 +48,12 @@ export const Input = ({
           {...rest}
         />
         {iconRight && (
-          <TouchableOpacity
-            onPress={onIconRightPress}
-            style={styles.iconRightContainer}>
+          <TouchableOpacity onPress={onIconRightPress} style={styles.iconRightContainer}>
             <Icon name={iconRight} size={20} color={colors.textSecondary} />
           </TouchableOpacity>
         )}
       </View>
-      {error && (
-        <Text style={[styles.error, {color: colors.accent}]}>{error}</Text>
-      )}
+      {error && <Text style={[styles.error, { color: colors.accent }]}>{error}</Text>}
     </View>
   );
 };

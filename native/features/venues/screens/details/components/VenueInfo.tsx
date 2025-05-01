@@ -1,189 +1,127 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity, Linking} from 'react-native';
-import {useTheme} from '@/design-system';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import {useTranslation} from 'react-i18next';
-
-interface Venue {
-  id?: string;
-  name?: string;
-  address?: string;
-  openingHours?: string;
-  contacts?: {
-    phone?: string;
-    email?: string;
-    website?: string;
-  };
-}
+import { View, Text, StyleSheet } from 'react-native';
+import { useTheme } from '@/design-system';
+import { useTranslation } from 'react-i18next';
+import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
 interface VenueInfoProps {
-  address?: {
-    street?: string;
-    houseNumber?: string;
-    city?: string;
-    stateOrProvince?: string;
+  venue: {
+    id?: string;
+    name?: string;
+    address?: {
+      street?: string;
+      houseNumber?: string;
+      city?: string;
+      stateOrProvince?: string;
+    };
+    openingHours?: string;
+    contacts?: {
+      phone?: string;
+      website?: string;
+    };
   };
-  openingHours?: string[];
-  contacts?: string[];
-  websiteUrl?: string;
 }
 
-export const VenueInfo: React.FC<{venue: Venue | undefined}> = ({venue}) => {
-  const {colors} = useTheme();
-  const {t} = useTranslation();
-
-  const openGoogleMaps = () => {
-    if (!venue?.address) {
-      return;
-    }
-    const url = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
-      venue.address,
-    )}`;
-    Linking.openURL(url);
-  };
-
-  const callPhone = (phone: string) => {
-    Linking.openURL(`tel:${phone}`);
-  };
-
-  const openWebsite = (website: string) => {
-    Linking.openURL(website);
-  };
-
-  const openEmail = (email: string) => {
-    Linking.openURL(`mailto:${email}`);
-  };
+export const VenueInfo: React.FC<VenueInfoProps> = ({ venue }) => {
+  const { colors } = useTheme();
+  const { t } = useTranslation();
 
   return (
-    <View style={styles.container}>
-      {venue?.address && (
-        <View style={styles.infoSection}>
-          <View style={styles.iconContainer}>
-            <MaterialIcon name="place" size={24} color={colors.accent} />
-          </View>
-          <View style={styles.infoContent}>
-            <Text style={[styles.infoTitle, {color: colors.textPrimary}]}>
-              {t('venues.address')}
-            </Text>
-            <TouchableOpacity onPress={openGoogleMaps}>
-              <Text style={[styles.infoText, {color: colors.textSecondary}]}>
-                {venue.address}
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      )}
+    <View style={[styles.sectionContainer, { borderBottomColor: colors.border }]}>
+      <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
+        {t('venues.details')}
+      </Text>
 
-      {venue?.openingHours && (
-        <View style={styles.infoSection}>
-          <View style={styles.iconContainer}>
-            <MaterialIcon name="access-time" size={24} color={colors.accent} />
-          </View>
-          <View style={styles.infoContent}>
-            <Text style={[styles.infoTitle, {color: colors.textPrimary}]}>
-              {t('venues.openingHours')}
-            </Text>
-            <Text style={[styles.infoText, {color: colors.textSecondary}]}>
-              {venue.openingHours}
-            </Text>
-          </View>
+      <View style={styles.infoRow}>
+        <View style={styles.infoIconContainer}>
+          <MaterialIcons name="location-on" size={22} color={colors.textSecondary} />
         </View>
-      )}
+        <View style={styles.infoTextContainer}>
+          <Text style={[styles.infoLabel, { color: colors.textPrimary }]}>
+            {t('classes.location')}
+          </Text>
+          <Text style={[styles.infoValue, { color: colors.textSecondary }]}>
+            {venue.address
+              ? `${venue.address.street} ${venue.address.houseNumber}, ${venue.address.city}`
+              : t('common.noResults')}
+          </Text>
+        </View>
+      </View>
 
-      {venue?.contacts?.phone && (
-        <View style={styles.infoSection}>
-          <View style={styles.iconContainer}>
-            <MaterialIcon name="phone" size={24} color={colors.accent} />
-          </View>
-          <View style={styles.infoContent}>
-            <Text style={[styles.infoTitle, {color: colors.textPrimary}]}>
-              {t('venues.phone')}
-            </Text>
-            <TouchableOpacity onPress={() => venue.contacts && callPhone(venue.contacts.phone!)}>
-              <Text
-                style={[
-                  styles.infoText,
-                  {color: colors.accent, textDecorationLine: 'underline'},
-                ]}>
-                {venue.contacts.phone}
-              </Text>
-            </TouchableOpacity>
-          </View>
+      <View style={styles.infoRow}>
+        <View style={styles.infoIconContainer}>
+          <MaterialIcons name="access-time" size={22} color={colors.textSecondary} />
         </View>
-      )}
+        <View style={styles.infoTextContainer}>
+          <Text style={[styles.infoLabel, { color: colors.textPrimary }]}>
+            {t('venues.hours')}
+          </Text>
+          <Text style={[styles.infoValue, { color: colors.textSecondary }]}>
+            {venue.openingHours || t('common.noResults')}
+          </Text>
+        </View>
+      </View>
 
-      {venue?.contacts?.email && (
-        <View style={styles.infoSection}>
-          <View style={styles.iconContainer}>
-            <MaterialIcon name="email" size={24} color={colors.accent} />
-          </View>
-          <View style={styles.infoContent}>
-            <Text style={[styles.infoTitle, {color: colors.textPrimary}]}>
-              {t('venues.email')}
-            </Text>
-            <TouchableOpacity onPress={() => venue.contacts && openEmail(venue.contacts.email!)}>
-              <Text
-                style={[
-                  styles.infoText,
-                  {color: colors.accent, textDecorationLine: 'underline'},
-                ]}>
-                {venue.contacts.email}
-              </Text>
-            </TouchableOpacity>
-          </View>
+      <View style={styles.infoRow}>
+        <View style={styles.infoIconContainer}>
+          <MaterialIcons name="phone" size={22} color={colors.textSecondary} />
         </View>
-      )}
+        <View style={styles.infoTextContainer}>
+          <Text style={[styles.infoLabel, { color: colors.textPrimary }]}>
+            {t('venues.phone')}
+          </Text>
+          <Text style={[styles.infoValue, { color: colors.textSecondary }]}>
+            {venue.contacts?.phone || t('common.noResults')}
+          </Text>
+        </View>
+      </View>
 
-      {venue?.contacts?.website && (
-        <View style={styles.infoSection}>
-          <View style={styles.iconContainer}>
-            <MaterialIcon name="language" size={24} color={colors.accent} />
-          </View>
-          <View style={styles.infoContent}>
-            <Text style={[styles.infoTitle, {color: colors.textPrimary}]}>
-              {t('venues.website')}
-            </Text>
-            <TouchableOpacity
-              onPress={() => venue.contacts && openWebsite(venue.contacts.website!)}>
-              <Text
-                style={[
-                  styles.infoText,
-                  {color: colors.accent, textDecorationLine: 'underline'},
-                ]}>
-                {venue.contacts.website}
-              </Text>
-            </TouchableOpacity>
-          </View>
+      <View style={styles.infoRow}>
+        <View style={styles.infoIconContainer}>
+          <MaterialIcons name="language" size={22} color={colors.textSecondary} />
         </View>
-      )}
+        <View style={styles.infoTextContainer}>
+          <Text style={[styles.infoLabel, { color: colors.textPrimary }]}>
+            {t('venues.website')}
+          </Text>
+          <Text style={[styles.infoValue, { color: colors.textSecondary }]}>
+            {venue.contacts?.website || t('common.noResults')}
+          </Text>
+        </View>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  sectionContainer: {
     padding: 16,
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(255, 255, 255, 0.05)',
   },
-  infoSection: {
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 12,
+  },
+  infoRow: {
     flexDirection: 'row',
     marginBottom: 16,
   },
-  iconContainer: {
+  infoIconContainer: {
     width: 40,
     alignItems: 'center',
   },
-  infoContent: {
+  infoTextContainer: {
     flex: 1,
   },
-  infoTitle: {
+  infoLabel: {
     fontSize: 16,
     fontWeight: '500',
     marginBottom: 4,
   },
-  infoText: {
+  infoValue: {
     fontSize: 14,
     lineHeight: 20,
   },
-}); 
+});

@@ -1,8 +1,8 @@
-import {VenueQueryKeys} from '@/constants/queryKeys';
-import {ContentAPI} from '@/services/api';
-import {IVenuesListResponse} from '@/types/venues.interfaces';
-import {useQuery} from '@tanstack/react-query';
-import {useMemo} from 'react';
+import { VenueQueryKeys } from '@/constants/queryKeys';
+import { ContentAPI } from '@/services/api';
+import { IVenuesListResponse } from '@/types/venues.interfaces';
+import { useQuery } from '@tanstack/react-query';
+import { useMemo } from 'react';
 
 interface ISearchParams {
   query?: string;
@@ -14,10 +14,7 @@ interface ISearchParams {
   category?: string[];
 }
 
-export const useVenuesBottomSheet = (
-  params: ISearchParams,
-  enabled: boolean,
-) => {
+export const useVenuesBottomSheet = (params: ISearchParams, enabled: boolean) => {
   const queryKey = useMemo(
     () => [
       VenueQueryKeys.venuesSearchBottomSheet,

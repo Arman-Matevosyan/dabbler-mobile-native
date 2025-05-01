@@ -1,4 +1,4 @@
-import React, {useState, useRef, useCallback} from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import {
   View,
   Image,
@@ -20,19 +20,15 @@ import Animated, {
   interpolate,
   Extrapolate,
 } from 'react-native-reanimated';
-import {
-  Gesture,
-  GestureDetector,
-  GestureHandlerRootView,
-} from 'react-native-gesture-handler';
+import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {useTheme} from '../theme/ThemeContext';
+import { useTheme } from '../theme/ThemeContext';
 import LinearGradient from 'react-native-linear-gradient';
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 export interface ImageSliderProps {
-  images: Array<{url: string; id?: string}>;
+  images: Array<{ url: string; id?: string }>;
   onBackPress: () => void;
   title?: string;
   showFavoriteButton?: boolean;
@@ -54,7 +50,7 @@ export const ImageSlider: React.FC<ImageSliderProps> = ({
   style,
   height: customHeight,
 }) => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isZoomed, setIsZoomed] = useState(false);
   const flatListRef = useRef<FlatList>(null);
@@ -76,7 +72,7 @@ export const ImageSlider: React.FC<ImageSliderProps> = ({
 
   const pinchGesture = Gesture.Pinch()
     .onStart(() => {
-      headerOpacity.value = withTiming(0, {duration: 200});
+      headerOpacity.value = withTiming(0, { duration: 200 });
     })
     .onUpdate(e => {
       scale.value = Math.max(1, Math.min(e.scale, 3));
@@ -86,10 +82,10 @@ export const ImageSlider: React.FC<ImageSliderProps> = ({
     })
     .onEnd(() => {
       if (scale.value < 1.2) {
-        scale.value = withTiming(1, {duration: 150});
-        translateX.value = withTiming(0, {duration: 150});
-        translateY.value = withTiming(0, {duration: 150});
-        headerOpacity.value = withTiming(1, {duration: 200});
+        scale.value = withTiming(1, { duration: 150 });
+        translateX.value = withTiming(0, { duration: 150 });
+        translateY.value = withTiming(0, { duration: 150 });
+        headerOpacity.value = withTiming(1, { duration: 200 });
         setIsZoomed(false);
       }
     });
@@ -98,16 +94,16 @@ export const ImageSlider: React.FC<ImageSliderProps> = ({
     .numberOfTaps(2)
     .onStart(e => {
       if (scale.value > 1) {
-        scale.value = withTiming(1, {duration: 250});
-        translateX.value = withTiming(0, {duration: 250});
-        translateY.value = withTiming(0, {duration: 250});
-        headerOpacity.value = withTiming(1, {duration: 200});
+        scale.value = withTiming(1, { duration: 250 });
+        translateX.value = withTiming(0, { duration: 250 });
+        translateY.value = withTiming(0, { duration: 250 });
+        headerOpacity.value = withTiming(1, { duration: 200 });
         setIsZoomed(false);
       } else {
-        scale.value = withTiming(2, {duration: 250});
+        scale.value = withTiming(2, { duration: 250 });
         translateX.value = e.x;
         translateY.value = e.y;
-        headerOpacity.value = withTiming(0, {duration: 200});
+        headerOpacity.value = withTiming(0, { duration: 200 });
         setIsZoomed(true);
       }
     });
@@ -127,9 +123,9 @@ export const ImageSlider: React.FC<ImageSliderProps> = ({
   const animatedImageStyle = useAnimatedStyle(() => {
     return {
       transform: [
-        {translateX: translateX.value},
-        {translateY: translateY.value},
-        {scale: scale.value},
+        { translateX: translateX.value },
+        { translateY: translateY.value },
+        { scale: scale.value },
       ],
     };
   });
@@ -139,37 +135,27 @@ export const ImageSlider: React.FC<ImageSliderProps> = ({
       opacity: headerOpacity.value,
       transform: [
         {
-          translateY: interpolate(
-            headerOpacity.value,
-            [0, 1],
-            [-50, 0],
-            Extrapolate.CLAMP,
-          ),
+          translateY: interpolate(headerOpacity.value, [0, 1], [-50, 0], Extrapolate.CLAMP),
         },
       ],
     };
   });
 
   return (
-    <View style={[styles.container, customHeight ? {height: customHeight} : null, style]}>
+    <View style={[styles.container, customHeight ? { height: customHeight } : null, style]}>
       <LinearGradient
         colors={['rgba(0,0,0,0.7)', 'rgba(0,0,0,0.3)', 'transparent']}
         style={styles.headerGradient}
         pointerEvents="none"
       />
-      
+
       <Animated.View style={[styles.header, animatedHeaderStyle]}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={onBackPress}
-          activeOpacity={0.7}>
+        <TouchableOpacity style={styles.backButton} onPress={onBackPress} activeOpacity={0.7}>
           <Icon name="arrow-back" size={24} color="white" />
         </TouchableOpacity>
 
         {title && (
-          <Text
-            style={[styles.title, {color: 'white'}]}
-            numberOfLines={1}>
+          <Text style={[styles.title, { color: 'white' }]} numberOfLines={1}>
             {title}
           </Text>
         )}
@@ -203,14 +189,10 @@ export const ImageSlider: React.FC<ImageSliderProps> = ({
           onScroll={handleScroll}
           scrollEventThrottle={16}
           keyExtractor={(item, index) => item.id || `image-${index}`}
-          renderItem={({item}) => (
+          renderItem={({ item }) => (
             <GestureDetector gesture={gesture}>
               <Animated.View style={[styles.imageWrapper, animatedImageStyle]}>
-                <Image
-                  source={{uri: item.url}}
-                  style={styles.image}
-                  resizeMode="cover"
-                />
+                <Image source={{ uri: item.url }} style={styles.image} resizeMode="cover" />
               </Animated.View>
             </GestureDetector>
           )}
@@ -218,12 +200,8 @@ export const ImageSlider: React.FC<ImageSliderProps> = ({
       </GestureHandlerRootView>
 
       <Animated.View style={[styles.counter, animatedHeaderStyle]}>
-        <View
-          style={[
-            styles.counterContainer,
-            {backgroundColor: 'rgba(0, 0, 0, 0.6)'},
-          ]}>
-          <Text style={[styles.counterText, {color: colors.textPrimary}]}>
+        <View style={[styles.counterContainer, { backgroundColor: 'rgba(0, 0, 0, 0.6)' }]}>
+          <Text style={[styles.counterText, { color: colors.textPrimary }]}>
             {currentIndex + 1}/{images.length}
           </Text>
         </View>
@@ -274,7 +252,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginHorizontal: 10,
     textShadowColor: 'rgba(0, 0, 0, 0.8)',
-    textShadowOffset: {width: 1, height: 1},
+    textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 3,
   },
   favoriteButton: {

@@ -1,66 +1,31 @@
-import React, {Suspense, lazy, useState, useCallback, useEffect} from 'react';
-import {
-  StyleSheet,
-  View,
-  TouchableOpacity,
-  ActivityIndicator,
-  Dimensions,
-} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useTheme, Text, Skeleton} from '@design-system';
-import {useNavigation} from '@react-navigation/native';
-import {StackNavigationProp} from '@react-navigation/stack';
+import React, { Suspense, lazy, useState, useCallback, useEffect } from 'react';
+import { StyleSheet, View, TouchableOpacity, ActivityIndicator, Dimensions } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTheme, Text, Skeleton } from '@design-system';
+import { useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import QrCheck from '@/assets/svg/QrCheck';
-import {CheckInStackParamList} from './CheckInNavigator';
-import {IDiscoverClass} from '@/types/class.interfaces';
-import {useTranslation} from 'react-i18next';
+import { CheckInStackParamList } from './CheckInNavigator';
+import { IDiscoverClass } from '@/types/class.interfaces';
+import { useTranslation } from 'react-i18next';
+import { HeaderSkeleton, QrScannerSkeleton } from './components';
 
-type CheckInScreenNavigationProp = StackNavigationProp<
-  CheckInStackParamList,
-  'CheckIn'
->;
-const {width, height} = Dimensions.get('window');
+type CheckInScreenNavigationProp = StackNavigationProp<CheckInStackParamList, 'CheckIn'>;
+const { width, height } = Dimensions.get('window');
 const QrScanner = lazy(() =>
   import('./components/QrScanner').then(module => ({
     default: module.QrScanner,
   })),
 );
 
-const HeaderSkeleton = () => {
-  return (
-    <View style={styles.header}>
-      <Skeleton
-        width="60%"
-        height={28}
-        style={{marginBottom: 8, alignSelf: 'center'}}
-      />
-      <Skeleton width="80%" height={16} style={{alignSelf: 'center'}} />
-    </View>
-  );
-};
-
-const QrScannerSkeleton = () => {
-  const {colors} = useTheme();
-  return (
-    <View style={[styles.scannerSkeleton, {backgroundColor: colors.card}]}>
-      <Skeleton width={200} height={200} style={{borderRadius: 8}} />
-      <Skeleton
-        width="70%"
-        height={50}
-        style={{borderRadius: 8, marginTop: 24}}
-      />
-    </View>
-  );
-};
-
 export default function CheckInScreen() {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   const navigation = useNavigation<CheckInScreenNavigationProp>();
   const [scanning, setScanning] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   const handleOnScan = useCallback(async () => {
     try {
@@ -85,7 +50,7 @@ export default function CheckInScreen() {
             date: '',
             scheduledSpots: 0,
             totalSpots: 15,
-            covers: [{url: 'https://example.com/yoga.jpg'}],
+            covers: [{ url: 'https://example.com/yoga.jpg' }],
             venue: {
               name: 'Downtown Studio',
               id: 'venue-1',
@@ -107,7 +72,7 @@ export default function CheckInScreen() {
             date: '2023-07-15T10:00:00Z',
             scheduledSpots: 8,
             totalSpots: 12,
-            covers: [{url: 'https://example.com/spin.jpg'}],
+            covers: [{ url: 'https://example.com/spin.jpg' }],
             venue: {
               name: 'Fitness Center',
               id: 'venue-2',
@@ -143,7 +108,7 @@ export default function CheckInScreen() {
 
   if (scanning) {
     return (
-      <View style={[styles.container, {backgroundColor: colors.background}]}>
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
         <Suspense fallback={<QrScannerSkeleton />}>
           <QrScanner
             onQrCodeScanned={handleOnScan}
@@ -164,16 +129,16 @@ export default function CheckInScreen() {
           paddingTop: insets.top,
         },
       ]}>
-      <View style={[styles.content, {paddingBottom: insets.bottom + 60}]}>
+      <View style={[styles.content, { paddingBottom: insets.bottom + 60 }]}>
         <View style={styles.qrContainer}>
           <QrCheck width={width - 50} height={height * 2} />
         </View>
         <Suspense fallback={<HeaderSkeleton />}>
           <View style={styles.header}>
-            <Text style={[styles.title, {color: colors.textPrimary}]}>
+            <Text style={[styles.title, { color: colors.textPrimary }]}>
               {t('checkin.checkIn')}
             </Text>
-            <Text style={[styles.subtitle, {color: colors.textSecondary}]}>
+            <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
               {t('checkin.scanToCheckIn')}
             </Text>
           </View>
@@ -182,13 +147,11 @@ export default function CheckInScreen() {
         <Suspense fallback={<QrScannerSkeleton />}>
           <View style={styles.buttonContainer}>
             <TouchableOpacity
-              style={[styles.scanButton, {backgroundColor: colors.accent}]}
+              style={[styles.scanButton, { backgroundColor: colors.accent }]}
               onPress={handleScanPress}
               activeOpacity={0.8}>
               <MaterialIcons name="qr-code-scanner" size={24} color="white" />
-              <Text style={[styles.buttonText, {color: 'white'}]}>
-                {t('checkin.scanQrCode')}
-              </Text>
+              <Text style={[styles.buttonText, { color: 'white' }]}>{t('checkin.scanQrCode')}</Text>
             </TouchableOpacity>
           </View>
         </Suspense>

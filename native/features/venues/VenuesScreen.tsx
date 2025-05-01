@@ -1,28 +1,14 @@
-import React, {
-  useCallback,
-  useMemo,
-  useRef,
-  useState,
-  Suspense,
-  useEffect,
-  lazy,
-} from 'react';
-import {StyleSheet, View} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useVenueSearch, SearchResult} from './hooks/useVenueSearch';
-import {useUserLocation} from './hooks/useUserLocation';
-import {ARMENIA_REGION} from './stores/useVenueSearchStore';
-import {Region} from 'react-native-maps';
-import {useTranslation} from 'react-i18next';
+import React, { useCallback, useMemo, useRef, useState, Suspense, useEffect, lazy } from 'react';
+import { StyleSheet, View, TouchableOpacity, Text } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useVenueSearch, SearchResult } from './hooks/useVenueSearch';
+import { useUserLocation } from './hooks/useUserLocation';
+import { ARMENIA_REGION } from './stores/useVenueSearchStore';
+import { Region } from 'react-native-maps';
+import { useTranslation } from 'react-i18next';
+import { Venue } from './components/MapComponent';
 
 type Timeout = ReturnType<typeof setTimeout>;
-
-import {
-  SearchSkeleton,
-  MapSkeleton,
-  BottomSheetSkeleton,
-} from './components/VenueSkeleton';
-import {VenuesScreenSkeleton} from './components/VenuesScreenSkeleton';
 
 const SearchComponent = lazy(() =>
   import('../../components/SearchWithCategories').then(module => ({
@@ -37,22 +23,20 @@ const VenueBottomSheet = lazy(() =>
   })),
 );
 
-import {
-  useLocationParams,
-  useSearchStore,
-  useVenueSearchFilters,
-} from '@/stores/searchStore';
-import {useShallow} from 'zustand/react/shallow';
-import {useIsFocused} from '@react-navigation/native';
+import { useLocationParams, useSearchStore, useVenueSearchFilters } from '@/stores/searchStore';
+import { useShallow } from 'zustand/react/shallow';
+import { useIsFocused } from '@react-navigation/native';
+import { BottomSheetSkeleton, MapSkeleton, VenuesScreenSkeleton } from './components/skeletons';
+import { SearchSkeleton } from '@/components/skeletons';
 
 export default function VenuesScreen() {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const isFocused = useIsFocused();
   const lastUpdate = useRef<number>(0);
   const regionChangeTimeoutRef = useRef<Timeout | null>(null);
   const initialized = useRef<boolean>(false);
   const insets = useSafeAreaInsets();
-  const [selectedVenue, setSelectedVenue] = useState<any>(null);
+  const [selectedVenue, setSelectedVenue] = useState<Venue | null>(null);
 
   const [pendingRegion, setPendingRegion] = useState<{
     region: Region;
@@ -61,12 +45,11 @@ export default function VenuesScreen() {
 
   const venueParams = useSearchStore(useShallow(state => state.venueParams));
 
-  const {locationLat, locationLng, radius, updateLocation} =
-    useLocationParams();
+  const { locationLat, locationLng, radius, updateLocation } = useLocationParams();
 
-  const {query, category, setQuery, setCategory} = useVenueSearchFilters();
+  const { query, category, setQuery, setCategory } = useVenueSearchFilters();
 
-  const {fetchUserLocation} = useUserLocation();
+  const { fetchUserLocation } = useUserLocation();
 
   const searchParams = useMemo(
     () => ({
@@ -78,15 +61,7 @@ export default function VenuesScreen() {
       query,
       category,
     }),
-    [
-      locationLat,
-      locationLng,
-      radius,
-      venueParams.limit,
-      venueParams.offset,
-      query,
-      category,
-    ],
+    [locationLat, locationLng, radius, venueParams.limit, venueParams.offset, query, category],
   );
 
   useEffect(() => {
@@ -101,7 +76,7 @@ export default function VenuesScreen() {
     }
   }, [isFocused, updateLocation, fetchUserLocation]);
 
-  const {data, isLoading, refetch} = useVenueSearch(searchParams, isFocused);
+  const { data, isLoading, refetch } = useVenueSearch(searchParams, isFocused);
 
   const handleMapReady = useCallback(() => {
     if (locationLat && locationLng && radius) {
@@ -134,7 +109,7 @@ export default function VenuesScreen() {
     clusters = [],
     totalVenues = 0,
   } = useMemo(() => {
-    if (!data) return {venues: [], clusters: [], totalVenues: 0};
+    if (!data) return { venues: [], clusters: [], totalVenues: 0 };
 
     const result = data as unknown as SearchResult;
 
@@ -151,13 +126,9 @@ export default function VenuesScreen() {
     }
   }, [fetchUserLocation, isFocused]);
 
-  const handleVenuePress = useCallback((venue: any) => {
-    setSelectedVenue(venue);
-  }, []);
-
   const handleRegionChange = useCallback(
     (region: Region, radius: number) => {
-      setPendingRegion({region, radius});
+      setPendingRegion({ region, radius });
 
       if (regionChangeTimeoutRef.current) {
         clearTimeout(regionChangeTimeoutRef.current);
@@ -204,24 +175,9 @@ export default function VenuesScreen() {
     }));
   }, [venues]);
 
-  const mapSelectedVenue = useMemo(() => {
-    if (!selectedVenue) return null;
-
-    if (selectedVenue.location?.coordinates) {
-      return selectedVenue;
-    }
-
-    return {
-      ...selectedVenue,
-      location: {
-        coordinates: [
-          selectedVenue.location.longitude,
-          selectedVenue.location.latitude,
-        ],
-        type: 'Point',
-      },
-    };
-  }, [selectedVenue]);
+  const handleVenuePress = useCallback((venue: Venue | null) => {
+    setSelectedVenue(venue);
+  }, []);
 
   if (isLoading && venues.length === 0 && !initialized.current) {
     return <VenuesScreenSkeleton />;
@@ -236,24 +192,24 @@ export default function VenuesScreen() {
         },
       ]}>
       <Suspense fallback={<SearchSkeleton />}>
-        <SearchComponent
-          searchValue={query}
-          onSearchChange={setQuery}
-          selectedCategories={category || []}
-          onCategoryToggle={(categories: string[]) => {
-            setCategory(categories);
-          }}
-          isLoading={isLoading}
-          placeholder={t('venues.searchVenues')}
-        />
+        <View style={styles.searchContainer}>
+          <SearchComponent
+            searchValue={query}
+            onSearchChange={setQuery}
+            selectedCategories={category || []}
+            onCategoryToggle={(categories: string[]) => {
+              setCategory(categories);
+            }}
+            isLoading={isLoading}
+            placeholder={t('venues.searchVenues')}
+          />
+        </View>
       </Suspense>
 
       <Suspense fallback={<MapSkeleton />}>
         <MapComponent
           venues={mapVenues}
           clusters={clusters}
-          selectedVenue={mapSelectedVenue}
-          onVenuePress={handleVenuePress}
           onRegionChange={handleRegionChange}
           onMapReady={handleMapReady}
           initialRegion={{
@@ -263,6 +219,8 @@ export default function VenuesScreen() {
             longitudeDelta: 0.05,
           }}
           showUserLocation={true}
+          selectedVenue={selectedVenue}
+          onVenuePress={handleVenuePress}
         />
       </Suspense>
 
@@ -271,7 +229,6 @@ export default function VenuesScreen() {
           totalVenues={totalVenues}
           searchParams={searchParams}
           isLoading={isLoading}
-          onVenuePress={handleVenuePress}
         />
       </Suspense>
     </View>
@@ -284,8 +241,6 @@ const styles = StyleSheet.create({
     position: 'relative',
   },
   searchContainer: {
-    position: 'absolute',
-    top: 0,
     left: 0,
     right: 0,
     zIndex: 2,

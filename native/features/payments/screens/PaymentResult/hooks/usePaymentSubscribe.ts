@@ -1,23 +1,14 @@
-import {PaymentQueryKeys, UserQueryKeys} from '@/constants/queryKeys';
-import {PaymentAPI} from '@/services/api';
-import {ISubscriptionCreateRequest} from '@/types/payment.interfaces';
-import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {useTranslation} from 'react-i18next';
+import { PaymentQueryKeys, UserQueryKeys } from '@/constants/queryKeys';
+import { PaymentAPI } from '@/services/api';
+import { ISubscriptionCreateRequest } from '@/types/payment.interfaces';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useTranslation } from 'react-i18next';
 
 export const usePaymentSubscribe = () => {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const queryClient = useQueryClient();
 
-  const {
-    mutate,
-    data,
-    isPending,
-    isSuccess,
-    error,
-    reset,
-    mutateAsync,
-    status,
-  } = useMutation({
+  const { mutate, data, isPending, isSuccess, error, reset, mutateAsync, status } = useMutation({
     mutationFn: (subData: ISubscriptionCreateRequest) => {
       try {
         return PaymentAPI.subscribe(subData);

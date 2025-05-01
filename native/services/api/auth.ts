@@ -1,4 +1,4 @@
-import {API_URL, client} from '../client';
+import { API_URL, client } from '../client';
 
 export interface User {
   id: string;
@@ -75,7 +75,7 @@ export const authService = {
 
   logout: async (): Promise<void> => {
     try {
-      await client.post('/auth/logout', {}, {withAuth: true});
+      await client.post('/auth/logout', {}, { withAuth: true });
     } catch (error) {
       console.log('Logout error:', error);
     }

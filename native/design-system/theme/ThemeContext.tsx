@@ -1,15 +1,13 @@
-import React, {createContext, useContext, useState, useEffect, useCallback} from 'react';
-import {useColorScheme, Appearance} from 'react-native';
-import {MMKVLoader} from 'react-native-mmkv-storage';
-import {colors} from './colors';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { useColorScheme, Appearance } from 'react-native';
+import { MMKVLoader } from 'react-native-mmkv-storage';
+import { colors } from './colors';
 
-// Initialize storage safely
 let storage: any;
 try {
   storage = new MMKVLoader().initialize();
 } catch (error) {
   console.error('Failed to initialize MMKV storage:', error);
-  // Fallback to simple in-memory storage
   storage = {
     getString: () => null,
     setString: () => {},
@@ -31,11 +29,9 @@ interface ThemeContextType {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
-export const ThemeProvider: React.FC<{children: React.ReactNode}> = ({
-  children,
-}) => {
-  const systemColorScheme = useColorScheme() as ThemeMode || 'light';
-  
+export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const systemColorScheme = (useColorScheme() as ThemeMode) || 'light';
+
   const getSavedThemeMode = (): ThemeMode => {
     try {
       const savedMode = storage.getString(THEME_MODE_KEY);
@@ -49,13 +45,13 @@ export const ThemeProvider: React.FC<{children: React.ReactNode}> = ({
   };
 
   const [mode, setModeState] = useState<ThemeMode>(getSavedThemeMode());
-  
+
   useEffect(() => {
     const subscription = Appearance.addChangeListener(({ colorScheme }) => {
       try {
         const savedMode = storage.getString(THEME_MODE_KEY);
         if (!savedMode) {
-          setModeState(colorScheme as ThemeMode || 'light');
+          setModeState((colorScheme as ThemeMode) || 'light');
         }
       } catch (error) {
         console.error('Error handling appearance change:', error);
@@ -67,26 +63,29 @@ export const ThemeProvider: React.FC<{children: React.ReactNode}> = ({
     };
   }, []);
 
-  const setMode = useCallback((newMode: ThemeMode) => {
-    try {
-      if (newMode !== 'light' && newMode !== 'dark') {
-        console.warn(`Invalid theme mode: ${newMode}, using system default`);
-        setModeState(systemColorScheme);
-        return;
-      }
-      
-      setModeState(newMode);
-      
+  const setMode = useCallback(
+    (newMode: ThemeMode) => {
       try {
-        storage.setString(THEME_MODE_KEY, newMode);
-      } catch (storageError) {
-        console.error('Failed to save theme preference:', storageError);
+        if (newMode !== 'light' && newMode !== 'dark') {
+          console.warn(`Invalid theme mode: ${newMode}, using system default`);
+          setModeState(systemColorScheme);
+          return;
+        }
+
+        setModeState(newMode);
+
+        try {
+          storage.setString(THEME_MODE_KEY, newMode);
+        } catch (storageError) {
+          console.error('Failed to save theme preference:', storageError);
+        }
+      } catch (error) {
+        console.error('Error setting theme:', error);
+        setModeState(systemColorScheme);
       }
-    } catch (error) {
-      console.error('Error setting theme:', error);
-      setModeState(systemColorScheme);
-    }
-  }, [systemColorScheme]);
+    },
+    [systemColorScheme],
+  );
 
   const themeColors = mode === 'dark' ? colors.dark : colors.light;
 

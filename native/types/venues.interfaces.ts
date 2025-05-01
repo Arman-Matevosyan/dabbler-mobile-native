@@ -116,14 +116,14 @@ export interface MapVenueWithCoordinates {
     coordinates: number[];
     type: string;
   };
-  covers: Array<{url: string}>;
-  categories?: Array<{name: string}>;
+  covers: Array<{ url: string }>;
+  categories?: Array<{ name: string }>;
 }
 
 export interface MapVenue {
   id: string;
   name: string;
   location: MapVenueLocation;
-  covers: Array<{url: string}>;
-  categories?: Array<{name: string}>;
+  covers: Array<{ url: string }>;
+  categories?: Array<{ name: string }>;
 }

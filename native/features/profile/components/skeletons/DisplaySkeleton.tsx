@@ -1,34 +1,31 @@
 import React from 'react';
-import {View, StyleSheet, ScrollView} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {Skeleton, useTheme} from '@/design-system';
+import { View, StyleSheet, ScrollView } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Skeleton, useTheme } from '@/design-system';
 
 export const DisplaySkeleton = () => {
   const insets = useSafeAreaInsets();
-  const {colors} = useTheme();
+  const { colors } = useTheme();
 
   return (
     <View
-      style={[
-        styles.container,
-        {backgroundColor: colors.background, paddingTop: insets.top},
-      ]}>
+      style={[styles.container, { backgroundColor: colors.background, paddingTop: insets.top }]}>
       <View style={styles.header}>
-        <Skeleton width={24} height={24} style={{marginRight: 16}} />
+        <Skeleton width={24} height={24} style={{ marginRight: 16 }} />
         <Skeleton width="40%" height={24} />
       </View>
-      
+
       <ScrollView style={styles.scrollView}>
         <View style={styles.content}>
-          <Skeleton width="70%" height={28} style={{marginBottom: 24}} />
-          
+          <Skeleton width="70%" height={28} style={{ marginBottom: 24 }} />
+
           <View style={styles.section}>
-            <Skeleton width="50%" height={20} style={{marginBottom: 16}} />
-            <View style={[styles.optionContainer, {backgroundColor: colors.card}]}>
+            <Skeleton width="50%" height={20} style={{ marginBottom: 16 }} />
+            <View style={[styles.optionContainer, { backgroundColor: colors.card }]}>
               {[1, 2].map(item => (
                 <View key={item} style={styles.optionItem}>
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Skeleton width={24} height={24} style={{marginRight: 12}} />
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Skeleton width={24} height={24} style={{ marginRight: 12 }} />
                     <Skeleton width="60%" height={18} />
                   </View>
                   <Skeleton width={24} height={24} borderRadius={12} />
@@ -36,14 +33,14 @@ export const DisplaySkeleton = () => {
               ))}
             </View>
           </View>
-          
+
           <View style={styles.section}>
-            <Skeleton width="60%" height={20} style={{marginBottom: 16}} />
-            <View style={[styles.optionContainer, {backgroundColor: colors.card}]}>
+            <Skeleton width="60%" height={20} style={{ marginBottom: 16 }} />
+            <View style={[styles.optionContainer, { backgroundColor: colors.card }]}>
               {[1, 2, 3].map(item => (
                 <View key={item} style={styles.optionItem}>
-                  <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                    <Skeleton width={24} height={24} style={{marginRight: 12}} />
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <Skeleton width={24} height={24} style={{ marginRight: 12 }} />
                     <Skeleton width="70%" height={18} />
                   </View>
                   <Skeleton width={40} height={24} borderRadius={12} />
@@ -91,4 +88,4 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(0,0,0,0.05)',
   },
-}); 
+});

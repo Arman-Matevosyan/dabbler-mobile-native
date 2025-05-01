@@ -1,1 +1,1 @@
-export { default as ClassListSkeleton } from './ClassListSkeleton'; 
+export { default as ClassListSkeleton } from './ClassListSkeleton';

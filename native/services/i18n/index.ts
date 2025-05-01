@@ -1,11 +1,11 @@
 import i18n from 'i18next';
-import {initReactI18next} from 'react-i18next';
+import { initReactI18next } from 'react-i18next';
 import * as RNLocalize from 'react-native-localize';
-import {MMKVLoader} from 'react-native-mmkv-storage';
+import { MMKVLoader } from 'react-native-mmkv-storage';
 
-import en from './translations/en';
-import ru from './translations/ru';
-import hy from './translations/hy';
+import en from './translations/en.json';
+import ru from './translations/ru.json';
+import hy from './translations/hy.json';
 
 export const LANGUAGE_KEY = 'user_language';
 
@@ -21,12 +21,8 @@ const getSavedLanguage = (): string => {
     return savedLanguage;
   }
 
-  const deviceLanguages = RNLocalize.getLocales().map(
-    locale => locale.languageCode,
-  );
-  const bestMatch = deviceLanguages.find(lang =>
-    LANGUAGES.includes(lang as any),
-  );
+  const deviceLanguages = RNLocalize.getLocales().map(locale => locale.languageCode);
+  const bestMatch = deviceLanguages.find(lang => LANGUAGES.includes(lang as any));
 
   return bestMatch || DEFAULT_LANGUAGE;
 };
@@ -34,9 +30,9 @@ const getSavedLanguage = (): string => {
 i18n.use(initReactI18next).init({
   compatibilityJSON: 'v4',
   resources: {
-    en: {translation: en},
-    ru: {translation: ru},
-    hy: {translation: hy},
+    en: { translation: en },
+    ru: { translation: ru },
+    hy: { translation: hy },
   },
   lng: getSavedLanguage(),
   fallbackLng: DEFAULT_LANGUAGE,

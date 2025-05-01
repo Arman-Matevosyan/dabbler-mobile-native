@@ -1,9 +1,9 @@
 import React from 'react';
-import {FlatList, View, ActivityIndicator, StyleSheet} from 'react-native';
+import { FlatList, View, ActivityIndicator, StyleSheet } from 'react-native';
 
 interface ClassListProps {
   classes: any[];
-  renderItem: (item: {item: any; index: number}) => React.ReactElement;
+  renderItem: (item: { item: any; index: number }) => React.ReactElement;
   keyExtractor: (item: any, index: number) => string;
   ListEmptyComponent: React.ComponentType<any> | React.ReactElement | null;
   isLoading: boolean;

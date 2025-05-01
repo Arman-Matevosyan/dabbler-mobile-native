@@ -10,57 +10,53 @@ interface BookingInfoProps {
   onAddToCalendar: () => void;
 }
 
-export const BookingInfo = React.memo(({ 
-  isClassBooked, 
-  cancelDateStr, 
-  onAddToCalendar 
-}: BookingInfoProps) => {
-  const { colors } = useTheme();
-  const { t } = useTranslation();
-  
-  if (!isClassBooked) {
-    return null;
-  }
+export const BookingInfo = React.memo(
+  ({ isClassBooked, cancelDateStr, onAddToCalendar }: BookingInfoProps) => {
+    const { colors } = useTheme();
+    const { t } = useTranslation();
 
-  return (
-    <View style={styles.container}>
-      <View style={styles.sectionHeader}>
-        <Text style={[styles.sectionTitle, {color: colors.textPrimary}]}>
-          {t('classes.details.bookingInfo')}
-        </Text>
-      </View>
+    if (!isClassBooked) {
+      return null;
+    }
 
-      <View
-        style={[
-          styles.statusContainer,
-          {backgroundColor: colors.background, borderColor: colors.border},
-        ]}>
-        <View style={styles.statusIconContainer}>
-          <MaterialIcons name="event-available" size={24} color="#4CAF50" />
-          <Text style={[styles.statusText, {color: colors.textPrimary}]}>
-            {t('classes.details.bookedStatus')}
+    return (
+      <View style={styles.container}>
+        <View style={styles.sectionHeader}>
+          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
+            {t('classes.details.bookingInfo')}
           </Text>
         </View>
 
-        {cancelDateStr && (
-          <Text style={[styles.cancelText, {color: colors.textSecondary}]}>
-            {t('classes.details.freeCancellation')} {cancelDateStr}
-          </Text>
-        )}
+        <View
+          style={[
+            styles.statusContainer,
+            { backgroundColor: colors.background, borderColor: colors.border },
+          ]}>
+          <View style={styles.statusIconContainer}>
+            <MaterialIcons name="event-available" size={24} color="#4CAF50" />
+            <Text style={[styles.statusText, { color: colors.textPrimary }]}>
+              {t('classes.details.bookedStatus')}
+            </Text>
+          </View>
 
-        <TouchableOpacity
-          style={[styles.calendarButton, {backgroundColor: colors.accent}]}
-          onPress={onAddToCalendar}
-          activeOpacity={0.7}>
-          <MaterialIcons name="event" size={20} color="white" />
-          <Text style={styles.calendarButtonText}>
-            {t('classes.details.addToCalendar')}
-          </Text>
-        </TouchableOpacity>
+          {cancelDateStr && (
+            <Text style={[styles.cancelText, { color: colors.textSecondary }]}>
+              {t('classes.details.freeCancellation')} {cancelDateStr}
+            </Text>
+          )}
+
+          <TouchableOpacity
+            style={[styles.calendarButton, { backgroundColor: colors.accent }]}
+            onPress={onAddToCalendar}
+            activeOpacity={0.7}>
+            <MaterialIcons name="event" size={20} color="white" />
+            <Text style={styles.calendarButtonText}>{t('classes.details.addToCalendar')}</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
-  );
-});
+    );
+  },
+);
 
 const styles = StyleSheet.create({
   container: {
@@ -106,4 +102,4 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     marginLeft: 8,
   },
-}); 
+});

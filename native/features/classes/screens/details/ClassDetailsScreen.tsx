@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo, useRef} from 'react';
+import React, { useEffect, useMemo, useRef, lazy, Suspense } from 'react';
 import {
   Animated,
   StyleSheet,
@@ -7,31 +7,76 @@ import {
   View,
   Image,
   Platform,
+  Alert,
 } from 'react-native';
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {format} from 'date-fns';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { format } from 'date-fns';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {ClassBookingWrapper, useTheme} from '@/design-system';
-import {useMyschedules} from '@/hooks/useSchedules';
-import {useAuthStore} from '@/stores/authStore';
-import {useClassDetailsData} from './hooks/useClassDetailsData';
+import { ClassBookingWrapper, useTheme, Skeleton } from '@/design-system';
+import { useMyschedules } from '@/hooks/useSchedules';
+import { useAuthStore } from '@/stores/authStore';
+import { useClassDetailsData } from './hooks/useClassDetailsData';
 import {
-  BookingInfo,
-  ClassDescription,
   ClassDetailsSkeleton,
-  ClassHeader,
-  ClassImageSlider,
-  ClassInfo,
-  ClassLocationMap,
-  ClassMeta,
+  HeaderSkeleton,
+  ImageSkeleton,
+  TitleSkeleton,
+  DateTimeSkeleton,
+  CategorySkeleton,
+  VenueSkeleton,
+  InstructorSkeleton,
+  DescriptionSkeleton,
+  MapSkeleton,
 } from './components';
-import {Share} from 'react-native';
-import {useTranslation} from 'react-i18next';
+import { Share } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
-let Calendar: any;
+const ClassHeader = lazy(() =>
+  import('./components/ClassHeader').then(module => ({
+    default: module.ClassHeader,
+  })),
+);
+
+const ClassImageSlider = lazy(() =>
+  import('./components/ClassImageSlider').then(module => ({
+    default: module.ClassImageSlider,
+  })),
+);
+
+const ClassInfo = lazy(() =>
+  import('./components/ClassInfo').then(module => ({
+    default: module.ClassInfo,
+  })),
+);
+
+const ClassMeta = lazy(() =>
+  import('./components/ClassMeta').then(module => ({
+    default: module.ClassMeta,
+  })),
+);
+
+const ClassDescription = lazy(() =>
+  import('./components/ClassDescription').then(module => ({
+    default: module.ClassDescription,
+  })),
+);
+
+const ClassLocationMap = lazy(() =>
+  import('./components/ClassLocationMap').then(module => ({
+    default: module.ClassLocationMap,
+  })),
+);
+
+const BookingInfo = lazy(() =>
+  import('./components/BookingInfo').then(module => ({
+    default: module.BookingInfo,
+  })),
+);
+
+let Calendar: any = null;
 try {
-  Calendar = require('expo-calendar');
+  Calendar = require('expo-calendar').default;
 } catch (error) {
   console.warn('expo-calendar module could not be loaded:', error);
 }
@@ -48,7 +93,7 @@ interface Venue {
   openingHours?: any[];
   websiteUrl?: string;
   coordinates?: Coordinates | any;
-  covers?: Array<{url: string; id?: string}>;
+  covers?: Array<{ url: string; id?: string }>;
 }
 
 interface ClassDetail {
@@ -57,7 +102,7 @@ interface ClassDetail {
   date?: string;
   description?: string;
   duration?: number;
-  covers?: Array<{url: string; id?: string}>;
+  covers?: Array<{ url: string; id?: string }>;
   categories?: string[];
   venue?: Venue;
   instructorInfo?: string;
@@ -78,14 +123,14 @@ interface Schedule {
 }
 
 export default function ClassDetailsScreen() {
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const navigation = useNavigation<any>();
   const route = useRoute<any>();
   const insets = useSafeAreaInsets();
-  const {id = '', date} = route.params || {};
+  const { id = '', date } = route.params || {};
 
-  const {colors} = useTheme();
-  const {isAuthenticated} = useAuthStore();
+  const { colors } = useTheme();
+  const { isAuthenticated } = useAuthStore();
 
   const scrollY = useRef(new Animated.Value(0)).current;
   const headerOpacity = scrollY.interpolate({
@@ -94,17 +139,16 @@ export default function ClassDetailsScreen() {
     extrapolate: 'clamp',
   });
 
-  const {classData, isLoading, error} = useClassDetailsData({id, date});
+  const { classData, isLoading, error } = useClassDetailsData({ id, date });
 
   const processedClassData = useMemo(() => {
     if (!classData) return null;
 
-    const data = {...classData};
+    const data = { ...classData };
 
     if (
       data.venue &&
-      (!data.venue.coordinates ||
-        Object.keys(data.venue.coordinates).length === 0) &&
+      (!data.venue.coordinates || Object.keys(data.venue.coordinates).length === 0) &&
       data.location?.coordinates?.length >= 2
     ) {
       data.venue.coordinates = {
@@ -116,15 +160,13 @@ export default function ClassDetailsScreen() {
     return data;
   }, [classData]);
 
-  const {data: schedulesData, refetch: refetchSchedules} = useMyschedules();
+  const { data: schedulesData, refetch: refetchSchedules } = useMyschedules();
 
   const isClassBooked = useMemo(() => {
     if (!schedulesData || !processedClassData) return false;
-    return (schedulesData as Schedule[]).some(
-      schedule => schedule.id === processedClassData.id,
-    );
+    return (schedulesData as Schedule[]).some(schedule => schedule.id === processedClassData.id);
   }, [schedulesData, processedClassData]);
-
+  console.log(processedClassData, schedulesData);
   useEffect(() => {
     Animated.timing(scrollY, {
       toValue: 0,
@@ -152,9 +194,7 @@ export default function ClassDetailsScreen() {
 
     try {
       await Share.share({
-        message: `Join me for ${processedClassData.name} at ${
-          processedClassData.venue?.name
-        } on ${
+        message: `Join me for ${processedClassData.name} at ${processedClassData.venue?.name} on ${
           processedClassData.date
             ? format(new Date(processedClassData.date), 'MMM d, yyyy h:mm a')
             : 'TBD'
@@ -166,9 +206,16 @@ export default function ClassDetailsScreen() {
   };
 
   const handleAddToCalendar = async () => {
-    if (!processedClassData?.date || !Calendar) {
-      console.warn(
-        'Cannot add to calendar: Calendar module not available or no date provided',
+    if (!processedClassData?.date) {
+      console.warn('Cannot add to calendar: No date provided');
+      return;
+    }
+
+    if (!Calendar) {
+      Alert.alert(
+        'Calendar Not Available',
+        'The calendar feature is not available on your device.',
+        [{ text: 'OK' }],
       );
       return;
     }
@@ -177,12 +224,17 @@ export default function ClassDetailsScreen() {
       const classStartDate = new Date(processedClassData.date);
       if (isNaN(classStartDate.getTime())) return;
 
-      const {status} = await Calendar.requestCalendarPermissionsAsync();
-      if (status !== 'granted') return;
+      const { status } = await Calendar.requestCalendarPermissionsAsync();
+      if (status !== 'granted') {
+        Alert.alert(
+          'Calendar Permission',
+          'Calendar permission is required to add this class to your calendar.',
+          [{ text: 'OK' }],
+        );
+        return;
+      }
 
-      const calendars = await Calendar.getCalendarsAsync(
-        Calendar.EntityTypes.EVENT,
-      );
+      const calendars = await Calendar.getCalendarsAsync(Calendar.EntityTypes.EVENT);
       const defaultCalendar = findDefaultCalendar(calendars);
       if (!defaultCalendar) return;
 
@@ -197,7 +249,7 @@ export default function ClassDetailsScreen() {
         location: processedClassData.venue?.name || '',
         notes: processedClassData.description || 'Booking confirmed',
         timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-        alarms: [{relativeOffset: -60}],
+        alarms: [{ relativeOffset: -60 }],
       };
 
       await Calendar.createEventAsync(defaultCalendar.id, eventDetails);
@@ -243,7 +295,7 @@ export default function ClassDetailsScreen() {
         screen: 'Venues',
         params: {
           screen: 'VenueDetails',
-          params: {id: processedClassData.venue.id},
+          params: { id: processedClassData.venue.id },
         },
       });
     }
@@ -255,34 +307,27 @@ export default function ClassDetailsScreen() {
 
   if (error || !processedClassData) {
     return (
-      <View style={[styles.container, {backgroundColor: colors.background}]}>
-        <View style={[styles.header, {backgroundColor: colors.background}]}>
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={closeScreen}
-            activeOpacity={0.7}>
-            <MaterialIcons
-              name="arrow-back"
-              size={24}
-              color={colors.textPrimary}
-            />
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
+        <View style={[styles.header, { backgroundColor: colors.background }]}>
+          <TouchableOpacity style={styles.backButton} onPress={closeScreen} activeOpacity={0.7}>
+            <MaterialIcons name="arrow-back" size={24} color={colors.textPrimary} />
           </TouchableOpacity>
-          <Text style={[styles.headerTitle, {color: colors.textPrimary}]}>
+          <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>
             {t('classes.details.classDetails')}
           </Text>
         </View>
         <View style={styles.errorContainer}>
           <MaterialIcons name="error-outline" size={60} color="#E53E3E" />
-          <Text style={[styles.errorTitle, {color: colors.textPrimary}]}>
+          <Text style={[styles.errorTitle, { color: colors.textPrimary }]}>
             {t('classes.details.errorTitle')}
           </Text>
-          <Text style={[styles.errorText, {color: colors.textSecondary}]}>
+          <Text style={[styles.errorText, { color: colors.textSecondary }]}>
             {error instanceof Error ? error.message : 'An error occurred'}
           </Text>
           <TouchableOpacity
-            style={[styles.tryAgainButton, {backgroundColor: colors.accent}]}
+            style={[styles.tryAgainButton, { backgroundColor: colors.accent }]}
             onPress={closeScreen}>
-            <Text style={[styles.tryAgainButtonText, {color: 'white'}]}>
+            <Text style={[styles.tryAgainButtonText, { color: 'white' }]}>
               {t('classes.details.goBack')}
             </Text>
           </TouchableOpacity>
@@ -293,12 +338,8 @@ export default function ClassDetailsScreen() {
 
   const classDetail = processedClassData as unknown as ClassDetail;
 
-  const formattedDate = classDetail.date
-    ? format(new Date(classDetail.date), 'EEE, MMM d')
-    : 'TBD';
-  const formattedTime = classDetail.date
-    ? format(new Date(classDetail.date), 'h:mm a')
-    : 'TBD';
+  const formattedDate = classDetail.date ? format(new Date(classDetail.date), 'EEE, MMM d') : 'TBD';
+  const formattedTime = classDetail.date ? format(new Date(classDetail.date), 'h:mm a') : 'TBD';
   const formattedClassDate = classDetail.date
     ? format(new Date(classDetail.date), 'EEE, d MMM, h:mm a')
     : 'TBD';
@@ -307,10 +348,9 @@ export default function ClassDetailsScreen() {
     : '';
 
   const hasValidCoordinates = !!(
-    classDetail.venue?.coordinates?.latitude &&
-    classDetail.venue?.coordinates?.longitude
+    classDetail.venue?.coordinates?.latitude && classDetail.venue?.coordinates?.longitude
   );
-  console.log(classDetail);
+
   return (
     <View
       style={[
@@ -326,85 +366,102 @@ export default function ClassDetailsScreen() {
         contentContainerStyle={styles.scrollViewContent}
         showsVerticalScrollIndicator={false}
         scrollEventThrottle={16}
-        onScroll={Animated.event(
-          [{nativeEvent: {contentOffset: {y: scrollY}}}],
-          {useNativeDriver: true},
-        )}>
-        <ClassImageSlider
-          covers={classDetail.covers}
-          className={classDetail.name}
-          onBackPress={closeScreen}
-        />
+        onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], {
+          useNativeDriver: true,
+        })}>
+        <Suspense fallback={<ImageSkeleton />}>
+          <ClassImageSlider
+            covers={classDetail.covers}
+            className={classDetail.name}
+            onBackPress={closeScreen}
+          />
+        </Suspense>
 
         <View style={styles.contentContainer}>
-          <ClassInfo
-            title={classDetail.name || ''}
-            formattedDate={formattedDate}
-            formattedTime={formattedTime}
-          />
+          <Suspense
+            fallback={
+              <View>
+                <TitleSkeleton />
+                <DateTimeSkeleton />
+              </View>
+            }>
+            <ClassInfo
+              title={classDetail.name || ''}
+              formattedDate={formattedDate}
+              formattedTime={formattedTime}
+            />
+          </Suspense>
 
           <View style={styles.detailsContainer}>
-            <ClassMeta
-              categories={classDetail.categories}
-              venueName={classDetail.venue?.name}
-              instructorInfo={classDetail.instructorInfo}
-            />
+            <Suspense
+              fallback={
+                <View>
+                  <CategorySkeleton />
+                  <VenueSkeleton />
+                  <InstructorSkeleton />
+                </View>
+              }>
+              <ClassMeta
+                categories={classDetail.categories}
+                venueName={classDetail.venue?.name}
+                instructorInfo={classDetail.instructorInfo}
+              />
+            </Suspense>
 
             <View style={styles.sectionContainer}>
-              <Text style={[styles.sectionTitle, {color: colors.textPrimary}]}>
+              <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
                 {t('classes.details.aboutClass')}
               </Text>
-              <ClassDescription description={classDetail.description} />
+              <Suspense fallback={<DescriptionSkeleton />}>
+                <ClassDescription description={classDetail.description} />
+              </Suspense>
             </View>
-
+            <Suspense
+              fallback={
+                <View style={styles.bookingInfoContainer}>
+                  <Skeleton width="80%" height={16} style={{ marginBottom: 8 }} />
+                  <Skeleton width="60%" height={14} />
+                </View>
+              }>
+              <BookingInfo
+                isClassBooked={isClassBooked}
+                cancelDateStr={cancelDateStr}
+                onAddToCalendar={handleAddToCalendar}
+              />
+            </Suspense>
             <View style={styles.sectionContainer}>
               <View style={styles.sectionHeaderRow}>
-                <Text
-                  style={[styles.sectionTitle, {color: colors.textPrimary}]}>
+                <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
                   {t('classes.details.venueDetails')}
                 </Text>
                 <TouchableOpacity onPress={goToVenue}>
-                  <Text style={[styles.viewMoreText, {color: colors.accent}]}>
+                  <Text style={[styles.viewMoreText, { color: colors.accent }]}>
                     {t('classes.details.viewMore')}
                   </Text>
                 </TouchableOpacity>
               </View>
 
               <View style={styles.venueContainer}>
-                {classDetail.venue?.covers &&
-                classDetail.venue.covers[0]?.url ? (
+                {classDetail.venue?.covers && classDetail.venue.covers[0]?.url ? (
                   <Image
-                    source={{uri: classDetail.venue.covers[0].url}}
+                    source={{ uri: classDetail.venue.covers[0].url }}
                     style={styles.venueImage}
                   />
                 ) : (
                   <View
-                    style={[
-                      styles.venueImagePlaceholder,
-                      {backgroundColor: colors.border},
-                    ]}
+                    style={[styles.venueImagePlaceholder, { backgroundColor: colors.border }]}
                   />
                 )}
 
                 <View style={styles.venueDetails}>
-                  <Text style={[styles.venueName, {color: colors.textPrimary}]}>
+                  <Text style={[styles.venueName, { color: colors.textPrimary }]}>
                     {classDetail.venue?.name}
                   </Text>
-                  <Text
-                    style={[
-                      styles.venueAddress,
-                      {color: colors.textSecondary},
-                    ]}>
-                    {classDetail.venue?.address?.street}{' '}
-                    {classDetail.venue?.address?.houseNumber}
+                  <Text style={[styles.venueAddress, { color: colors.textSecondary }]}>
+                    {classDetail.venue?.address?.street} {classDetail.venue?.address?.houseNumber}
                   </Text>
-                  <Text
-                    style={[
-                      styles.venueAddress,
-                      {color: colors.textSecondary},
-                    ]}>
-                    {classDetail.venue?.address?.city} -{' '}
-                    {classDetail.venue?.address?.country}
+                  <Text style={[styles.venueAddress, { color: colors.textSecondary }]}>
+                    {classDetail.venue?.address?.city} - {classDetail.venue?.address?.country}
                   </Text>
                 </View>
               </View>
@@ -412,12 +469,10 @@ export default function ClassDetailsScreen() {
 
             {classDetail.importantInfo && (
               <View style={styles.sectionContainer}>
-                <Text
-                  style={[styles.sectionTitle, {color: colors.textPrimary}]}>
+                <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
                   Important Info
                 </Text>
-                <Text
-                  style={[styles.importantInfo, {color: colors.textSecondary}]}>
+                <Text style={[styles.importantInfo, { color: colors.textSecondary }]}>
                   {classDetail.importantInfo}
                 </Text>
               </View>
@@ -425,32 +480,27 @@ export default function ClassDetailsScreen() {
 
             {hasValidCoordinates && (
               <View style={styles.sectionContainer}>
-                <Text
-                  style={[styles.sectionTitle, {color: colors.textPrimary}]}>
-                  Location
-                </Text>
-                <ClassLocationMap
-                  coordinates={classDetail.venue?.coordinates}
-                  venueName={classDetail.venue?.name}
-                />
+                <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Location</Text>
+                <Suspense fallback={<MapSkeleton />}>
+                  <ClassLocationMap
+                    coordinates={classDetail.venue?.coordinates}
+                    venueName={classDetail.venue?.name}
+                  />
+                </Suspense>
               </View>
             )}
-
-            <BookingInfo
-              isClassBooked={isClassBooked}
-              cancelDateStr={cancelDateStr}
-              onAddToCalendar={handleAddToCalendar}
-            />
           </View>
         </View>
       </Animated.ScrollView>
 
-      <ClassHeader
-        title={classDetail.name || ''}
-        onClose={closeScreen}
-        headerOpacity={headerOpacity}
-        insets={insets}
-      />
+      <Suspense fallback={<HeaderSkeleton onClose={closeScreen} />}>
+        <ClassHeader
+          title={classDetail.name || ''}
+          onClose={closeScreen}
+          headerOpacity={headerOpacity}
+          insets={insets}
+        />
+      </Suspense>
 
       <View
         style={[
@@ -462,7 +512,7 @@ export default function ClassDetailsScreen() {
           },
         ]}>
         <View style={styles.bookingContainer}>
-          <Text style={[styles.priceText, {color: colors.textPrimary}]}>
+          <Text style={[styles.priceText, { color: colors.textPrimary }]}>
             {classDetail.isFree ? 'Free' : 'Paid Class'}
           </Text>
 
@@ -632,5 +682,26 @@ const styles = StyleSheet.create({
   tryAgainButtonText: {
     fontSize: 16,
     fontWeight: '600',
+  },
+  imageContainer: {
+    flex: 1,
+  },
+  titleContainer: {
+    flex: 1,
+  },
+  metaContainer: {
+    flex: 1,
+  },
+  descriptionContainer: {
+    flex: 1,
+  },
+  mapContainer: {
+    flex: 1,
+  },
+  bookingInfoContainer: {
+    flex: 1,
+  },
+  headerContainer: {
+    flex: 1,
   },
 });

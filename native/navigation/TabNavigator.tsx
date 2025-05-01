@@ -1,40 +1,29 @@
-import React, {lazy, Suspense, useEffect} from 'react';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {View, StyleSheet, Platform, Pressable} from 'react-native';
+import React, { lazy, Suspense, useEffect } from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { View, StyleSheet, Platform, Pressable } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {useTheme, Skeleton} from '@design-system';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {ProfileSkeleton} from '@/features/profile';
-import {VenuesScreenSkeleton} from '@/features/venues/components/VenuesScreenSkeleton';
-import {ClassesScreenSkeleton} from '@/features/classes/components/ClassesScreenSkeleton';
-import {useAuthStore} from '@/stores/authStore';
-import {getFocusedRouteNameFromRoute} from '@react-navigation/native';
+import { useTheme } from '@design-system';
+import { useAuthStore } from '@/stores/authStore';
+import { getFocusedRouteNameFromRoute } from '@react-navigation/native';
+import { VenuesScreenSkeleton } from '@/features/venues/components/skeletons';
+import { ProfileSkeleton } from '@/features/profile/components/skeletons';
+import { ClassesScreenSkeleton } from '@/features/classes/components';
+import { CheckInScreenSkeleton } from '@/features/check-in/components';
 
 const Tab = createBottomTabNavigator();
 
 const LazyVenuesNavigator = lazy(() =>
-  import('@/features/venues').then(m => ({default: m.VenuesNavigator})),
+  import('@/features/venues').then(m => ({ default: m.VenuesNavigator })),
 );
 const LazyClassesNavigator = lazy(() =>
-  import('@/features/classes').then(m => ({default: m.ClassesNavigator})),
+  import('@/features/classes').then(m => ({ default: m.ClassesNavigator })),
 );
 const LazyCheckInNavigator = lazy(() =>
-  import('@/features/check-in').then(m => ({default: m.CheckInNavigator})),
+  import('@/features/check-in').then(m => ({ default: m.CheckInNavigator })),
 );
 const LazyProfileNavigator = lazy(() =>
-  import('@/features/profile').then(m => ({default: m.ProfileNavigator})),
+  import('@/features/profile').then(m => ({ default: m.ProfileNavigator })),
 );
-
-const GenericScreenFallback = () => {
-  const {colors} = useTheme();
-  return (
-    <View
-      style={[styles.fallbackContainer, {backgroundColor: colors.background}]}>
-      <Skeleton width="80%" height={50} style={{marginBottom: 16}} />
-      <Skeleton width="100%" height="70%" style={{borderRadius: 8}} />
-    </View>
-  );
-};
 
 const VenuesNavigatorWithSuspense = () => (
   <Suspense fallback={<VenuesScreenSkeleton />}>
@@ -49,7 +38,7 @@ const ClassesNavigatorWithSuspense = () => (
 );
 
 const CheckInNavigatorWithSuspense = () => (
-  <Suspense fallback={<GenericScreenFallback />}>
+  <Suspense fallback={<CheckInScreenSkeleton />}>
     <LazyCheckInNavigator />
   </Suspense>
 );
@@ -61,8 +50,8 @@ const ProfileNavigatorWithSuspense = () => (
 );
 
 const TabNavigator = () => {
-  const {colors} = useTheme();
-  const {isAuthenticated, hasActiveSubscription, initialize} = useAuthStore();
+  const { colors } = useTheme();
+  const { isAuthenticated, hasActiveSubscription, initialize } = useAuthStore();
   useEffect(() => {
     const initializeAuth = async () => {
       await initialize();
@@ -70,12 +59,10 @@ const TabNavigator = () => {
     initializeAuth();
   }, [initialize]);
 
-  const renderProfileIcon = ({color, size}: {color: string; size: number}) => (
+  const renderProfileIcon = ({ color, size }: { color: string; size: number }) => (
     <View style={styles.iconContainer}>
       <Icon name="person" color={color} size={size} />
-      {isAuthenticated && !hasActiveSubscription && (
-        <View style={styles.notificationBadge} />
-      )}
+      {isAuthenticated && !hasActiveSubscription && <View style={styles.notificationBadge} />}
     </View>
   );
 
@@ -96,25 +83,23 @@ const TabNavigator = () => {
         tabBarButton: props => (
           <Pressable
             {...props}
-            android_ripple={{color: 'transparent'}}
-            style={({pressed}) => [props.style, {opacity: 1}]}
+            android_ripple={{ color: 'transparent' }}
+            style={({ pressed }) => [props.style, { opacity: 1 }]}
           />
         ),
       }}>
       <Tab.Screen
         name="Venues"
         component={VenuesNavigatorWithSuspense}
-        options={({route}) => {
+        options={({ route }) => {
           const routeName = getFocusedRouteNameFromRoute(route) || 'VenuesList';
           const hideTabBarScreens = ['VenueDetails', 'VenueClassesList'];
           const tabBarStyle = hideTabBarScreens.includes(routeName)
-            ? {display: 'none' as const}
-            : {display: 'flex' as const};
+            ? { display: 'none' as const }
+            : { display: 'flex' as const };
 
           return {
-            tabBarIcon: ({color, size}) => (
-              <Icon name="place" size={size} color={color} />
-            ),
+            tabBarIcon: ({ color, size }) => <Icon name="place" size={size} color={color} />,
             tabBarStyle,
           };
         }}
@@ -123,16 +108,15 @@ const TabNavigator = () => {
       <Tab.Screen
         name="Classes"
         component={ClassesNavigatorWithSuspense}
-        options={({route}) => {
-          const routeName =
-            getFocusedRouteNameFromRoute(route) || 'ClassScreen';
+        options={({ route }) => {
+          const routeName = getFocusedRouteNameFromRoute(route) || 'ClassScreen';
           const hideTabBarScreens = ['ClassDetails'];
           const tabBarStyle = hideTabBarScreens.includes(routeName)
-            ? {display: 'none' as const}
-            : {display: 'flex' as const};
+            ? { display: 'none' as const }
+            : { display: 'flex' as const };
 
           return {
-            tabBarIcon: ({color, size}) => (
+            tabBarIcon: ({ color, size }) => (
               <Icon name="calendar-today" size={size} color={color} />
             ),
             tabBarStyle,
@@ -143,17 +127,16 @@ const TabNavigator = () => {
       <Tab.Screen
         name="CheckIn"
         component={CheckInNavigatorWithSuspense}
-        options={({route}) => {
-          const routeName =
-            getFocusedRouteNameFromRoute(route) || 'CheckInMain';
+        options={({ route }) => {
+          const routeName = getFocusedRouteNameFromRoute(route) || 'CheckInMain';
           const hideTabBarScreens = ['CheckInListScreen'];
           const tabBarStyle = hideTabBarScreens.includes(routeName)
-            ? {display: 'none' as const}
-            : {display: 'flex' as const};
+            ? { display: 'none' as const }
+            : { display: 'flex' as const };
 
           return {
             tabBarLabel: 'Check-in',
-            tabBarIcon: ({color, size}) => (
+            tabBarIcon: ({ color, size }) => (
               <Icon name="qr-code-scanner" size={size} color={color} />
             ),
             tabBarStyle,
@@ -164,7 +147,7 @@ const TabNavigator = () => {
       <Tab.Screen
         name="Profile"
         component={ProfileNavigatorWithSuspense}
-        options={({route}) => {
+        options={({ route }) => {
           const routeName = getFocusedRouteNameFromRoute(route) || 'AuthUser';
           const hideTabBarScreens = [
             'Settings',
@@ -178,8 +161,8 @@ const TabNavigator = () => {
             'Payment',
           ];
           const tabBarStyle = hideTabBarScreens.includes(routeName)
-            ? {display: 'none' as const}
-            : {display: 'flex' as const};
+            ? { display: 'none' as const }
+            : { display: 'flex' as const };
 
           return {
             tabBarIcon: renderProfileIcon,

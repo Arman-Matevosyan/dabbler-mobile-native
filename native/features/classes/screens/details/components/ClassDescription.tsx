@@ -8,7 +8,7 @@ interface ClassDescriptionProps {
 
 export const ClassDescription = React.memo(({ description }: ClassDescriptionProps) => {
   const { colors } = useTheme();
-  
+
   return (
     <View style={styles.descriptionContainer}>
       <Text style={[styles.descriptionText, { color: colors.textSecondary }]}>
@@ -26,4 +26,4 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20,
   },
-}); 
+});

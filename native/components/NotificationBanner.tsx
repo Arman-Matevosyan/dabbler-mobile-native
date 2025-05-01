@@ -1,16 +1,9 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {
-  Animated,
-  Dimensions,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
-import messaging, {FirebaseMessagingTypes} from '@react-native-firebase/messaging';
-import {useTheme} from '@design-system';
+import React, { useEffect, useRef, useState } from 'react';
+import { Animated, Dimensions, Pressable, StyleSheet, Text, View } from 'react-native';
+import messaging, { FirebaseMessagingTypes } from '@react-native-firebase/messaging';
+import { useTheme } from '@design-system';
 
-const {width} = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 type NotificationMessage = {
   title?: string;
@@ -19,10 +12,8 @@ type NotificationMessage = {
 };
 
 export const NotificationBanner = () => {
-  const {colors} = useTheme();
-  const [notification, setNotification] = useState<NotificationMessage | null>(
-    null,
-  );
+  const { colors } = useTheme();
+  const [notification, setNotification] = useState<NotificationMessage | null>(null);
   const translateY = useRef(new Animated.Value(-100)).current;
 
   useEffect(() => {
@@ -50,7 +41,7 @@ export const NotificationBanner = () => {
 
     // Subscribe to foreground messages
     const unsubscribe = messaging().onMessage(onMessageHandler);
-    
+
     // Cleanup function
     return () => {
       unsubscribe();
@@ -78,18 +69,14 @@ export const NotificationBanner = () => {
         {
           backgroundColor: colors.background,
           borderBottomColor: colors.border,
-          transform: [{translateY}],
+          transform: [{ translateY }],
         },
       ]}>
       <Pressable style={styles.content} onPress={hideBanner}>
         <View>
-          <Text style={[styles.title, {color: colors.textPrimary}]}>
-            {notification.title}
-          </Text>
+          <Text style={[styles.title, { color: colors.textPrimary }]}>{notification.title}</Text>
           {notification.body ? (
-            <Text style={[styles.body, {color: colors.textSecondary}]}>
-              {notification.body}
-            </Text>
+            <Text style={[styles.body, { color: colors.textSecondary }]}>{notification.body}</Text>
           ) : null}
         </View>
       </Pressable>
@@ -127,4 +114,4 @@ const styles = StyleSheet.create({
   body: {
     fontSize: 14,
   },
-}); 
+});

@@ -1,17 +1,13 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
-import {useTheme} from '@/design-system';
+import { View, Text, StyleSheet } from 'react-native';
+import { useTheme } from '@/design-system';
+import { useTranslation } from 'react-i18next';
 
-const ActivityChip = ({title, style}: {title: string; style?: any}) => {
-  const {colors} = useTheme();
+const ActivityChip = ({ title, style }: { title: string; style?: any }) => {
+  const { colors } = useTheme();
   return (
-    <View
-      style={[
-        styles.activityChip,
-        {backgroundColor: colors.card},
-        style,
-      ]}>
-      <Text style={{color: colors.textPrimary}}>{title}</Text>
+    <View style={[styles.activityChip, { backgroundColor: colors.card }, style]}>
+      <Text style={[styles.activityChipText, { color: colors.textPrimary }]}>{title}</Text>
     </View>
   );
 };
@@ -20,13 +16,14 @@ interface VenueAmenitiesProps {
   categories?: string[];
 }
 
-export const VenueAmenities: React.FC<VenueAmenitiesProps> = ({categories}) => {
-  const {colors} = useTheme();
+export const VenueAmenities: React.FC<VenueAmenitiesProps> = ({ categories }) => {
+  const { colors } = useTheme();
+  const { t } = useTranslation();
 
   return (
-    <View style={styles.sectionContainer}>
-      <Text style={[styles.sectionTitle, {color: colors.textPrimary}]}>
-        {'venues.amenities'}
+    <View style={[styles.sectionContainer, { borderBottomColor: colors.border }]}>
+      <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
+        {t('venues.amenities')}
       </Text>
       <View style={styles.activitiesContainer}>
         {categories && categories.length > 0 ? (
@@ -34,12 +31,12 @@ export const VenueAmenities: React.FC<VenueAmenitiesProps> = ({categories}) => {
             <ActivityChip
               key={`activity-${index}`}
               title={activity}
-              style={{marginRight: 8, marginBottom: 8}}
+              style={{ marginRight: 8, marginBottom: 8 }}
             />
           ))
         ) : (
-          <Text style={[styles.sectionText, {color: colors.textSecondary}]}>
-            {'common.noResults'}
+          <Text style={[styles.sectionText, { color: colors.textSecondary }]}>
+            {t('common.noResults')}
           </Text>
         )}
       </View>
@@ -73,4 +70,8 @@ const styles = StyleSheet.create({
     marginRight: 8,
     marginBottom: 8,
   },
-}); 
+  activityChipText: {
+    fontSize: 14,
+    fontWeight: '500',
+  },
+});

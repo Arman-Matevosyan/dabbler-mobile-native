@@ -1,12 +1,11 @@
-import {useState, useCallback} from 'react';
-import {Animated} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {NativeStackNavigationProp} from '@react-navigation/native-stack';
-import {VenuesStackParamList} from '@/navigation/types';
+import { useState, useCallback } from 'react';
+import { Animated } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { VenuesStackParamList } from '@/navigation/types';
 
 export const useVenueScreen = () => {
-  const navigation =
-    useNavigation<NativeStackNavigationProp<VenuesStackParamList>>();
+  const navigation = useNavigation<NativeStackNavigationProp<VenuesStackParamList>>();
   const [activeVenueId, setActiveVenueId] = useState<string | null>(null);
   const [filterVisible, setFilterVisible] = useState(false);
   const animatedFilterHeight = new Animated.Value(0);
@@ -17,7 +16,7 @@ export const useVenueScreen = () => {
 
   const navigateToVenueDetails = useCallback(
     (venueId: string) => {
-      navigation.navigate('VenueDetails', {id: venueId});
+      navigation.navigate('VenueDetails', { id: venueId });
     },
     [navigation],
   );

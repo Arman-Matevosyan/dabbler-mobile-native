@@ -1,10 +1,10 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
-import {useTheme} from '@/design-system';
-import {useTranslation} from 'react-i18next';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { useTheme } from '@/design-system';
+import { useTranslation } from 'react-i18next';
 
 interface VenueDescriptionProps {
-  description: string | undefined;
+  description?: string;
   showFullDescription: boolean;
   toggleDescription: () => void;
 }
@@ -14,22 +14,25 @@ export const VenueDescription: React.FC<VenueDescriptionProps> = ({
   showFullDescription,
   toggleDescription,
 }) => {
-  const {colors} = useTheme();
-  const {t} = useTranslation();
+  const { colors } = useTheme();
+  const { t } = useTranslation();
+
+  const descriptionText = description || t('common.noResults');
 
   return (
-    <View style={styles.sectionContainer}>
-      <Text style={[styles.sectionTitle, {color: colors.textPrimary}]}>
+    <View style={[styles.sectionContainer, { borderBottomColor: colors.border }]}>
+      <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
         {t('venues.about')}
       </Text>
       <Text
-        style={[styles.sectionText, {color: colors.textSecondary}]}
-        numberOfLines={showFullDescription ? undefined : 3}>
-        {description || t('common.noResults')}
+        style={[styles.sectionText, { color: colors.textSecondary }]}
+        numberOfLines={showFullDescription ? undefined : 3}
+      >
+        {descriptionText}
       </Text>
       {description && description.length > 120 && (
         <TouchableOpacity onPress={toggleDescription}>
-          <Text style={[styles.readMore, {color: colors.accent}]}>
+          <Text style={[styles.readMore, { color: colors.accent }]}>
             {showFullDescription ? t('venues.showLess') : t('venues.showMore')}
           </Text>
         </TouchableOpacity>
@@ -58,4 +61,4 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: '600',
   },
-}); 
+});

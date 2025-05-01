@@ -1,13 +1,7 @@
-import {useTheme} from '@/design-system';
-import {format} from 'date-fns';
+import { useTheme } from '@/design-system';
+import { format } from 'date-fns';
 import React from 'react';
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 interface DateSelectorProps {
   dates: Date[];
@@ -20,7 +14,7 @@ export const DateSelector: React.FC<DateSelectorProps> = ({
   selectedDate,
   onDateSelect,
 }) => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const formatDate = (date: Date) => {
     const today = new Date();
     const isToday = date.toDateString() === today.toDateString();
@@ -39,19 +33,14 @@ export const DateSelector: React.FC<DateSelectorProps> = ({
   };
 
   return (
-    <View
-      style={[
-        styles.dateSelectionContainer,
-        {borderBottomColor: colors.border},
-      ]}>
+    <View style={[styles.dateSelectionContainer, { borderBottomColor: colors.border }]}>
       <ScrollView
         horizontal
         showsHorizontalScrollIndicator={false}
         contentContainerStyle={styles.dateScrollContent}>
         {dates.map((date, index) => {
           const formatted = formatDate(date);
-          const isSelected =
-            date.toDateString() === selectedDate.toDateString();
+          const isSelected = date.toDateString() === selectedDate.toDateString();
 
           return (
             <TouchableOpacity

@@ -1,16 +1,16 @@
 import React from 'react';
-import {ScrollView, StyleSheet, View} from 'react-native';
-import {EmptyState} from '@/design-system';
-import {ClassCard} from '@/components/ClassCard';
-import {SkeletonCard} from './SkeletonCard';
+import { ScrollView, StyleSheet, View } from 'react-native';
+import { EmptyState } from '@/design-system';
+import { ClassCard } from '@/components/ClassCard';
+import { ClassCardSkeleton } from './skeletons/VenueClassesSkeleton';
 
 interface ClassItem {
   id: string;
   name: string;
-  covers: Array<{url: string}>;
+  covers: Array<{ url: string }>;
   date?: string;
   duration: number;
-  venue: {name: string};
+  venue: { name: string };
   instructorInfo: string;
   categories: string[];
   scheduled: boolean;
@@ -21,10 +21,10 @@ interface ClassItem {
 interface ApiClassItem {
   id: string;
   name: string;
-  covers?: Array<{url: string}>;
+  covers?: Array<{ url: string }>;
   date?: string;
   duration: number;
-  venue?: {name: string};
+  venue?: { name: string };
   instructorInfo?: string;
   categories?: string[];
   scheduledSpots?: number;
@@ -46,11 +46,13 @@ export const ClassContent: React.FC<ClassContentProps> = ({
 }) => {
   if (isLoading) {
     return (
-      <ScrollView
-        style={styles.scrollView}
-        showsVerticalScrollIndicator={false}>
-        {Array.from({length: 3}).map((_, index) => (
-          <SkeletonCard key={index} />
+      <ScrollView 
+        style={styles.scrollView} 
+        contentContainerStyle={styles.skeletonContent}
+        showsVerticalScrollIndicator={false}
+      >
+        {Array.from({ length: 3 }).map((_, index) => (
+          <ClassCardSkeleton key={`skeleton-${index}`} />
         ))}
       </ScrollView>
     );
@@ -70,24 +72,18 @@ export const ClassContent: React.FC<ClassContentProps> = ({
   if (!scheduledClasses?.length && !freeClasses.length) {
     return (
       <View style={styles.contentContainer}>
-        <EmptyState
-          title={'classes.noClassesAvailable'}
-          message={'classes.noClassesScheduled'}
-        />
+        <EmptyState title={'classes.noClassesAvailable'} message={'classes.noClassesScheduled'} />
       </View>
     );
   }
 
-  const mapToClassItem = (
-    classItem: ApiClassItem,
-    isScheduled: boolean,
-  ): ClassItem => ({
+  const mapToClassItem = (classItem: ApiClassItem, isScheduled: boolean): ClassItem => ({
     id: classItem.id,
     name: classItem.name,
     covers: classItem.covers || [],
     date: classItem.date,
     duration: classItem.duration,
-    venue: {name: classItem.venue?.name || ''},
+    venue: { name: classItem.venue?.name || '' },
     instructorInfo: classItem.instructorInfo || '',
     categories: classItem.categories || [],
     scheduled: isScheduled,
@@ -96,18 +92,16 @@ export const ClassContent: React.FC<ClassContentProps> = ({
   });
 
   return (
-    <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
+    <ScrollView 
+      style={styles.scrollView} 
+      contentContainerStyle={styles.contentContainerStyle}
+      showsVerticalScrollIndicator={false}
+    >
       {freeClasses.map(classItem => (
-        <ClassCard
-          key={`free-${classItem.id}`}
-          classItem={mapToClassItem(classItem, false)}
-        />
+        <ClassCard key={`free-${classItem.id}-${classItem.date}`} classItem={mapToClassItem(classItem, false)} />
       ))}
       {scheduledClasses?.map(classItem => (
-        <ClassCard
-          key={`scheduled-${classItem.id}`}
-          classItem={mapToClassItem(classItem, true)}
-        />
+        <ClassCard key={`scheduled-${classItem.id}-${classItem.date}`} classItem={mapToClassItem(classItem, true)} />
       ))}
     </ScrollView>
   );
@@ -118,8 +112,20 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 16,
   },
+  contentContainerStyle: {
+    paddingTop: 12,
+    paddingBottom: 16,
+    gap: 12,
+  },
+  skeletonContent: {
+    paddingTop: 12,
+    paddingBottom: 16,
+    gap: 12,
+  },
   contentContainer: {
     flex: 1,
     paddingHorizontal: 16,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

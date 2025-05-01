@@ -1,18 +1,14 @@
-import {Skeleton, useTheme} from '@/design-system';
-import {StyleSheet, View} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
+import { Skeleton, useTheme } from '@/design-system';
+import { StyleSheet, View } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export const SearchSkeleton = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   return (
-    <View
-      style={[
-        styles.searchSkeleton,
-        {backgroundColor: colors.card, paddingTop: insets.top},
-      ]}>
+    <View style={[styles.searchSkeleton, { backgroundColor: colors.card, paddingTop: insets.top }]}>
       <View style={styles.searchBarContainer}>
-        <Skeleton width="100%" height={48} style={{borderRadius: 24}} />
+        <Skeleton width="100%" height={48} style={{ borderRadius: 24 }} />
       </View>
       <View style={styles.categoriesContainer}>
         <Skeleton
@@ -23,7 +19,7 @@ export const SearchSkeleton = () => {
             marginRight: 8,
           }}
         />
-        <Skeleton width={100} height={16} style={{alignSelf: 'center'}} />
+        <Skeleton width={100} height={16} style={{ alignSelf: 'center' }} />
       </View>
     </View>
   );
@@ -40,7 +36,7 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 8,
     borderBottomRightRadius: 8,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
     elevation: 3,

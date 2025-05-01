@@ -1,7 +1,7 @@
-import {Avatar, Text} from '@/design-system';
-import {IUserProfile} from '@/types/user.interfaces';
+import { Avatar, Text } from '@/design-system';
+import { IUserProfile } from '@/types/user.interfaces';
 import React from 'react';
-import {View} from 'react-native';
+import { View } from 'react-native';
 
 interface UserInfoCardProps {
   user: IUserProfile;

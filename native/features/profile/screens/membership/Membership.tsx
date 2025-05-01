@@ -1,22 +1,16 @@
 import React from 'react';
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  Image,
-  TouchableOpacity,
-} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useNavigation} from '@react-navigation/native';
-import {Text, Button, useTheme, Skeleton} from '@/design-system';
+import { View, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import { Text, Button, useTheme, Skeleton } from '@/design-system';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {format} from 'date-fns';
-import {useSubscriptions} from '@/hooks/useSubscriptions';
-import {ISubscription} from '@/types/payment.interfaces';
+import { format } from 'date-fns';
+import { useSubscriptions } from '@/hooks/useSubscriptions';
+import { ISubscription } from '@/types/payment.interfaces';
 
 // Skeleton components for the membership screen
 const MembershipDetailSkeleton = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
 
   return (
     <View
@@ -29,12 +23,12 @@ const MembershipDetailSkeleton = () => {
           paddingVertical: 16,
         },
       ]}>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <Skeleton width={24} height={24} style={{marginRight: 16}} />
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <Skeleton width={24} height={24} style={{ marginRight: 16 }} />
         <View>
-          <Skeleton width={120} height={16} style={{marginBottom: 8}} />
+          <Skeleton width={120} height={16} style={{ marginBottom: 8 }} />
           <Skeleton width={180} height={18} />
-          <Skeleton width={150} height={14} style={{marginTop: 4}} />
+          <Skeleton width={150} height={14} style={{ marginTop: 4 }} />
         </View>
       </View>
     </View>
@@ -43,29 +37,20 @@ const MembershipDetailSkeleton = () => {
 
 export const MembershipScreen = () => {
   const insets = useSafeAreaInsets();
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const navigation = useNavigation();
-  const {data: subscriptionData, isLoading} = useSubscriptions();
+  const { data: subscriptionData, isLoading } = useSubscriptions();
   const subscription = subscriptionData as ISubscription | undefined;
 
   const hasSubscriptionData =
-    subscription &&
-    subscription.plan &&
-    subscription.plan.name &&
-    subscription.status;
+    subscription && subscription.plan && subscription.plan.name && subscription.status;
 
   const renderHeader = () => (
     <View style={styles.header}>
       <Button
         variant="ghost"
         onPress={() => navigation.goBack()}
-        icon={
-          <MaterialIcons
-            name="arrow-back"
-            size={24}
-            color={colors.textPrimary}
-          />
-        }
+        icon={<MaterialIcons name="arrow-back" size={24} color={colors.textPrimary} />}
         style={styles.backButton}
       />
       <Text variant="heading1">Membership</Text>
@@ -78,7 +63,7 @@ export const MembershipScreen = () => {
         name="card-membership"
         size={90}
         color={colors.accent}
-        style={{marginBottom: 20}}
+        style={{ marginBottom: 20 }}
       />
 
       <Text
@@ -113,10 +98,10 @@ export const MembershipScreen = () => {
   const renderLoadingState = () => (
     <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
       <View style={styles.content}>
-        <Skeleton width="70%" height={24} style={{marginBottom: 24}} />
+        <Skeleton width="70%" height={24} style={{ marginBottom: 24 }} />
 
         {/* Skeleton loading for membership details */}
-        <View style={{gap: 8}}>
+        <View style={{ gap: 8 }}>
           <MembershipDetailSkeleton />
           <MembershipDetailSkeleton />
           <MembershipDetailSkeleton />
@@ -133,7 +118,7 @@ export const MembershipScreen = () => {
           Membership Details
         </Text>
 
-        <View style={{gap: 16, marginTop: 16}}>
+        <View style={{ gap: 16, marginTop: 16 }}>
           {/* Plan Details */}
           <View
             style={[
@@ -184,14 +169,13 @@ export const MembershipScreen = () => {
                 <Text variant="bodySmall" color="secondary">
                   Payment Method
                 </Text>
-                <View
-                  style={{flexDirection: 'row', alignItems: 'center', gap: 8}}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                   {subscription?.paymentMethod?.details?.imageUrl && (
                     <Image
                       source={{
                         uri: subscription.paymentMethod.details.imageUrl,
                       }}
-                      style={{width: 24, height: 16}}
+                      style={{ width: 24, height: 16 }}
                     />
                   )}
                   <Text variant="bodySmall" bold>
@@ -203,8 +187,7 @@ export const MembershipScreen = () => {
                 {subscription?.paymentMethod?.details?.expirationMonth &&
                   subscription?.paymentMethod?.details?.expirationYear && (
                     <Text variant="bodySmall" color="secondary">
-                      Expires{' '}
-                      {subscription.paymentMethod.details.expirationMonth}/
+                      Expires {subscription.paymentMethod.details.expirationMonth}/
                       {subscription.paymentMethod.details.expirationYear}
                     </Text>
                   )}
@@ -231,18 +214,10 @@ export const MembershipScreen = () => {
                 <Text variant="bodySmall" color="secondary">
                   Billing Period
                 </Text>
-                {subscription?.billingPeriodStartDate &&
-                subscription?.billingPeriodEndDate ? (
+                {subscription?.billingPeriodStartDate && subscription?.billingPeriodEndDate ? (
                   <Text variant="bodySmall" bold>
-                    {format(
-                      new Date(subscription.billingPeriodStartDate),
-                      'MMM dd',
-                    )}{' '}
-                    -{' '}
-                    {format(
-                      new Date(subscription.billingPeriodEndDate),
-                      'MMM dd, yyyy',
-                    )}
+                    {format(new Date(subscription.billingPeriodStartDate), 'MMM dd')} -{' '}
+                    {format(new Date(subscription.billingPeriodEndDate), 'MMM dd, yyyy')}
                   </Text>
                 ) : (
                   <Text variant="bodySmall" bold>
@@ -276,10 +251,7 @@ export const MembershipScreen = () => {
                   variant="bodySmall"
                   bold
                   style={{
-                    color:
-                      subscription?.status === 'active'
-                        ? colors.success
-                        : colors.error,
+                    color: subscription?.status === 'active' ? colors.success : colors.error,
                   }}>
                   {subscription?.status || 'Unknown'}
                 </Text>
@@ -316,10 +288,7 @@ export const MembershipScreen = () => {
 
   return (
     <View
-      style={[
-        styles.container,
-        {backgroundColor: colors.background, paddingTop: insets.top},
-      ]}>
+      style={[styles.container, { backgroundColor: colors.background, paddingTop: insets.top }]}>
       {renderHeader()}
       {renderContent()}
     </View>

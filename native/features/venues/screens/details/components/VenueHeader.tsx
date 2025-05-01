@@ -1,12 +1,12 @@
 import React from 'react';
-import {View, Text, StyleSheet, Animated, TouchableOpacity, Platform} from 'react-native';
-import {useTheme, ImageSlider} from '@/design-system';
+import { View, Text, StyleSheet, Animated, TouchableOpacity, Platform } from 'react-native';
+import { useTheme, ImageSlider } from '@/design-system';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {ActivityIndicator} from 'react-native';
+import { ActivityIndicator } from 'react-native';
 
 interface VenueHeaderProps {
   name: string;
-  images: Array<{url: string}>;
+  images: Array<{ url: string }>;
   onBackPress: () => void;
   onFavoritePress: () => void;
   isFavorite: boolean;
@@ -23,7 +23,7 @@ export const VenueHeader: React.FC<VenueHeaderProps> = ({
   isLoading,
   headerOpacity,
 }) => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
 
   return (
     <>
@@ -36,14 +36,10 @@ export const VenueHeader: React.FC<VenueHeaderProps> = ({
             borderBottomColor: colors.border,
           },
         ]}>
-        <TouchableOpacity
-          style={styles.fixedHeaderButton}
-          onPress={onBackPress}>
+        <TouchableOpacity style={styles.fixedHeaderButton} onPress={onBackPress}>
           <MaterialIcons name="arrow-back" size={24} color={colors.textPrimary} />
         </TouchableOpacity>
-        <Text style={[styles.fixedHeaderTitle, {color: colors.textPrimary}]}>
-          {name}
-        </Text>
+        <Text style={[styles.fixedHeaderTitle, { color: colors.textPrimary }]}>{name}</Text>
         <TouchableOpacity
           style={styles.fixedHeaderButton}
           onPress={onFavoritePress}
@@ -72,9 +68,7 @@ export const VenueHeader: React.FC<VenueHeaderProps> = ({
       />
 
       <View style={styles.venueNameContainer}>
-        <Text style={[styles.venueName, {color: colors.textPrimary}]}>
-          {name}
-        </Text>
+        <Text style={[styles.venueName, { color: colors.textPrimary }]}>{name}</Text>
       </View>
     </>
   );
@@ -119,4 +113,4 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 8,
   },
-}); 
+});

@@ -19,12 +19,8 @@
     "**/*.tsx",
     "**/*.js",
     "**/*.jsx",
-    "src/@types/*.d.ts"
+    "src/@types/*.d.ts",
+    "native/services/i18n/translations/hy.josn"
   ],
-  "exclude": [
-    "node_modules",
-    "babel.config.js",
-    "metro.config.js",
-    "jest.config.js"
-  ]
+  "exclude": ["node_modules", "babel.config.js", "metro.config.js", "jest.config.js"]
 }

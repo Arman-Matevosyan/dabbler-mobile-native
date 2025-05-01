@@ -14,16 +14,16 @@ export const useUserLocation = () => {
 
   const fetchUserLocation = useCallback(() => {
     setIsLoading(true);
-    
+
     Geolocation.getCurrentPosition(
-      (position) => {
+      position => {
         setUserLocation({
           latitude: position.coords.latitude,
           longitude: position.coords.longitude,
         });
         setIsLoading(false);
       },
-      (err) => {
+      err => {
         setError(new Error(err.message));
         setUserLocation({
           latitude: ARMENIA_REGION.latitude,
@@ -31,7 +31,7 @@ export const useUserLocation = () => {
         });
         setIsLoading(false);
       },
-      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 }
+      { enableHighAccuracy: true, timeout: 15000, maximumAge: 10000 },
     );
   }, []);
 
@@ -45,4 +45,4 @@ export const useUserLocation = () => {
     isLoading,
     fetchUserLocation,
   };
-}; 
+};

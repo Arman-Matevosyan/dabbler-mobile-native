@@ -1,20 +1,18 @@
-export {VenueHeader} from './VenueHeader';
-export {VenueDescription} from './VenueDescription';
-export {VenueInfo} from './VenueInfo';
-export {VenueAmenities} from './VenueAmenities';
-export {VenueImportantInfo} from './VenueImportantInfo';
-export {VenuePlans} from './VenuePlans';
-export {VenueMap} from './VenueMap';
-export {VenueActions} from './VenueActions';
-export {VenueDetailsScreenSkeleton} from './VenueDetailsScreenSkeleton';
+export { VenueHeader } from './VenueHeader';
+export { VenueDescription } from './VenueDescription';
+export { VenueInfo } from './VenueInfo';
+export { VenueAmenities } from './VenueAmenities';
+export { VenueImportantInfo } from './VenueImportantInfo';
+export { VenuePlans } from './VenuePlans';
+export { VenueMap } from './VenueMap';
+export { VenueActions } from './VenueActions';
 export {
-  VenueDetailsSkeleton,
-  HeaderSkeleton,
-  ImageSliderSkeleton,
-  VenueNameSkeleton,
+  VenueDetailsScreenSkeleton,
   DescriptionSkeleton,
   InfoSkeleton,
   AmenitiesSkeleton,
+  ImportantInfoSkeleton,
+  VenuePlansSkeleton,
   MapSectionSkeleton,
-  ActionsSkeleton,
-} from './VenueDetailsSkeleton';
+  HeaderSkeleton,
+} from './skeletons';

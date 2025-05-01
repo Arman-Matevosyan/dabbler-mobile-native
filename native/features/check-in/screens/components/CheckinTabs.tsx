@@ -1,7 +1,7 @@
 import React from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
-import {useTheme, Text} from '@design-system';
-import {useTranslation} from 'react-i18next';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import { useTheme, Text } from '@design-system';
+import { useTranslation } from 'react-i18next';
 
 interface CheckinTabsProps {
   activeTab: 'free' | 'scheduled';
@@ -16,19 +16,16 @@ const CheckinTabs = ({
   freeClassesCount,
   scheduledClassesCount,
 }: CheckinTabsProps) => {
-  const {colors} = useTheme();
-  const {t} = useTranslation();
+  const { colors } = useTheme();
+  const { t } = useTranslation();
 
   return (
-    <View style={[styles.container, {backgroundColor: colors.background}]}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={styles.tabsContainer}>
         <TouchableOpacity
           style={[
             styles.tab,
-            activeTab === 'free' && [
-              styles.activeTab,
-              {borderBottomColor: colors.accent},
-            ],
+            activeTab === 'free' && [styles.activeTab, { borderBottomColor: colors.accent }],
           ]}
           onPress={() => onChangeTab('free')}
           activeOpacity={0.7}>
@@ -36,10 +33,7 @@ const CheckinTabs = ({
             style={[
               styles.tabText,
               {
-                color:
-                  activeTab === 'free'
-                    ? colors.textPrimary
-                    : colors.textSecondary,
+                color: activeTab === 'free' ? colors.textPrimary : colors.textSecondary,
               },
             ]}>
             {t('checkin.freeClasses')}
@@ -49,8 +43,7 @@ const CheckinTabs = ({
               style={[
                 styles.countText,
                 {
-                  color:
-                    activeTab === 'free' ? colors.accent : colors.textSecondary,
+                  color: activeTab === 'free' ? colors.accent : colors.textSecondary,
                 },
               ]}>
               {freeClassesCount}
@@ -61,10 +54,7 @@ const CheckinTabs = ({
         <TouchableOpacity
           style={[
             styles.tab,
-            activeTab === 'scheduled' && [
-              styles.activeTab,
-              {borderBottomColor: colors.accent},
-            ],
+            activeTab === 'scheduled' && [styles.activeTab, { borderBottomColor: colors.accent }],
           ]}
           onPress={() => onChangeTab('scheduled')}
           activeOpacity={0.7}>
@@ -72,10 +62,7 @@ const CheckinTabs = ({
             style={[
               styles.tabText,
               {
-                color:
-                  activeTab === 'scheduled'
-                    ? colors.textPrimary
-                    : colors.textSecondary,
+                color: activeTab === 'scheduled' ? colors.textPrimary : colors.textSecondary,
               },
             ]}>
             {t('checkin.scheduledClasses')}
@@ -85,10 +72,7 @@ const CheckinTabs = ({
               style={[
                 styles.countText,
                 {
-                  color:
-                    activeTab === 'scheduled'
-                      ? colors.accent
-                      : colors.textSecondary,
+                  color: activeTab === 'scheduled' ? colors.accent : colors.textSecondary,
                 },
               ]}>
               {scheduledClassesCount}

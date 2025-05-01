@@ -1,22 +1,22 @@
-import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, ScrollView} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useNavigation} from '@react-navigation/native';
-import {Text, Button, useTheme, Skeleton} from '@/design-system';
+import React, { useState, useEffect } from 'react';
+import { View, StyleSheet, ScrollView } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import { Text, Button, useTheme, Skeleton } from '@/design-system';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import type {User} from '@/services/api/auth';
-import {useAuthStore} from '@/stores/authStore';
-import {useTranslation} from 'react-i18next';
+import type { User } from '@/services/api/auth';
+import { useAuthStore } from '@/stores/authStore';
+import { useTranslation } from 'react-i18next';
 
 interface ExtendedUser extends User {
   isVerified?: boolean;
 }
 
-const SkeletonDetailItem = ({colors}: {colors: any}) => (
-  <View style={[styles.detailItemSkeleton, {borderBottomColor: colors.border}]}>
-    <Skeleton width={24} height={24} style={{marginRight: 16}} />
-    <View style={{flex: 1}}>
-      <Skeleton width="40%" height={16} style={{marginBottom: 8}} />
+const SkeletonDetailItem = ({ colors }: { colors: any }) => (
+  <View style={[styles.detailItemSkeleton, { borderBottomColor: colors.border }]}>
+    <Skeleton width={24} height={24} style={{ marginRight: 16 }} />
+    <View style={{ flex: 1 }}>
+      <Skeleton width="40%" height={16} style={{ marginBottom: 8 }} />
       <Skeleton width="60%" height={18} />
     </View>
   </View>
@@ -33,13 +33,8 @@ const DetailItem = ({
   icon: string;
   colors: any;
 }) => (
-  <View style={[styles.detailItem, {borderBottomColor: colors.border}]}>
-    <MaterialIcons
-      name={icon}
-      size={24}
-      color={colors.textPrimary}
-      style={styles.detailIcon}
-    />
+  <View style={[styles.detailItem, { borderBottomColor: colors.border }]}>
+    <MaterialIcons name={icon} size={24} color={colors.textPrimary} style={styles.detailIcon} />
     <View style={styles.detailTextContainer}>
       <Text variant="bodySmall" color="secondary">
         {label}
@@ -51,11 +46,11 @@ const DetailItem = ({
 
 export const ProfileDetailsScreen = () => {
   const insets = useSafeAreaInsets();
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const navigation = useNavigation();
-  const {user: userData, isLoading: authLoading} = useAuthStore();
+  const { user: userData, isLoading: authLoading } = useAuthStore();
   const [loading, setLoading] = useState(true);
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (!authLoading) {
@@ -69,9 +64,7 @@ export const ProfileDetailsScreen = () => {
   const accountDetails = [
     {
       label: t('profile.name'),
-      value:
-        `${userData?.firstName || ''} ${userData?.lastName || ''}`.trim() ||
-        'N/A',
+      value: `${userData?.firstName || ''} ${userData?.lastName || ''}`.trim() || 'N/A',
       icon: 'account-circle',
     },
     {
@@ -95,12 +88,7 @@ export const ProfileDetailsScreen = () => {
     <View style={styles.header}>
       {loading ? (
         <>
-          <Skeleton
-            width={40}
-            height={40}
-            borderRadius={20}
-            style={{marginRight: 16}}
-          />
+          <Skeleton width={40} height={40} borderRadius={20} style={{ marginRight: 16 }} />
           <Skeleton width={150} height={28} />
         </>
       ) : (
@@ -108,13 +96,7 @@ export const ProfileDetailsScreen = () => {
           <Button
             variant="ghost"
             onPress={() => navigation.goBack()}
-            icon={
-              <MaterialIcons
-                name="arrow-back"
-                size={24}
-                color={colors.textPrimary}
-              />
-            }
+            icon={<MaterialIcons name="arrow-back" size={24} color={colors.textPrimary} />}
             style={styles.backButton}
           />
           <Text variant="heading1">{t('profile.account')}</Text>
@@ -128,7 +110,7 @@ export const ProfileDetailsScreen = () => {
       <View style={styles.content}>
         {loading ? (
           <>
-            <Skeleton width="70%" height={30} style={{marginBottom: 24}} />
+            <Skeleton width="70%" height={30} style={{ marginBottom: 24 }} />
             {[1, 2, 3, 4].map(item => (
               <SkeletonDetailItem key={item} colors={colors} />
             ))}
@@ -157,10 +139,7 @@ export const ProfileDetailsScreen = () => {
 
   return (
     <View
-      style={[
-        styles.container,
-        {backgroundColor: colors.background, paddingTop: insets.top},
-      ]}>
+      style={[styles.container, { backgroundColor: colors.background, paddingTop: insets.top }]}>
       {renderHeader()}
       {renderContent()}
     </View>

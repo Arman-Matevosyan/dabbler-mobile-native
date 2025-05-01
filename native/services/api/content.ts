@@ -1,5 +1,5 @@
-import {client} from '../client';
-import {ICategoriesResponse} from '@/types/categories.interfaces';
+import { client } from '../client';
+import { ICategoriesResponse } from '@/types/categories.interfaces';
 import {
   ICheckinsResponse,
   IClassDetailResponse,
@@ -13,7 +13,7 @@ import {
   ISchedulesResponse,
   IVenueClassesResponse,
 } from '@/types/class.interfaces';
-import {IVenueResponse, IVenuesListResponse} from '@/types/venues.interfaces';
+import { IVenueResponse, IVenuesListResponse } from '@/types/venues.interfaces';
 
 interface ApiResponse<T> {
   response: T;
@@ -48,7 +48,7 @@ export const ContentAPI = {
     const response = await client.get<ApiResponse<IVenuesListResponse>>(
       '/content/venues/discover/favorites/me',
       {},
-      {withAuth: true},
+      { withAuth: true },
     );
     return response.response;
   },
@@ -62,10 +62,7 @@ export const ContentAPI = {
     return response.response;
   },
 
-  getClassDetails: async (
-    classId: string,
-    params?: any,
-  ): Promise<IClassDetailResponse> => {
+  getClassDetails: async (classId: string, params?: any): Promise<IClassDetailResponse> => {
     const response = await client.get<ApiResponse<IClassDetailResponse>>(
       `/content/classes/discover/${classId}`,
       params,
@@ -85,7 +82,7 @@ export const ContentAPI = {
     const response = await client.get<ApiResponse<ISchedulesResponse>>(
       '/content/classes/discover/me/schedules',
       {},
-      {withAuth: true},
+      { withAuth: true },
     );
     return response.response;
   },
@@ -94,17 +91,16 @@ export const ContentAPI = {
     const response = await client.get<ApiResponse<ICheckinsResponse>>(
       '/content/classes/discover/me/checkins',
       {},
-      {withAuth: true},
+      { withAuth: true },
     );
     return response.response;
   },
 
-  discoverClassSearch: async (
-    params: any,
-  ): Promise<IDiscoverClassSearchResponse> => {
-    const response = await client.get<
-      ApiResponse<IDiscoverClassSearchResponse>
-    >('/content/classes/discover/search', params);
+  discoverClassSearch: async (params: any): Promise<IDiscoverClassSearchResponse> => {
+    const response = await client.get<ApiResponse<IDiscoverClassSearchResponse>>(
+      '/content/classes/discover/search',
+      params,
+    );
     return response.response;
   },
 
@@ -112,32 +108,36 @@ export const ContentAPI = {
     venueId: string,
     params?: any,
   ): Promise<IDiscoverVenueClassesResponse> => {
-    const response = await client.get<
-      ApiResponse<IDiscoverVenueClassesResponse>
-    >(`/content/classes/discover/venue`, {
-      venue_id: venueId,
-      ...params,
-    });
+    const response = await client.get<ApiResponse<IDiscoverVenueClassesResponse>>(
+      `/content/classes/discover/venue`,
+      {
+        venue_id: venueId,
+        ...params,
+      },
+    );
+    console.log(response);
     return response.response;
   },
 
   discoverUserCheckins: async (): Promise<IDiscoverClassCheckinsResponse> => {
-    const response = await client.get<
-      ApiResponse<IDiscoverClassCheckinsResponse>
-    >('/content/classes/discover/me/checkins', {}, {withAuth: true});
+    const response = await client.get<ApiResponse<IDiscoverClassCheckinsResponse>>(
+      '/content/classes/discover/me/checkins',
+      {},
+      { withAuth: true },
+    );
     return response.response;
   },
 
   discoverUserSchedules: async (): Promise<IDiscoverClassSchedulesResponse> => {
-    const response = await client.get<
-      ApiResponse<IDiscoverClassSchedulesResponse>
-    >('/content/classes/discover/me/schedules', {}, {withAuth: true});
+    const response = await client.get<ApiResponse<IDiscoverClassSchedulesResponse>>(
+      '/content/classes/discover/me/schedules',
+      {},
+      { withAuth: true },
+    );
     return response.response;
   },
 
-  discoverAllSchedules: async (
-    params?: any,
-  ): Promise<IDiscoverSchedulesResponse> => {
+  discoverAllSchedules: async (params?: any): Promise<IDiscoverSchedulesResponse> => {
     const response = await client.get<ApiResponse<IDiscoverSchedulesResponse>>(
       '/content/classes/discover/schedules',
       params,
@@ -145,12 +145,10 @@ export const ContentAPI = {
     return response.response;
   },
 
-  discoverClassDetail: async (
-    classId: string,
-  ): Promise<IDiscoverClassDetailResponse> => {
-    const response = await client.get<
-      ApiResponse<IDiscoverClassDetailResponse>
-    >(`/content/classes/discover/${classId}`);
+  discoverClassDetail: async (classId: string): Promise<IDiscoverClassDetailResponse> => {
+    const response = await client.get<ApiResponse<IDiscoverClassDetailResponse>>(
+      `/content/classes/discover/${classId}`,
+    );
     return response.response;
   },
 

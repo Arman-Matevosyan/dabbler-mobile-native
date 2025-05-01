@@ -1,102 +1,86 @@
 import React from 'react';
-import {View, StyleSheet, ScrollView} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {Skeleton, useTheme} from '@/design-system';
+import { View, StyleSheet, ScrollView } from 'react-native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Skeleton, useTheme } from '@/design-system';
 
 export const SignupScreenSkeleton = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const insets = useSafeAreaInsets();
 
   return (
     <View
-      style={[
-        styles.container,
-        {backgroundColor: colors.background, paddingTop: insets.top},
-      ]}>
+      style={[styles.container, { backgroundColor: colors.background, paddingTop: insets.top }]}>
       <ScrollView
-        style={styles.scrollView}
+        style={(styles.scrollView, { paddingTop: insets.top })}
         contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.header}>
-          <Skeleton width="70%" height={32} style={{marginBottom: 8}} />
+          <Skeleton width="70%" height={32} style={{ marginBottom: 8 }} />
           <Skeleton width="50%" height={18} />
         </View>
 
         <View style={styles.form}>
-          {/* First Name input */}
           <View style={styles.inputContainer}>
-            <Skeleton width="40%" height={16} style={{marginBottom: 8}} />
-            <View style={[styles.input, {backgroundColor: colors.card}]}>
-              <Skeleton width={24} height={24} style={{marginRight: 10}} />
+            <Skeleton width="40%" height={16} style={{ marginBottom: 8 }} />
+            <View style={[styles.input, { backgroundColor: colors.card }]}>
+              <Skeleton width={24} height={24} style={{ marginRight: 10 }} />
               <Skeleton width="80%" height={20} />
             </View>
           </View>
 
-          {/* Last Name input */}
           <View style={styles.inputContainer}>
-            <Skeleton width="40%" height={16} style={{marginBottom: 8}} />
-            <View style={[styles.input, {backgroundColor: colors.card}]}>
-              <Skeleton width={24} height={24} style={{marginRight: 10}} />
+            <Skeleton width="40%" height={16} style={{ marginBottom: 8 }} />
+            <View style={[styles.input, { backgroundColor: colors.card }]}>
+              <Skeleton width={24} height={24} style={{ marginRight: 10 }} />
               <Skeleton width="80%" height={20} />
             </View>
           </View>
 
-          {/* Email input */}
           <View style={styles.inputContainer}>
-            <Skeleton width="40%" height={16} style={{marginBottom: 8}} />
-            <View style={[styles.input, {backgroundColor: colors.card}]}>
-              <Skeleton width={24} height={24} style={{marginRight: 10}} />
+            <Skeleton width="40%" height={16} style={{ marginBottom: 8 }} />
+            <View style={[styles.input, { backgroundColor: colors.card }]}>
+              <Skeleton width={24} height={24} style={{ marginRight: 10 }} />
               <Skeleton width="80%" height={20} />
             </View>
           </View>
 
-          {/* Password input */}
           <View style={styles.inputContainer}>
-            <Skeleton width="40%" height={16} style={{marginBottom: 8}} />
-            <View style={[styles.input, {backgroundColor: colors.card}]}>
-              <Skeleton width={24} height={24} style={{marginRight: 10}} />
+            <Skeleton width="40%" height={16} style={{ marginBottom: 8 }} />
+            <View style={[styles.input, { backgroundColor: colors.card }]}>
+              <Skeleton width={24} height={24} style={{ marginRight: 10 }} />
               <Skeleton width="75%" height={20} />
               <Skeleton width={24} height={24} />
             </View>
           </View>
 
-          {/* Confirm Password input */}
           <View style={styles.inputContainer}>
-            <Skeleton width="50%" height={16} style={{marginBottom: 8}} />
-            <View style={[styles.input, {backgroundColor: colors.card}]}>
-              <Skeleton width={24} height={24} style={{marginRight: 10}} />
+            <Skeleton width="50%" height={16} style={{ marginBottom: 8 }} />
+            <View style={[styles.input, { backgroundColor: colors.card }]}>
+              <Skeleton width={24} height={24} style={{ marginRight: 10 }} />
               <Skeleton width="75%" height={20} />
               <Skeleton width={24} height={24} />
             </View>
           </View>
 
-          {/* Create account button */}
-          <Skeleton 
-            width="100%" 
-            height={50} 
-            style={{marginVertical: 8, borderRadius: 25}} 
-          />
+          <Skeleton width="100%" height={50} style={{ marginVertical: 8, borderRadius: 25 }} />
         </View>
 
-        {/* Login section */}
         <View style={styles.loginContainer}>
-          <Skeleton width="45%" height={16} style={{marginRight: 8}} />
+          <Skeleton width="45%" height={16} style={{ marginRight: 8 }} />
           <Skeleton width="20%" height={16} />
         </View>
 
-        {/* Divider */}
         <View style={styles.dividerContainer}>
-          <View style={[styles.divider, {backgroundColor: colors.border}]} />
-          <Skeleton width={30} height={16} style={{marginHorizontal: 10}} />
-          <View style={[styles.divider, {backgroundColor: colors.border}]} />
+          <View style={[styles.divider, { backgroundColor: colors.border }]} />
+          <Skeleton width={30} height={16} style={{ marginHorizontal: 10 }} />
+          <View style={[styles.divider, { backgroundColor: colors.border }]} />
         </View>
 
-        {/* Social buttons */}
         <View style={styles.socialButtonsContainer}>
-          <View style={[styles.socialButton, {borderColor: colors.border}]}>
+          <View style={[styles.socialButton, { borderColor: colors.border }]}>
             <Skeleton width={20} height={20} />
           </View>
-          
-          <View style={[styles.socialButton, {borderColor: colors.border}]}>
+
+          <View style={[styles.socialButton, { borderColor: colors.border }]}>
             <Skeleton width={20} height={20} />
           </View>
         </View>
@@ -161,4 +145,4 @@ const styles = StyleSheet.create({
     borderRadius: 4,
     borderWidth: 1,
   },
-}); 
+});

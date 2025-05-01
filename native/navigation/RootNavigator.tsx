@@ -1,8 +1,8 @@
 import React from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TabNavigator from './TabNavigator';
-import {AuthNavigator} from '@/features/auth/AuthNavigator';
-import {PaymentNavigator} from '@/features/payments/PaymentNavigator';
+import { AuthNavigator } from '@/features/auth/AuthNavigator';
+import { PaymentNavigator } from '@/features/payments/PaymentNavigator';
 
 const Stack = createNativeStackNavigator();
 

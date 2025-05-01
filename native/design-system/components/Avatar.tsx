@@ -1,5 +1,5 @@
-import {useTheme} from '@/design-system';
-import React, {useEffect, useRef, useState} from 'react';
+import { useTheme } from '@/design-system';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   ActivityIndicator,
   Animated,
@@ -20,7 +20,7 @@ interface AvatarProps {
   isUploading?: boolean;
 }
 
-const {width: SCREEN_WIDTH, height: SCREEN_HEIGHT} = Dimensions.get('window');
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 export const Avatar: React.FC<AvatarProps> = ({
   imageUri,
@@ -29,7 +29,7 @@ export const Avatar: React.FC<AvatarProps> = ({
   onLongPress,
   isUploading = false,
 }) => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
 
   const [modalVisible, setModalVisible] = useState(false);
   const modalScale = useRef(new Animated.Value(0)).current;
@@ -152,7 +152,7 @@ export const Avatar: React.FC<AvatarProps> = ({
         }}>
         <Animated.View
           style={{
-            transform: [{scale: pressScale}],
+            transform: [{ scale: pressScale }],
           }}>
           <TouchableOpacity
             onPress={imageUri ? handleLongPress : handlePress}
@@ -172,16 +172,8 @@ export const Avatar: React.FC<AvatarProps> = ({
               },
             ]}>
             {!imageUri ? (
-              <View
-                style={[
-                  styles.placeholder,
-                  {backgroundColor: colors.background},
-                ]}>
-                <Icon
-                  name="account-circle"
-                  size={size * 0.9}
-                  color={colors.textSecondary}
-                />
+              <View style={[styles.placeholder, { backgroundColor: colors.background }]}>
+                <Icon name="account-circle" size={size * 0.9} color={colors.textSecondary} />
                 <View
                   style={[
                     styles.plusIconContainer,
@@ -191,40 +183,23 @@ export const Avatar: React.FC<AvatarProps> = ({
                       borderColor: colors.accent,
                     },
                   ]}>
-                  <Icon
-                    name="add"
-                    size={20}
-                    color={colors.accent}
-                    style={{fontWeight: 'bold'}}
-                  />
+                  <Icon name="add" size={20} color={colors.accent} style={{ fontWeight: 'bold' }} />
                 </View>
               </View>
             ) : (
-              <Image
-                source={{uri: imageUri}}
-                style={styles.image}
-                resizeMode="cover"
-              />
+              <Image source={{ uri: imageUri }} style={styles.image} resizeMode="cover" />
             )}
 
             {isUploading && (
               <View
-                style={[
-                  styles.uploadingOverlay,
-                  {backgroundColor: colors.textPrimary + '80'},
-                ]}>
+                style={[styles.uploadingOverlay, { backgroundColor: colors.textPrimary + '80' }]}>
                 <View style={styles.shimmerContainer}>
-                  <View
-                    style={[
-                      styles.skeleton,
-                      {backgroundColor: colors.background},
-                    ]}
-                  />
+                  <View style={[styles.skeleton, { backgroundColor: colors.background }]} />
                   <Animated.View
                     style={[
                       StyleSheet.absoluteFill,
                       {
-                        transform: [{translateX: shimmerTranslate}],
+                        transform: [{ translateX: shimmerTranslate }],
                       },
                     ]}></Animated.View>
                 </View>
@@ -254,7 +229,7 @@ export const Avatar: React.FC<AvatarProps> = ({
               alignItems: 'center',
               elevation: 6,
               shadowColor: '#000',
-              shadowOffset: {width: 0, height: 3},
+              shadowOffset: { width: 0, height: 3 },
               shadowOpacity: 0.4,
               shadowRadius: 5,
               zIndex: 10,
@@ -285,12 +260,12 @@ export const Avatar: React.FC<AvatarProps> = ({
             style={[
               styles.modalImageContainer,
               {
-                transform: [{scale: modalScale}],
+                transform: [{ scale: modalScale }],
                 opacity: modalOpacity,
               },
             ]}>
             <Image
-              source={{uri: imageUri || undefined}}
+              source={{ uri: imageUri || undefined }}
               style={styles.modalImage}
               resizeMode="cover"
             />
@@ -328,7 +303,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     elevation: 3,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
+    shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 3,
   },
@@ -368,7 +343,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     elevation: 10,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 4},
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
   },

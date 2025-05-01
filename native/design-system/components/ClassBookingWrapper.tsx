@@ -1,25 +1,26 @@
-import React, {useState, useEffect, useRef} from 'react';
-import {
-  ActivityIndicator,
-  View,
-  Text,
-  StyleSheet,
-  Alert,
-} from 'react-native';
-import {useClassBook, useCancelBooking} from '../hooks/useBooking';
-import {BookingStatusBottomSheet} from './BookingStatusBottomSheet';
-import {useTheme} from '../theme/ThemeContext';
-import {Button} from '../components/Button';
-import type {BookingStatus} from './BookingStatusBottomSheet';
-import {useAuthStore} from '@/stores/authStore';
+import React, { useState, useEffect, useRef } from 'react';
+import { ActivityIndicator, View, Text, StyleSheet, Alert } from 'react-native';
+import { useClassBook, useCancelBooking } from '../hooks/useBooking';
+import { BookingStatusBottomSheet } from './BookingStatusBottomSheet';
+import { useTheme } from '../theme/ThemeContext';
+import { Button } from '../components/Button';
+import type { BookingStatus } from './BookingStatusBottomSheet';
+import { useAuthStore } from '@/stores/authStore';
+import { useQueryClient } from '@tanstack/react-query';
+import { ClassQueryKeys } from '@/constants/queryKeys';
 
 interface ClassBookingWrapperProps {
   classId: string;
   venueId?: string | null;
   className?: string;
+  classDescription?: string;
   date?: string;
   formattedDate?: string;
   venue?: string;
+  instructor?: string;
+  price?: string;
+  duration?: string;
+  cancellationPolicy?: string;
   isClassBooked: boolean;
   onBookingChange: () => void;
   onAddToCalendar?: () => void;
@@ -30,103 +31,111 @@ export const ClassBookingWrapper: React.FC<ClassBookingWrapperProps> = ({
   classId,
   venueId,
   className,
+  classDescription,
   date,
   formattedDate,
   venue,
+  instructor,
+  price,
+  duration,
+  cancellationPolicy,
   isClassBooked,
   onBookingChange,
   onAddToCalendar,
   onShare,
 }) => {
-  const {colors} = useTheme();
-  const [bookingStatus, setBookingStatus] = useState<BookingStatus>('success');
+  const { colors } = useTheme();
+  const [bookingStatus, setBookingStatus] = useState<BookingStatus>('booking');
   const [isBookingStatusVisible, setIsBookingStatusVisible] = useState(false);
-  const {isAuthenticated} = useAuthStore();
-  const {confirmClassBooking, isLoading: isBookingLoading} = useClassBook();
-  const {cancelBookingMutation, isLoading: isCancellingLoading} =
-    useCancelBooking();
-  
-  // Track previous booking state
-  const prevIsClassBooked = useRef(isClassBooked);
-  const isInitialRender = useRef(true);
+  const { isAuthenticated } = useAuthStore();
+  const { confirmClassBooking } = useClassBook();
+  const { cancelBookingMutation } = useCancelBooking();
+  const queryClient = useQueryClient();
 
-  // Handle booking state changes - only needed for initialization
-  useEffect(() => {
-    if (isInitialRender.current) {
-      isInitialRender.current = false;
-    } else if (isClassBooked !== prevIsClassBooked.current) {
-      prevIsClassBooked.current = isClassBooked;
-      // Only reset status if sheet is not currently being shown
-      if (!isBookingStatusVisible) {
-        if (isClassBooked) {
-          setBookingStatus('confirm');
-        } else {
-          setBookingStatus('success');
-        }
-      }
-    }
-  }, [isClassBooked, isBookingStatusVisible]);
-
-  const handleBookClass = () => {
-    if (!classId || !date) return;
+  // Handle initial booking flow
+  const handleStartBooking = () => {
     if (!isAuthenticated) {
       Alert.alert('Authentication Required', 'Please log in to book this class.');
       return;
     }
-    
-    // First set the booking state we want to show
-    setBookingStatus('success');
-    
-    confirmClassBooking.mutate(
-      {
-        classId,
-        venueId,
-        startDate: date,
-      },
-      {
-        onSuccess: () => {
-          // Show the success message - importantly, set this after the mutation completes
-          setIsBookingStatusVisible(true);
-          onBookingChange();
-        },
-        onError: error => {
-          console.error('Error booking class:', error);
-        },
-      },
-    );
-  };
 
-  const handleCancelBooking = () => {
-    // First set the state to danger (confirmation dialog)
-    setBookingStatus('danger');
-    // Then show the sheet
+    setBookingStatus('booking');
     setIsBookingStatusVisible(true);
   };
 
-  const handleConfirmCancellation = () => {
+  // Handle confirming the booking
+  const handleConfirmBooking = async () => {
     if (!classId || !date) return;
 
-    cancelBookingMutation.mutate(
-      {
-        classId,
-        date,
-      },
-      {
-        onSuccess: () => {
-          // Show cancellation success once the mutation completes
-          setBookingStatus('cancelled');
-          onBookingChange();
-          // Important: keep the bottom sheet open to show the cancelled message
+    return new Promise((resolve, reject) => {
+      confirmClassBooking.mutate(
+        {
+          classId,
+          venueId,
+          startDate: date,
         },
-        onError: error => {
-          console.error('Error cancelling booking:', error);
+        {
+          onSuccess: () => {
+            setBookingStatus('success');
+            onBookingChange();
+            resolve(true);
+          },
+          onError: error => {
+            console.error('Error booking class:', error);
+            Alert.alert(
+              'Booking Error',
+              'There was an error booking this class. Please try again.',
+            );
+            reject(error);
+          },
         },
-      },
-    );
+      );
+    });
+  };
+
+  // Start the cancellation flow
+  const handleStartCancellation = () => {
+    setBookingStatus('cancelConfirm');
+    setIsBookingStatusVisible(true);
+  };
+
+  // Handle confirming the cancellation
+  const handleConfirmCancellation = async () => {
+    if (!classId || !date) return;
+
+    return new Promise((resolve, reject) => {
+      cancelBookingMutation.mutate(
+        {
+          classId,
+          date,
+        },
+        {
+          onSuccess: () => {
+            setBookingStatus('cancelled');
+            onBookingChange();
+            resolve(true);
+          },
+          onError: error => {
+            console.error('Error cancelling booking:', error);
+            Alert.alert(
+              'Cancellation Error',
+              'There was an error cancelling your booking. Please try again.',
+            );
+            reject(error);
+          },
+        },
+      );
+    });
   };
 
   const handleCloseBottomSheet = () => {
     setIsBookingStatusVisible(false);
+  };
+
+  const invalidateQueries = () => {
+    // Invalidate any queries that might be affected by booking changes
+    queryClient.invalidateQueries({ queryKey: [ClassQueryKeys.schedules] });
+    queryClient.invalidateQueries({ queryKey: [ClassQueryKeys.classDetails, classId] });
   };
 
   return (
@@ -136,27 +145,35 @@ export const ClassBookingWrapper: React.FC<ClassBookingWrapperProps> = ({
           <Button
             title="Cancel Booking"
             variant="outline"
-            size="large"
-            onPress={handleCancelBooking}
-            disabled={isCancellingLoading}
+            size="medium"
+            onPress={handleStartCancellation}
+            disabled={cancelBookingMutation.isPending}
             style={{
               ...styles.actionButton,
-              borderColor: '#E53E3E'
+              borderColor: '#E53E3E',
             }}
-            textStyle={{color: '#E53E3E'}}
+            textStyle={{ color: '#E53E3E' }}
             contentContainerStyle={styles.buttonContent}
-            icon={isCancellingLoading ? <ActivityIndicator size="small" color="#E53E3E" /> : undefined}
+            icon={
+              cancelBookingMutation.isPending ? (
+                <ActivityIndicator size="small" color="#E53E3E" />
+              ) : undefined
+            }
           />
         ) : (
           <Button
             title="Book Now"
             variant="primary"
-            size="large"
-            onPress={handleBookClass}
-            disabled={isBookingLoading}
+            size="medium"
+            onPress={handleStartBooking}
+            disabled={confirmClassBooking.isPending}
             style={styles.actionButton}
             contentContainerStyle={styles.buttonContent}
-            icon={isBookingLoading ? <ActivityIndicator size="small" color="white" /> : undefined}
+            icon={
+              confirmClassBooking.isPending ? (
+                <ActivityIndicator size="small" color="white" />
+              ) : undefined
+            }
           />
         )}
       </View>
@@ -164,17 +181,20 @@ export const ClassBookingWrapper: React.FC<ClassBookingWrapperProps> = ({
       <BookingStatusBottomSheet
         isVisible={isBookingStatusVisible}
         onClose={handleCloseBottomSheet}
-        onConfirm={() => {
-          if (bookingStatus === 'danger') {
-            handleConfirmCancellation();
-          }
-        }}
+        onBookConfirm={handleConfirmBooking}
+        onCancelConfirm={handleConfirmCancellation}
         onAddToCalendar={onAddToCalendar}
         onShare={onShare}
         status={bookingStatus}
         className={className}
+        classDescription={classDescription}
         dateTime={formattedDate}
         venue={venue}
+        instructor={instructor}
+        price={price}
+        duration={duration}
+        cancellationPolicy={cancellationPolicy}
+        invalidateQueries={invalidateQueries}
       />
     </>
   );
@@ -184,10 +204,11 @@ const styles = StyleSheet.create({
   buttonContainer: {
     flex: 1,
     alignItems: 'flex-end',
+    padding: 20,
   },
   actionButton: {
-    minWidth: 150,
-    borderRadius: 4, // Less rounded corners
+    minWidth: 100,
+    borderRadius: 4,
   },
   buttonContent: {
     paddingHorizontal: 12,

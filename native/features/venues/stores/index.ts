@@ -1,1 +1,1 @@
-export * from './useVenueSearchStore'; 
+export * from './useVenueSearchStore';

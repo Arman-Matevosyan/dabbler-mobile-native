@@ -1,6 +1,6 @@
-import {Text, useTheme} from '@/design-system';
-import {useNavigation} from '@react-navigation/native';
-import {useEffect, useRef} from 'react';
+import { Text, useTheme } from '@/design-system';
+import { useNavigation } from '@react-navigation/native';
+import { useEffect, useRef } from 'react';
 import {
   ActivityIndicator,
   Animated,
@@ -11,23 +11,17 @@ import {
   View,
   Dimensions,
 } from 'react-native';
-import {usePaymentSubscribe, useVerifyPayment} from './hooks';
+import { usePaymentSubscribe, useVerifyPayment } from './hooks';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {
-  PaymentStackParamList,
-  RootStackNavigationProp,
-} from '@/navigation/types';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {useTranslation} from 'react-i18next';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { PaymentStackParamList, RootStackNavigationProp } from '@/navigation/types';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useTranslation } from 'react-i18next';
 
-type PaymentResultProps = NativeStackScreenProps<
-  PaymentStackParamList,
-  'PaymentResult'
->;
+type PaymentResultProps = NativeStackScreenProps<PaymentStackParamList, 'PaymentResult'>;
 
-export default function PaymentResult({route}: PaymentResultProps) {
-  const {t} = useTranslation();
+export default function PaymentResult({ route }: PaymentResultProps) {
+  const { t } = useTranslation();
   const scaleAnim = useRef(new Animated.Value(0.8)).current;
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const fadeTextAnim = useRef(new Animated.Value(0)).current;
@@ -35,20 +29,18 @@ export default function PaymentResult({route}: PaymentResultProps) {
   const buttonFadeAnim = useRef(new Animated.Value(0)).current;
   const buttonScaleAnim = useRef(new Animated.Value(0.95)).current;
 
-  const {colors, mode} = useTheme();
+  const { colors, mode } = useTheme();
   const navigation = useNavigation<RootStackNavigationProp>();
   const insets = useSafeAreaInsets();
-  const {nonce, plan} = route.params || {};
+  const { nonce, plan } = route.params || {};
 
-  const {data: paymentData, isSuccess: isVerifyPaymentSuccess} =
-    useVerifyPayment(nonce);
+  const { data: paymentData, isSuccess: isVerifyPaymentSuccess } = useVerifyPayment(nonce);
 
-  const {mutate: subscribeToPlan, isSuccess: isSubscribeSuccess} =
-    usePaymentSubscribe();
+  const { mutate: subscribeToPlan, isSuccess: isSubscribeSuccess } = usePaymentSubscribe();
 
   useEffect(() => {
     if (isVerifyPaymentSuccess && paymentData?.id && plan) {
-      subscribeToPlan({paymentMethodId: paymentData.id, planId: plan});
+      subscribeToPlan({ paymentMethodId: paymentData.id, planId: plan });
     }
   }, [isVerifyPaymentSuccess, paymentData, plan]);
 
@@ -113,21 +105,16 @@ export default function PaymentResult({route}: PaymentResultProps) {
   };
 
   const renderLoadingState = () => (
-    <SafeAreaView
-      style={[styles.safeArea, {backgroundColor: colors.background}]}>
-      <View style={[styles.container, {paddingTop: insets.top}]}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
+      <View style={[styles.container, { paddingTop: insets.top }]}>
         <View style={styles.loadingContent}>
           <View style={styles.loadingIconContainer}>
             <ActivityIndicator size="large" color={colors.accent} />
           </View>
-          <Text
-            style={[
-              styles.loadingText,
-              {color: colors.textPrimary, marginTop: 24},
-            ]}>
+          <Text style={[styles.loadingText, { color: colors.textPrimary, marginTop: 24 }]}>
             {t('payment.processing')}
           </Text>
-          <Text style={[styles.loadingSubText, {color: colors.textSecondary}]}>
+          <Text style={[styles.loadingSubText, { color: colors.textSecondary }]}>
             {t('payment.pleaseWait')}
           </Text>
         </View>
@@ -136,41 +123,36 @@ export default function PaymentResult({route}: PaymentResultProps) {
   );
 
   const renderSuccessState = () => (
-    <SafeAreaView
-      style={[styles.safeArea, {backgroundColor: colors.background}]}>
-      <View style={[styles.container, {paddingTop: insets.top}]}>
+    <SafeAreaView style={[styles.safeArea, { backgroundColor: colors.background }]}>
+      <View style={[styles.container, { paddingTop: insets.top }]}>
         <View style={styles.contentContainer}>
           <Animated.View
             style={[
               styles.iconContainer,
               {
-                transform: [{scale: scaleAnim}],
+                transform: [{ scale: scaleAnim }],
                 backgroundColor: colors.success + '15',
                 borderColor: colors.success + '30',
               },
             ]}>
-            <MaterialIcons
-              name="check-circle"
-              size={90}
-              color={colors.success}
-            />
+            <MaterialIcons name="check-circle" size={90} color={colors.success} />
           </Animated.View>
 
-          <Animated.View style={[styles.textContainer, {opacity: fadeAnim}]}>
-            <Text style={[styles.title, {color: colors.textPrimary}]}>
+          <Animated.View style={[styles.textContainer, { opacity: fadeAnim }]}>
+            <Text style={[styles.title, { color: colors.textPrimary }]}>
               {t('payment.successful')}
             </Text>
 
             <Animated.View
               style={{
                 opacity: fadeTextAnim,
-                transform: [{translateY: translateYAnim}],
+                transform: [{ translateY: translateYAnim }],
               }}>
-              <Text style={[styles.subtitle, {color: colors.textSecondary}]}>
+              <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
                 {t('payment.thankYou')}
               </Text>
 
-              <Text style={[styles.details, {color: colors.textSecondary}]}>
+              <Text style={[styles.details, { color: colors.textSecondary }]}>
                 {t('payment.membershipActive')}
               </Text>
             </Animated.View>
@@ -181,20 +163,15 @@ export default function PaymentResult({route}: PaymentResultProps) {
               styles.buttonContainer,
               {
                 opacity: buttonFadeAnim,
-                transform: [{scale: buttonScaleAnim}],
+                transform: [{ scale: buttonScaleAnim }],
               },
             ]}>
             <TouchableOpacity
-              style={[styles.button, {backgroundColor: colors.accent}]}
+              style={[styles.button, { backgroundColor: colors.accent }]}
               onPress={goToHome}
               activeOpacity={0.8}>
-              <MaterialIcons
-                name="check"
-                size={22}
-                color="#fff"
-                style={styles.buttonIcon}
-              />
-              <Text style={[styles.buttonText, {color: '#fff'}]}>
+              <MaterialIcons name="check" size={22} color="#fff" style={styles.buttonIcon} />
+              <Text style={[styles.buttonText, { color: '#fff' }]}>
                 {t('payment.continueToProfile')}
               </Text>
             </TouchableOpacity>
@@ -211,7 +188,7 @@ export default function PaymentResult({route}: PaymentResultProps) {
   return renderSuccessState();
 }
 
-const {width} = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   safeArea: {
@@ -263,7 +240,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 40,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 8},
+    shadowOffset: { width: 0, height: 8 },
     shadowOpacity: 0.2,
     shadowRadius: 16,
     elevation: 10,
@@ -307,7 +284,7 @@ const styles = StyleSheet.create({
     width: '90%',
     maxWidth: 300,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 4},
+    shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.2,
     shadowRadius: 8,
     elevation: 5,

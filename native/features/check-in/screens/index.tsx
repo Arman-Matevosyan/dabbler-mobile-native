@@ -1,11 +1,11 @@
-import {useCheckIn} from '../hooks/useCheckin';
+import { useCheckIn } from '../hooks/useCheckin';
 import CheckinClassesScreen from './CheckinClassesScreen';
-import {useRoute} from '@react-navigation/native';
-import {CheckInStackParamList} from '../CheckInNavigator';
-import {RouteProp} from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
+import { CheckInStackParamList } from '../CheckInNavigator';
+import { RouteProp } from '@react-navigation/native';
 
 export default function CheckinClassesRoute() {
-  const {checkInData, isLoading} = useCheckIn();
+  const { checkInData, isLoading } = useCheckIn();
   return (
     <CheckinClassesScreen
       route={{

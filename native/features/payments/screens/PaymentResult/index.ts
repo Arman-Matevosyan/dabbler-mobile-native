@@ -1,1 +1,1 @@
-export {default as PaymentResult} from './PaymentResult';
+export { default as PaymentResult } from './PaymentResult';

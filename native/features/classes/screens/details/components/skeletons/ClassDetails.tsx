@@ -1,14 +1,14 @@
 import React from 'react';
-import {StyleSheet, View, Dimensions} from 'react-native';
-import {Skeleton, useTheme} from '@/design-system';
+import { StyleSheet, View, Dimensions } from 'react-native';
+import { Skeleton, useTheme } from '@/design-system';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 
-const {width} = Dimensions.get('window');
+const { width } = Dimensions.get('window');
 
-export const HeaderSkeleton = ({onClose}: {onClose?: () => void}) => {
-  const {colors} = useTheme();
+export const HeaderSkeleton = ({ onClose }: { onClose?: () => void }) => {
+  const { colors } = useTheme();
   return (
-    <View style={[styles.header, {backgroundColor: colors.background}]}>
+    <View style={[styles.header, { backgroundColor: colors.background }]}>
       <View style={styles.backButton} onTouchEnd={onClose}>
         <MaterialIcons name="arrow-back" size={24} color={colors.textPrimary} />
       </View>
@@ -36,7 +36,7 @@ export const TitleSkeleton = () => {
 export const DateTimeSkeleton = () => {
   return (
     <View style={styles.dateTimeSkeleton}>
-      <Skeleton width={120} height={20} style={{marginRight: 16}} />
+      <Skeleton width={120} height={20} style={{ marginRight: 16 }} />
       <Skeleton width={80} height={20} />
     </View>
   );
@@ -45,11 +45,7 @@ export const DateTimeSkeleton = () => {
 export const CategorySkeleton = () => {
   return (
     <View style={styles.categoryContainer}>
-      <Skeleton
-        style={styles.categorySkeleton}
-        width={width * 0.5}
-        height={16}
-      />
+      <Skeleton style={styles.categorySkeleton} width={width * 0.5} height={16} />
     </View>
   );
 };
@@ -65,11 +61,7 @@ export const VenueSkeleton = () => {
 export const InstructorSkeleton = () => {
   return (
     <View style={styles.instructorSkeleton}>
-      <Skeleton
-        width={16}
-        height={16}
-        style={{marginRight: 8, borderRadius: 8}}
-      />
+      <Skeleton width={16} height={16} style={{ marginRight: 8, borderRadius: 8 }} />
       <Skeleton width={120} height={16} />
     </View>
   );
@@ -78,9 +70,9 @@ export const InstructorSkeleton = () => {
 export const DescriptionSkeleton = () => {
   return (
     <View style={styles.descriptionSkeleton}>
-      <Skeleton width="100%" height={12} style={{marginBottom: 8}} />
-      <Skeleton width="90%" height={12} style={{marginBottom: 8}} />
-      <Skeleton width="80%" height={12} style={{marginBottom: 8}} />
+      <Skeleton width="100%" height={12} style={{ marginBottom: 8 }} />
+      <Skeleton width="90%" height={12} style={{ marginBottom: 8 }} />
+      <Skeleton width="80%" height={12} style={{ marginBottom: 8 }} />
       <Skeleton width="50%" height={12} />
     </View>
   );
@@ -91,30 +83,23 @@ export const MapSkeleton = () => {
 };
 
 export const ActionButtonSkeleton = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   return (
     <View
       style={[
         styles.bottomBar,
-        {backgroundColor: colors.background, borderTopColor: colors.border},
+        { backgroundColor: colors.background, borderTopColor: colors.border },
       ]}>
-      <Skeleton
-        style={styles.buttonSkeleton}
-        width="100%"
-        height={50}
-        borderRadius={25}
-      />
+      <Skeleton style={styles.buttonSkeleton} width="100%" height={50} borderRadius={25} />
     </View>
   );
 };
 
-export const ClassDetailsSkeleton: React.FC<{onClose: () => void}> = ({
-  onClose,
-}) => {
-  const {colors} = useTheme();
+export const ClassDetailsSkeleton: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+  const { colors } = useTheme();
 
   return (
-    <View style={[styles.container, {backgroundColor: colors.background}]}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <HeaderSkeleton onClose={onClose} />
 
       <View style={styles.scrollContent}>
@@ -130,7 +115,7 @@ export const ClassDetailsSkeleton: React.FC<{onClose: () => void}> = ({
           <MapSkeleton />
         </View>
 
-        <View style={{height: 90}} />
+        <View style={{ height: 90 }} />
       </View>
 
       <ActionButtonSkeleton />

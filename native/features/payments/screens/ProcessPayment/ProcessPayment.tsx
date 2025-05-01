@@ -1,37 +1,28 @@
-import {ActivityIndicator, Linking, StyleSheet, View} from 'react-native';
-import {WebView} from 'react-native-webview';
-import {useClientToken} from './hooks/useClientToken';
-import {Text, useTheme} from '@/design-system';
-import {usePlans} from '@/hooks/usePlans';
-import {IPlan} from '@/types/venues.interfaces';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useNavigation} from '@react-navigation/native';
-import {
-  PaymentStackNavigationProp,
-  PaymentStackParamList,
-} from '@/navigation/types';
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
-import {useTranslation} from 'react-i18next';
+import { ActivityIndicator, Linking, StyleSheet, View } from 'react-native';
+import { WebView } from 'react-native-webview';
+import { useClientToken } from './hooks/useClientToken';
+import { Text, useTheme } from '@/design-system';
+import { usePlans } from '@/hooks/usePlans';
+import { IPlan } from '@/types/venues.interfaces';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useNavigation } from '@react-navigation/native';
+import { PaymentStackNavigationProp, PaymentStackParamList } from '@/navigation/types';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { useTranslation } from 'react-i18next';
 
-type ProcessPaymentProps = NativeStackScreenProps<
-  PaymentStackParamList,
-  'ProcessPayment'
->;
+type ProcessPaymentProps = NativeStackScreenProps<PaymentStackParamList, 'ProcessPayment'>;
 
-export default function ProcessPayment({route}: ProcessPaymentProps) {
-  const {t} = useTranslation();
-  const {data, isLoading} = useClientToken();
+export default function ProcessPayment({ route }: ProcessPaymentProps) {
+  const { t } = useTranslation();
+  const { data, isLoading } = useClientToken();
   const token = Array.isArray(data) && data.length > 0 ? data[0].token : null;
-  const merchantId =
-    Array.isArray(data) && data.length > 0 ? data[0].merchantId : null;
-  const {colors, mode} = useTheme();
+  const merchantId = Array.isArray(data) && data.length > 0 ? data[0].merchantId : null;
+  const { colors, mode } = useTheme();
   const navigation = useNavigation<PaymentStackNavigationProp>();
   const insets = useSafeAreaInsets();
-  const {plan} = route.params;
-  const {data: plans = []} = usePlans();
-  const currentPlan = plans.find(
-    (item: IPlan) => item.planId === plan || item.id === plan,
-  );
+  const { plan } = route.params;
+  const { data: plans = [] } = usePlans();
+  const currentPlan = plans.find((item: IPlan) => item.planId === plan || item.id === plan);
 
   const handleMessage = (event: any) => {
     try {
@@ -51,14 +42,9 @@ export default function ProcessPayment({route}: ProcessPaymentProps) {
   if (isLoading && !merchantId && !token) {
     return (
       <View
-        style={[
-          styles.container,
-          {backgroundColor: colors.background, paddingTop: insets.top},
-        ]}>
+        style={[styles.container, { backgroundColor: colors.background, paddingTop: insets.top }]}>
         <ActivityIndicator size="large" color={colors.accent} />
-        <Text style={[styles.loadingText, {marginTop: 20}]}>
-          {t('payment.preparingPayment')}
-        </Text>
+        <Text style={[styles.loadingText, { marginTop: 20 }]}>{t('payment.preparingPayment')}</Text>
       </View>
     );
   }

@@ -1,8 +1,8 @@
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 interface ProfileActionsProps {
   colors: {
@@ -32,10 +32,10 @@ interface ActionItem {
   route: string;
 }
 
-const ProfileActions: React.FC<ProfileActionsProps> = ({colors, translations}) => {
+const ProfileActions: React.FC<ProfileActionsProps> = ({ colors, translations }) => {
   const router = useNavigation();
-  const {t} = useTranslation();
-  
+  const { t } = useTranslation();
+
   const actions: ActionItem[] = [
     {
       name: 'favorites',
@@ -56,7 +56,7 @@ const ProfileActions: React.FC<ProfileActionsProps> = ({colors, translations}) =
   };
 
   return (
-    <View style={{marginTop: 16}}>
+    <View style={{ marginTop: 16 }}>
       <View style={styles.actionsContainer}>
         {actions.map(action => (
           <TouchableOpacity

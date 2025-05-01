@@ -1,5 +1,5 @@
-import {client} from '@/services/client';
-import {useMutation} from '@tanstack/react-query';
+import { client } from '@/services/client';
+import { useMutation } from '@tanstack/react-query';
 
 const fetchCheckIn = async (url: string) => {
   try {

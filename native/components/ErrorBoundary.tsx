@@ -1,6 +1,6 @@
-import React, {Component, ErrorInfo, ReactNode} from 'react';
-import {View, Text, StyleSheet, ScrollView} from 'react-native';
-import {Button} from '@design-system';
+import React, { Component, ErrorInfo, ReactNode } from 'react';
+import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { Button } from '@design-system';
 
 interface Props {
   children: ReactNode;
@@ -54,8 +54,7 @@ export class ErrorBoundary extends Component<Props, State> {
           <ScrollView style={styles.scrollView}>
             <Text style={styles.errorText}>{this.state.error?.toString()}</Text>
             <Text style={styles.stackTrace}>
-              {this.state.errorInfo?.componentStack ||
-                'No stack trace available'}
+              {this.state.errorInfo?.componentStack || 'No stack trace available'}
             </Text>
           </ScrollView>
           <Button

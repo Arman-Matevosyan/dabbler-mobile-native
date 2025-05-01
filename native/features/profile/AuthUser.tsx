@@ -1,48 +1,18 @@
-import {useTheme, Skeleton} from '@/design-system';
-import {useNavigation} from '@react-navigation/native';
-import {
-  Platform,
-  SafeAreaView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { useTheme, Skeleton } from '@/design-system';
+import { useNavigation } from '@react-navigation/native';
+import { Platform, SafeAreaView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import UserInfoCard from './components/UserInfoCard';
 import ProfileActions from './components/ProfileActions';
-import {MembershipStatus, MySchedules} from './components';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-import {useMemo} from 'react';
-import {useAuthStore} from '@/stores/authStore';
-import {useUser} from '@/hooks/useUser';
-import {launchImageLibrary} from 'react-native-image-picker';
-import {AxiosError} from 'axios';
-import {ScrollView} from 'react-native-gesture-handler';
-import {useTranslation} from 'react-i18next';
-
-export const ProfileSkeleton = () => {
-  const {colors} = useTheme();
-  const insets = useSafeAreaInsets();
-  return (
-    <View
-      style={[styles.skeletonContainer, {backgroundColor: colors.background}]}>
-      <View style={(styles.headerContainer, {paddingTop: insets.top})}>
-        <Skeleton width={24} height={24} borderRadius={12} />
-      </View>
-      <Skeleton style={styles.avatarSkeleton} />
-      <Skeleton width="80%" height={24} style={{alignSelf: 'center'}} />
-      <Skeleton
-        width="50%"
-        height={16}
-        style={{alignSelf: 'center', marginBottom: 24}}
-      />
-
-      <Skeleton width="100%" height={100} style={styles.cardSkeleton} />
-      <Skeleton width="100%" height={150} style={styles.cardSkeleton} />
-      <Skeleton width="100%" height={120} style={styles.cardSkeleton} />
-    </View>
-  );
-};
+import { MembershipStatus, MySchedules } from './components';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useMemo } from 'react';
+import { useAuthStore } from '@/stores/authStore';
+import { useUser } from '@/hooks/useUser';
+import { launchImageLibrary } from 'react-native-image-picker';
+import { AxiosError } from 'axios';
+import { ScrollView } from 'react-native-gesture-handler';
+import { useTranslation } from 'react-i18next';
 
 const styles = StyleSheet.create({
   safeArea: {
@@ -56,22 +26,6 @@ const styles = StyleSheet.create({
   settingsButton: {
     padding: 8,
   },
-  skeletonContainer: {
-    flex: 1,
-    padding: 16,
-    gap: 16,
-  },
-  avatarSkeleton: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
-    alignSelf: 'center',
-    marginBottom: 16,
-  },
-  cardSkeleton: {
-    borderRadius: 8,
-    marginBottom: 16,
-  },
 });
 
 interface FileData {
@@ -81,12 +35,12 @@ interface FileData {
 }
 
 const AuthenticatedProfile: React.FC = () => {
-  const {colors} = useTheme();
+  const { colors } = useTheme();
   const router = useNavigation();
-  const {isLoading, uploadAvatar, isUploading} = useAuthStore();
+  const { isLoading, uploadAvatar, isUploading } = useAuthStore();
   const insets = useSafeAreaInsets();
-  const {data: user} = useUser();
-  const {t} = useTranslation();
+  const { data: user } = useUser();
+  const { t } = useTranslation();
 
   const handleAvatarUpload = async () => {
     try {
@@ -162,10 +116,6 @@ const AuthenticatedProfile: React.FC = () => {
     ),
     [colors, t],
   );
-
-  if (isLoading) {
-    return <ProfileSkeleton />;
-  }
 
   return (
     <SafeAreaView

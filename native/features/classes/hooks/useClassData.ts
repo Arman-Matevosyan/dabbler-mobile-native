@@ -1,12 +1,9 @@
-import {useMemo} from 'react';
-import {
-  useDiscoverClassSearch,
-  DiscoverClassSearchParams,
-} from './useClassesDiscover';
-import {IDiscoverClass} from '@/types/class.interfaces';
+import { useMemo } from 'react';
+import { useDiscoverClassSearch, DiscoverClassSearchParams } from './useClassesDiscover';
+import { IDiscoverClass } from '@/types/class.interfaces';
 
 export const useClassesData = (classParams: DiscoverClassSearchParams) => {
-  const {data, isLoading, refetch} = useDiscoverClassSearch(classParams);
+  const { data, isLoading, refetch } = useDiscoverClassSearch(classParams);
   const classes = useMemo(() => {
     if (!data) return [];
     return data?.map((classItem: IDiscoverClass) => ({
@@ -15,7 +12,7 @@ export const useClassesData = (classParams: DiscoverClassSearchParams) => {
       covers: classItem.covers || [],
       date: classItem.date,
       duration: classItem.duration,
-      venue: {name: classItem.venue?.name || ''},
+      venue: { name: classItem.venue?.name || '' },
       instructorInfo: classItem.instructorInfo || '',
       categories: classItem.categories || [],
       scheduled: classItem.scheduled || false,
@@ -24,5 +21,5 @@ export const useClassesData = (classParams: DiscoverClassSearchParams) => {
     }));
   }, [data]);
 
-  return {classes, isLoading, refetch};
+  return { classes, isLoading, refetch };
 };

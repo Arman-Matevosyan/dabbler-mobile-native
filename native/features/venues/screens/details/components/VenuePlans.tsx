@@ -1,22 +1,37 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
-import {useTheme} from '@/design-system';
+import { View, Text, StyleSheet } from 'react-native';
+import { useTheme } from '@/design-system';
+import { useTranslation } from 'react-i18next';
 
 type Plan = {
   name?: string;
   limit?: number;
+  description?: string;
 };
 
-const PlanChip = ({plan, style}: {plan: Plan; style?: any}) => {
-  const {colors} = useTheme();
+const PlanChip = ({ plan, style }: { plan: Plan; style?: any }) => {
+  const { colors } = useTheme();
+  
+  const planName = plan.name || 'Unnamed Plan';
+  const planLimit = plan.limit || 0;
+  const planDescription = plan.description || 'No description available';
+  
   return (
     <View
-      style={[
-        styles.planChip,
-        {backgroundColor: colors.card},
-        style,
-      ]}>
-      <Text style={{color: colors.textPrimary}}>{plan.name || 'Plan'}</Text>
+      style={[styles.planChip, { backgroundColor: colors.card }, style]}
+    >
+      <Text style={[styles.planName, { color: colors.textPrimary }]}>
+        {planName}
+      </Text>
+      <Text style={[styles.planLimit, { color: colors.accent }]}>
+        {planLimit} visits/month
+      </Text>
+      <Text
+        style={[styles.planDescription, { color: colors.textSecondary }]}
+        numberOfLines={1}
+      >
+        {planDescription}
+      </Text>
     </View>
   );
 };
@@ -25,33 +40,27 @@ interface VenuePlansProps {
   plans?: Plan[];
 }
 
-export const VenuePlans: React.FC<VenuePlansProps> = ({plans = []}) => {
-  const {colors} = useTheme();
-  
-  const maxVisitsPerMonth =
-    plans.length > 0
-      ? Math.max(...plans.map((plan) => plan.limit || 0))
-      : 0;
+export const VenuePlans: React.FC<VenuePlansProps> = ({ plans = [] }) => {
+  const { colors } = useTheme();
+  const { t } = useTranslation();
+
+  const maxVisitsPerMonth = plans.length > 0 ? Math.max(...plans.map(plan => plan.limit || 0)) : 0;
 
   return (
     <>
-      <View style={styles.sectionContainer}>
-        <Text style={[styles.sectionTitle, {color: colors.textPrimary}]}>
-          {'venues.availableIn'}
+      <View style={[styles.sectionContainer, { borderBottomColor: colors.border }]}>
+        <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
+          {t('venues.availableIn')}
         </Text>
         {plans.length > 0 ? (
           <View style={styles.plansContainer}>
             {plans.map((plan, index) => (
-              <PlanChip
-                key={`plan-${index}`}
-                plan={plan}
-                style={{marginBottom: 12}}
-              />
+              <PlanChip key={`plan-${index}`} plan={plan} style={{ marginBottom: 12 }} />
             ))}
           </View>
         ) : (
-          <Text style={[styles.sectionText, {color: colors.textSecondary}]}>
-            {'common.noResults'}
+          <Text style={[styles.sectionText, { color: colors.textSecondary }]}>
+            {t('common.noResults')}
           </Text>
         )}
       </View>
@@ -61,17 +70,17 @@ export const VenuePlans: React.FC<VenuePlansProps> = ({plans = []}) => {
           style={[
             styles.sectionContainer,
             styles.visitLimitsContainer,
-            {backgroundColor: colors.card},
+            { backgroundColor: colors.card },
           ]}>
-          <Text style={[styles.sectionTitle, {color: colors.textPrimary}]}>
-            {'venues.maxVisitsPerMonth'}
+          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
+            {t('venues.maxVisitsPerMonth')}
           </Text>
           <View style={styles.visitsRow}>
-            <Text style={[styles.visitsText, {color: colors.textPrimary}]}>
-              0 / {maxVisitsPerMonth} {'schedule.booked'}
+            <Text style={[styles.visitsText, { color: colors.textPrimary }]}>
+              0 / {maxVisitsPerMonth} {t('schedule.booked')}
             </Text>
             <View style={styles.visitsLimitBadge}>
-              <Text style={styles.visitsLimitText}>{'plans.perMonth'}</Text>
+              <Text style={styles.visitsLimitText}>{t('plans.perMonth')}</Text>
             </View>
           </View>
           <View style={styles.progressBarContainer}>
@@ -87,12 +96,8 @@ export const VenuePlans: React.FC<VenuePlansProps> = ({plans = []}) => {
             />
           </View>
           <View style={styles.progressLabelsContainer}>
-            <Text
-              style={[styles.progressLabel, {color: colors.textSecondary}]}>
-              0
-            </Text>
-            <Text
-              style={[styles.progressLabel, {color: colors.textSecondary}]}>
+            <Text style={[styles.progressLabel, { color: colors.textSecondary }]}>0</Text>
+            <Text style={[styles.progressLabel, { color: colors.textSecondary }]}>
               {maxVisitsPerMonth}
             </Text>
           </View>
@@ -108,11 +113,6 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: 'rgba(255, 255, 255, 0.05)',
   },
-  visitLimitsContainer: {
-    borderRadius: 12,
-    marginHorizontal: 16,
-    marginVertical: 8,
-  },
   sectionTitle: {
     fontSize: 18,
     fontWeight: '600',
@@ -126,9 +126,28 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   planChip: {
-    padding: 12,
-    borderRadius: 8,
-    marginRight: 8,
+    padding: 16,
+    borderRadius: 12,
+    width: '100%',
+  },
+  planName: {
+    fontSize: 18,
+    fontWeight: '600',
+    marginBottom: 8,
+  },
+  planLimit: {
+    fontSize: 16,
+    fontWeight: '500',
+    marginBottom: 8,
+  },
+  planDescription: {
+    fontSize: 14,
+    opacity: 0.7,
+  },
+  visitLimitsContainer: {
+    borderRadius: 12,
+    marginHorizontal: 16,
+    marginVertical: 8,
   },
   visitsRow: {
     flexDirection: 'row',
@@ -180,4 +199,4 @@ const styles = StyleSheet.create({
   progressLabel: {
     fontSize: 12,
   },
-}); 
+});

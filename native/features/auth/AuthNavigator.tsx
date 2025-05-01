@@ -1,12 +1,12 @@
-import React, {Suspense, lazy} from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import {AuthStackParamList} from '@/navigation/types';
+import React, { Suspense, lazy } from 'react';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { AuthStackParamList } from '@/navigation/types';
 import {
   LoginScreenSkeleton,
   SignupScreenSkeleton,
-  ForgotPasswordScreenSkeleton
+  ForgotPasswordScreenSkeleton,
 } from './components/skeletons';
-import {useTranslation} from 'react-i18next';
+import { useTranslation } from 'react-i18next';
 
 const LazyLoginScreen = lazy(() =>
   import('./screens/LoginScreen').then(module => ({
@@ -47,26 +47,24 @@ const WithForgotPasswordSkeleton = (Component: React.ComponentType<any>) => (pro
 );
 
 export const AuthNavigator = () => {
-  const {t} = useTranslation();
-  
+  const { t } = useTranslation();
+
   return (
-    <Stack.Navigator
-      initialRouteName="Login"
-      screenOptions={{headerShown: false}}>
-      <Stack.Screen 
-        name="Login" 
+    <Stack.Navigator initialRouteName="Login" screenOptions={{ headerShown: false }}>
+      <Stack.Screen
+        name="Login"
         component={WithLoginSkeleton(LazyLoginScreen)}
-        options={{title: t('auth.login.signIn')}} 
+        options={{ title: t('auth.login.signIn') }}
       />
-      <Stack.Screen 
-        name="Signup" 
+      <Stack.Screen
+        name="Signup"
         component={WithSignupSkeleton(LazySignupScreen)}
-        options={{title: t('auth.signup.createAccount')}}
+        options={{ title: t('auth.signup.createAccount') }}
       />
       <Stack.Screen
         name="ForgotPassword"
         component={WithForgotPasswordSkeleton(LazyForgotPasswordScreen)}
-        options={{title: t('auth.forgotPassword.resetPassword')}}
+        options={{ title: t('auth.forgotPassword.resetPassword') }}
       />
     </Stack.Navigator>
   );

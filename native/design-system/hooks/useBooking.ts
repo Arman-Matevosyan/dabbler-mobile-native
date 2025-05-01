@@ -1,7 +1,7 @@
-import {ClassQueryKeys} from '@/constants/queryKeys';
-import {ActivityAPI} from '@/services/api';
-import {IClassBookingResponse} from '@/types/class.interfaces';
-import {useMutation} from '@tanstack/react-query';
+import { ClassQueryKeys } from '@/constants/queryKeys';
+import { ActivityAPI } from '@/services/api';
+import { IClassBookingResponse } from '@/types/class.interfaces';
+import { useMutation } from '@tanstack/react-query';
 
 export interface UseClassBookProps {
   venueId?: string | null;
@@ -10,13 +10,11 @@ export interface UseClassBookProps {
 }
 
 export const useClassBook = () => {
-  const mutation = useMutation<IClassBookingResponse, Error, UseClassBookProps>(
-    {
-      mutationKey: [ClassQueryKeys.classBooking],
-      mutationFn: async params => ActivityAPI.bookClass(params),
-      retry: 0,
-    },
-  );
+  const mutation = useMutation<IClassBookingResponse, Error, UseClassBookProps>({
+    mutationKey: [ClassQueryKeys.classBooking],
+    mutationFn: async params => ActivityAPI.bookClass(params),
+    retry: 0,
+  });
 
   return {
     confirmClassBooking: mutation,
@@ -33,13 +31,9 @@ export interface UseCancelBookingProps {
 }
 
 export const useCancelBooking = () => {
-  const mutation = useMutation<
-    IClassBookingResponse,
-    Error,
-    UseCancelBookingProps
-  >({
+  const mutation = useMutation<IClassBookingResponse, Error, UseCancelBookingProps>({
     mutationKey: [ClassQueryKeys.cancelBooking],
-    mutationFn: ({classId, date}) => ActivityAPI.cancelBooking(classId, date),
+    mutationFn: ({ classId, date }) => ActivityAPI.cancelBooking(classId, date),
     retry: 0,
   });
 

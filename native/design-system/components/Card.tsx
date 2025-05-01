@@ -1,6 +1,5 @@
-import React, {ReactNode} from 'react';
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
-import {useTheme} from '../theme/ThemeContext';
+import React, { ReactNode } from 'react';
+import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 interface CardProps {
   imageUrl?: string;
@@ -34,7 +33,7 @@ export const Card: React.FC<CardProps> = ({
       {imageUrl && (
         <View style={styles.imageContainer}>
           <Image
-            source={{uri: imageUrl}}
+            source={{ uri: imageUrl }}
             style={[styles.image, imageStyle]}
             resizeMode="cover"
             onError={e => {
