@@ -11,25 +11,16 @@ type Plan = {
 
 const PlanChip = ({ plan, style }: { plan: Plan; style?: any }) => {
   const { colors } = useTheme();
-  
+
   const planName = plan.name || 'Unnamed Plan';
   const planLimit = plan.limit || 0;
   const planDescription = plan.description || 'No description available';
-  
+
   return (
-    <View
-      style={[styles.planChip, { backgroundColor: colors.card }, style]}
-    >
-      <Text style={[styles.planName, { color: colors.textPrimary }]}>
-        {planName}
-      </Text>
-      <Text style={[styles.planLimit, { color: colors.accent }]}>
-        {planLimit} visits/month
-      </Text>
-      <Text
-        style={[styles.planDescription, { color: colors.textSecondary }]}
-        numberOfLines={1}
-      >
+    <View style={[styles.planChip, { backgroundColor: colors.card }, style]}>
+      <Text style={[styles.planName, { color: colors.textPrimary }]}>{planName}</Text>
+      <Text style={[styles.planLimit, { color: colors.accent }]}>{planLimit} visits/month</Text>
+      <Text style={[styles.planDescription, { color: colors.textSecondary }]} numberOfLines={1}>
         {planDescription}
       </Text>
     </View>

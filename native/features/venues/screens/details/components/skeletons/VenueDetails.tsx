@@ -223,7 +223,6 @@ export const VenueDetailsScreenSkeleton = () => {
 
         <View style={{ height: 90 }} />
       </View>
-
       <ActionsSkeleton />
     </View>
   );

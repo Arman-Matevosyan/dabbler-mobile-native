@@ -53,13 +53,8 @@ export const VenueMap: React.FC<VenueMapProps> = ({ location, name, address }) =
             longitude,
             latitudeDelta: 0.00008,
             longitudeDelta: 0.00008,
-          }}
-        >
-          <Marker
-            coordinate={{ latitude, longitude }}
-            title={name}
-            description={addressText}
-          >
+          }}>
+          <Marker coordinate={{ latitude, longitude }} title={name} description={addressText}>
             <MaterialIcons
               name="location-on"
               size={36}

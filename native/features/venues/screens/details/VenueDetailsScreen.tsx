@@ -89,7 +89,6 @@ export default function VenueDetailsScreen() {
     outputRange: [0, 1],
     extrapolate: 'clamp',
   });
-console.log(venueDetails, '===')
   const isFavoriteState = isFavorite(id);
 
   const handleToggleFavorite = useCallback(() => {
@@ -134,27 +133,15 @@ console.log(venueDetails, '===')
 
   if (error || !venueDetails) {
     return (
-      <View
-        style={[styles.errorContainer, { backgroundColor: colors.background }]}
-      >
+      <View style={[styles.errorContainer, { backgroundColor: colors.background }]}>
         <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
-        <MaterialIcons
-          name="error-outline"
-          size={64}
-          color={colors.error}
-        />
+        <MaterialIcons name="error-outline" size={64} color={colors.error} />
         <Text style={[styles.errorText, { color: colors.textPrimary }]}>
-          {error instanceof Error
-            ? error.message
-            : t('venues.couldntLoadVenue')}
+          {error instanceof Error ? error.message : t('venues.couldntLoadVenue')}
         </Text>
         <TouchableOpacity
-          style={[
-            styles.retryButton,
-            { backgroundColor: colors.accent },
-          ]}
-          onPress={() => router.goBack()}
-        >
+          style={[styles.retryButton, { backgroundColor: colors.accent }]}
+          onPress={() => router.goBack()}>
           <Text style={styles.retryButtonText}>{t('venues.retry')}</Text>
         </TouchableOpacity>
       </View>
@@ -162,7 +149,7 @@ console.log(venueDetails, '===')
   }
 
   const images = venueDetails?.covers?.map((img: any) => ({ url: img.url || '' })) || [];
-  
+
   const venue = {
     id: venueDetails?.id,
     name: venueDetails?.name,

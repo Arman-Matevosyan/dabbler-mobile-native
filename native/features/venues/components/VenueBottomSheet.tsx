@@ -288,12 +288,6 @@ export const VenueBottomSheet = React.memo(
             styles.header,
             {
               backgroundColor: colors.background,
-              borderBottomColor: colors.border,
-              shadowColor: '#000',
-              shadowOffset: { width: 0, height: 1 },
-              shadowOpacity: 0.1,
-              shadowRadius: 1.5,
-              elevation: 2,
             },
           ]}>
           <View style={[styles.handle, { backgroundColor: colors.border }]} />
@@ -552,9 +546,6 @@ const styles = StyleSheet.create({
     zIndex: 2,
   },
   header: {
-    borderBottomWidth: 1,
-    paddingBottom: 25,
-    backgroundColor: 'rgba(0,0,0,0.85)',
     zIndex: 10,
   },
   handle: {
@@ -562,7 +553,7 @@ const styles = StyleSheet.create({
     height: 4,
     borderRadius: 2,
     alignSelf: 'center',
-    marginVertical: 8,
+    marginVertical: 15,
   },
   headerContent: {
     paddingHorizontal: 16,
@@ -637,10 +628,6 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     overflow: 'hidden',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: -2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
     elevation: 8,
   },
   expandButton: {
