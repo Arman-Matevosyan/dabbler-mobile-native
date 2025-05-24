@@ -12,7 +12,9 @@ export const ClassListSkeleton = ({ count = 3 }: ClassListSkeletonProps) => {
   return (
     <View style={styles.container}>
       {[...Array(count)].map((_, index) => (
-        <View key={`skeleton-${index}`} style={[styles.card, { backgroundColor: colors.card }]}>
+        <View
+          key={`skeleton-${index}`}
+          style={[styles.card, { backgroundColor: colors.card, borderBottomColor: colors.border }]}>
           <View style={styles.imageContainer}>
             <Skeleton width={90} height={90} style={{ borderRadius: 8 }} />
           </View>
@@ -62,7 +64,6 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     borderRadius: 8,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(150, 150, 150, 0.2)',
   },
   imageContainer: {
     width: 90,

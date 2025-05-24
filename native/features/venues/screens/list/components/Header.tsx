@@ -2,6 +2,7 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useTheme } from '@/design-system';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { useTranslation } from 'react-i18next';
 
 interface HeaderProps {
   onClose: () => void;
@@ -9,6 +10,7 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ onClose }) => {
   const { colors } = useTheme();
+  const { t } = useTranslation();
 
   return (
     <View style={[styles.header, { backgroundColor: colors.background }]}>
@@ -18,7 +20,7 @@ export const Header: React.FC<HeaderProps> = ({ onClose }) => {
 
       <View style={styles.headerTitleContainer}>
         <Text style={[styles.headerTitle, { color: colors.textPrimary }]} numberOfLines={1}>
-          {'classes.availableClasses'}
+          {t('classes.availableClasses')}
         </Text>
       </View>
 

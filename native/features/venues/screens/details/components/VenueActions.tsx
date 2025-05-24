@@ -22,20 +22,13 @@ export const VenueActions: React.FC<VenueActionsProps> = ({ onClassesPress }) =>
           borderTopColor: 'rgba(255, 255, 255, 0.05)',
           paddingBottom: Platform.OS === 'ios' ? insets.bottom || 16 : 16,
         },
-      ]}
-    >
+      ]}>
       <View style={styles.scheduleButtonWrapper}>
         <TouchableOpacity
           onPress={onClassesPress}
-          style={[
-            styles.scheduleButton,
-            { backgroundColor: colors.accent },
-          ]}
-          activeOpacity={0.8}
-        >
-          <Text style={styles.scheduleButtonText}>
-            {t('venues.goToClasses')}
-          </Text>
+          style={[styles.scheduleButton, { backgroundColor: colors.accent }]}
+          activeOpacity={1}>
+          <Text style={styles.scheduleButtonText}>{t('venues.goToClasses')}</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -58,15 +51,12 @@ const styles = StyleSheet.create({
     justifyContent: 'flex-end',
   },
   scheduleButton: {
-    height: 44,
-    width: 120,
-    borderRadius: 8,
+    height: 42,
+    width: 110,
+    borderRadius: 2,
+    marginRight: 12,
     justifyContent: 'center',
     alignItems: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.3,
-    shadowRadius: 4,
     elevation: 5,
   },
   scheduleButtonText: {

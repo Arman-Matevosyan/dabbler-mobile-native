@@ -24,8 +24,7 @@ export const VenueImportantInfo: React.FC<VenueImportantInfoProps> = ({
       </Text>
       <Text
         style={[styles.sectionText, { color: colors.textSecondary }]}
-        numberOfLines={showImportantInfo ? undefined : 3}
-      >
+        numberOfLines={showImportantInfo ? undefined : 3}>
         {importantInfo || t('common.noResults')}
       </Text>
       <TouchableOpacity onPress={toggleImportantInfo}>
@@ -41,7 +40,6 @@ const styles = StyleSheet.create({
   sectionContainer: {
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255, 255, 255, 0.05)',
   },
   sectionTitle: {
     fontSize: 18,

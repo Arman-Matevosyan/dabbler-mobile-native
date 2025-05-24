@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
 import { PermissionsAndroid, Platform } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 export const usePermissions = () => {
   const [hasCameraPermission, setHasCameraPermission] = useState(false);
+  const { t } = useTranslation();
 
   useEffect(() => {
     checkCameraPermission();
@@ -25,11 +27,11 @@ export const usePermissions = () => {
     if (Platform.OS === 'android') {
       try {
         const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.CAMERA, {
-          title: 'Camera Permission',
-          message: 'This app needs access to your camera to scan QR codes',
-          buttonNeutral: 'Ask Me Later',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
+          title: t('permissions.cameraTitle'),
+          message: t('permissions.cameraMessage'),
+          buttonNeutral: t('permissions.askLater'),
+          buttonNegative: t('permissions.cancel'),
+          buttonPositive: t('permissions.ok'),
         });
         setHasCameraPermission(granted === PermissionsAndroid.RESULTS.GRANTED);
         return granted === PermissionsAndroid.RESULTS.GRANTED;

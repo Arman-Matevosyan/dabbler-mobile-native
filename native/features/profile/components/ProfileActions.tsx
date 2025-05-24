@@ -40,13 +40,13 @@ const ProfileActions: React.FC<ProfileActionsProps> = ({ colors, translations })
     {
       name: 'favorites',
       icon: 'favorite',
-      title: t('profile.history.title'),
+      title: t('profile.favorites'),
       route: 'Favorites',
     },
     {
       name: 'checkin',
       icon: 'history',
-      title: t('profile.history.checkinHistory'),
+      title: t('profile.checkins'),
       route: 'CheckinHistory',
     },
   ];

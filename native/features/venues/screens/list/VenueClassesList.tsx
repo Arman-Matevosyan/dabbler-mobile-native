@@ -14,6 +14,7 @@ import {
 } from './components/skeletons/VenueClassesSkeleton';
 import { useQueryClient } from '@tanstack/react-query';
 import { ClassQueryKeys } from '@/constants/queryKeys';
+import { useTranslation } from 'react-i18next';
 
 const ClassContent = lazy(() =>
   import('./components/ClassContent').then(m => ({ default: m.ClassContent })),
@@ -37,6 +38,7 @@ export default function VenueClassesPage() {
   const venueId = typeof id === 'string' ? id : '';
   const { colors } = useTheme();
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
 
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [dateRange, setDateRange] = useState<Date[]>([]);
@@ -79,7 +81,7 @@ export default function VenueClassesPage() {
         const date = new Date(today);
         date.setDate(today.getDate() + i);
         dates.push(date);
-        
+
         dateLoadingMap[format(date, 'yyyy-MM-dd')] = false;
       }
 
@@ -92,25 +94,32 @@ export default function VenueClassesPage() {
 
   useEffect(() => {
     const nextDay = addDays(selectedDate, 1);
-    if (nextDay && dateRange.some(date => format(date, 'yyyy-MM-dd') === format(nextDay, 'yyyy-MM-dd'))) {
+    if (
+      nextDay &&
+      dateRange.some(date => format(date, 'yyyy-MM-dd') === format(nextDay, 'yyyy-MM-dd'))
+    ) {
       const params = {
         from_date: nextDay.toISOString(),
         to_date: addDays(nextDay, 1).toISOString(),
       };
-      
+
       queryClient.prefetchQuery({
         queryKey: [ClassQueryKeys.discoverVenue, venueId, params],
-        queryFn: () => import('./hooks/useDiscoverVenueClasses').then(
-          module => module.useDiscoverVenueClasses(venueId, params)
-        ),
+        queryFn: () =>
+          import('./hooks/useDiscoverVenueClasses').then(module =>
+            module.useDiscoverVenueClasses(venueId, params),
+          ),
       });
     }
   }, [selectedDate, dateRange, venueId, queryClient]);
 
-  const params = useMemo(() => ({
-    from_date: selectedDate.toISOString(),
-    to_date: addDays(selectedDate, 1).toISOString(),
-  }), [selectedDate]);
+  const params = useMemo(
+    () => ({
+      from_date: selectedDate.toISOString(),
+      to_date: addDays(selectedDate, 1).toISOString(),
+    }),
+    [selectedDate],
+  );
 
   const { data, isLoading, error } = useDiscoverVenueClasses(venueId, params);
 

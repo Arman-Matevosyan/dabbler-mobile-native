@@ -1,5 +1,6 @@
 import React, { ReactNode } from 'react';
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { useTheme } from '@/design-system';
 
 interface CardProps {
   imageUrl?: string;
@@ -26,21 +27,13 @@ export const Card: React.FC<CardProps> = ({
   style,
   imageStyle,
   contentStyle,
-  onImageError,
 }) => {
+  const { colors } = useTheme();
   const renderCardContent = () => (
-    <View style={[styles.container, style]}>
+    <View style={[styles.container, style, { borderBottomColor: colors.border }]}>
       {imageUrl && (
         <View style={styles.imageContainer}>
-          <Image
-            source={{ uri: imageUrl }}
-            style={[styles.image, imageStyle]}
-            resizeMode="cover"
-            onError={e => {
-              console.warn('Image loading error:', e.nativeEvent.error);
-              if (onImageError) onImageError();
-            }}
-          />
+          <Image source={{ uri: imageUrl }} style={[styles.image, imageStyle]} resizeMode="cover" />
           {badge && badge}
         </View>
       )}
@@ -63,20 +56,15 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: 'row',
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255,255,255,0.1)',
-    paddingBottom: 20,
-    marginBottom: 20,
-    paddingTop: 20,
-    overflow: 'hidden',
+    padding: 5,
     backgroundColor: 'transparent',
   },
   imageContainer: {
     position: 'relative',
   },
   image: {
-    width: 100,
-    height: 100,
-    borderRadius: 8,
+    width: 150,
+    height: 150,
     marginRight: 16,
   },
   content: {

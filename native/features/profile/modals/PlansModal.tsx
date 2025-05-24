@@ -17,6 +17,7 @@ import {
 } from 'react-native';
 import { useAuthStore } from '@/stores/authStore';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import { useTranslation } from 'react-i18next';
 
 const PlanSkeleton = ({ colors }: { colors: any }) => {
   return (
@@ -54,6 +55,7 @@ export default function PlansModal({ onClose, forceShow = false }: PlansModalPro
     useNavigation<NativeStackNavigationProp<RootStackParamList & ProfileStackParamList>>();
   const { data: plans = [], isLoading } = usePlans();
   const { showSubscriptionModal, setShowSubscriptionModal } = useAuthStore();
+  const { t } = useTranslation();
 
   const isVisible = forceShow || showSubscriptionModal;
 
@@ -105,7 +107,7 @@ export default function PlansModal({ onClose, forceShow = false }: PlansModalPro
                 <View style={[styles.modalView, { backgroundColor: colors.background }]}>
                   <View style={styles.header}>
                     <Text style={[styles.title, { color: colors.textPrimary }]}>
-                      Upgrade Your Account
+                      {t('plans.chooseYourPlan')}
                     </Text>
                     <TouchableOpacity
                       onPress={handleClose}
@@ -116,14 +118,14 @@ export default function PlansModal({ onClose, forceShow = false }: PlansModalPro
                   </View>
 
                   <Text style={[styles.description, { color: colors.textSecondary }]}>
-                    Choose a subscription plan to access all features.
+                    {t('plans.choosePlan')}
                   </Text>
 
                   {isLoading ? (
                     <View style={styles.loadingContainer}>
                       <ActivityIndicator size="small" color={colors.accent} style={styles.loader} />
                       <Text style={[styles.loadingText, { color: colors.textSecondary }]}>
-                        Loading plans...
+                        {t('plans.loadingPlans')}
                       </Text>
                       <PlanSkeleton colors={colors} />
                       <PlanSkeleton colors={colors} />
@@ -148,7 +150,7 @@ export default function PlansModal({ onClose, forceShow = false }: PlansModalPro
                               {isPopular && (
                                 <View
                                   style={[styles.popularBadge, { backgroundColor: colors.accent }]}>
-                                  <Text style={styles.popularText}>Most Popular</Text>
+                                  <Text style={styles.popularText}>{t('plans.mostPopular')}</Text>
                                 </View>
                               )}
                               <View style={styles.planHeader}>
@@ -156,19 +158,20 @@ export default function PlansModal({ onClose, forceShow = false }: PlansModalPro
                                   {plan.name}
                                 </Text>
                                 <Text style={[styles.planPrice, { color: colors.accent }]}>
-                                  {plan.currencyIsoCode} {plan.price}/mo
+                                  {plan.currencyIsoCode} {plan.price}
+                                  {t('plans.perMonth')}
                                 </Text>
                               </View>
                               <Text
                                 style={[styles.planDescription, { color: colors.textSecondary }]}>
-                                {plan.description || 'No description available'}
+                                {plan.description || t('plans.noDescription')}
                               </Text>
                             </TouchableOpacity>
                           );
                         })
                       ) : (
                         <Text style={[styles.noPlansText, { color: colors.textSecondary }]}>
-                          No plans available
+                          {t('common.noResults')}
                         </Text>
                       )}
                     </ScrollView>
@@ -179,7 +182,7 @@ export default function PlansModal({ onClose, forceShow = false }: PlansModalPro
                       style={[styles.viewAllButton, { backgroundColor: colors.accent }]}
                       onPress={handleViewAllPlans}
                       activeOpacity={1}>
-                      <Text style={styles.viewAllButtonText}>View All Plans</Text>
+                      <Text style={styles.viewAllButtonText}>{t('membership.viewPlans')}</Text>
                     </TouchableOpacity>
 
                     <TouchableOpacity
@@ -187,7 +190,7 @@ export default function PlansModal({ onClose, forceShow = false }: PlansModalPro
                       onPress={handleClose}
                       activeOpacity={1}>
                       <Text style={[styles.skipButtonText, { color: colors.textSecondary }]}>
-                        Maybe Later
+                        {t('common.cancel')}
                       </Text>
                     </TouchableOpacity>
                   </View>

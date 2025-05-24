@@ -12,6 +12,7 @@ import {
 import Icon from 'react-native-vector-icons/MaterialIcons';
 import { CategoryList } from './CategoryList';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useTranslation } from 'react-i18next';
 
 interface SearchWithCategoriesProps {
   searchValue?: string;
@@ -27,13 +28,14 @@ export const SearchWithCategories = ({
   searchValue = '',
   selectedCategories = [],
   onCategoryToggle,
-  placeholder = 'Search...',
+  placeholder,
   onSearchChange,
   isLoading = false,
 }: SearchWithCategoriesProps) => {
   const { colors, mode } = useTheme();
   const [isFocused, setIsFocused] = useState(false);
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const { t } = useTranslation();
 
   const isSearching = useRef(false);
 
@@ -63,7 +65,7 @@ export const SearchWithCategories = ({
           <Icon name="search" size={20} color={colors.textSecondary} style={styles.searchIcon} />
           <TextInput
             style={[styles.searchInput, { color: mode === 'dark' ? '#fff' : colors.textPrimary }]}
-            placeholder={placeholder}
+            placeholder={placeholder || t('common.search')}
             placeholderTextColor={colors.textSecondary}
             value={searchValue}
             onChangeText={handleSearchChange}
@@ -87,13 +89,13 @@ export const SearchWithCategories = ({
               style={[styles.categoriesButton, { backgroundColor: colors.accent }]}
               onPress={() => setIsModalVisible(true)}>
               <Text style={[styles.categoriesButtonText, { color: '#fff' }]}>
-                {'venues.categories'}
+                {t('venues.categories')}
               </Text>
               <Icon name="arrow-drop-up" size={20} color="#fff" />
             </TouchableOpacity>
             {selectedCategories.length > 0 && (
               <Text style={[styles.selectedCount, { color: colors.textSecondary }]}>
-                {selectedCategories.length} {'venues.selected'}
+                {selectedCategories.length} {t('venues.selected')}
               </Text>
             )}
           </View>

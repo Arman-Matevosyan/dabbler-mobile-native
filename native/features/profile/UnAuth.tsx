@@ -51,7 +51,7 @@ const UnauthenticatedProfile: React.FC = () => {
                 textAlign: 'center',
                 color: colors.textPrimary,
               }}>
-              {t('profile.unAuth.welcome')}
+              {t('profile.welcomeToDabbler')}
             </Text>
 
             <Text
@@ -63,7 +63,7 @@ const UnauthenticatedProfile: React.FC = () => {
                 fontSize: 16,
                 maxWidth: '80%',
               }}>
-              {t('profile.unAuth.signInPrompt')}
+              {t('profile.signInToAccess')}
             </Text>
           </View>
           <TouchableOpacity
@@ -83,10 +83,10 @@ const UnauthenticatedProfile: React.FC = () => {
               </View>
               <View style={styles.authButtonTextContainer}>
                 <Text style={[styles.authButtonText, { color: colors.textPrimary }]}>
-                  {t('profile.unAuth.signIn')}
+                  {t('auth.login')}
                 </Text>
                 <Text style={[styles.authButtonSubtext, { color: colors.textSecondary }]}>
-                  {t('auth.login.signInAccount')}
+                  {t('auth.signInAccount')}
                 </Text>
               </View>
             </View>
@@ -109,10 +109,10 @@ const UnauthenticatedProfile: React.FC = () => {
               </View>
               <View style={styles.authButtonTextContainer}>
                 <Text style={[styles.authButtonText, { color: colors.textPrimary }]}>
-                  {t('profile.unAuth.signUp')}
+                  {t('auth.signup')}
                 </Text>
                 <Text style={[styles.authButtonSubtext, { color: colors.textSecondary }]}>
-                  {t('auth.signup.createAccount')}
+                  {t('auth.createAccount')}
                 </Text>
               </View>
             </View>

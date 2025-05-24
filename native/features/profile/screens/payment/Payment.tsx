@@ -2,35 +2,11 @@ import React from 'react';
 import { View, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import { Text, Button, useTheme, Skeleton } from '@/design-system';
+import { Text, Button, useTheme } from '@/design-system';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { IPaymentMethod } from '@/types/payment.interfaces';
 import { usePaymentMethods } from './hooks/usePaymentMethods';
-
-const PaymentMethodSkeleton = () => {
-  const { colors } = useTheme();
-
-  return (
-    <View
-      style={[
-        styles.detailItem,
-        {
-          backgroundColor: 'transparent',
-          borderBottomWidth: 1,
-          borderBottomColor: colors.border,
-          paddingVertical: 16,
-        },
-      ]}>
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Skeleton width={40} height={24} style={{ marginRight: 16 }} />
-        <View>
-          <Skeleton width={150} height={16} style={{ marginBottom: 8 }} />
-          <Skeleton width={100} height={14} />
-        </View>
-      </View>
-    </View>
-  );
-};
+import { useTranslation } from 'react-i18next';
 
 export const PaymentScreen = () => {
   const insets = useSafeAreaInsets();
@@ -38,6 +14,7 @@ export const PaymentScreen = () => {
   const navigation = useNavigation();
   const { data: paymentMethods, isLoading } = usePaymentMethods();
   const hasPaymentMethods = paymentMethods && paymentMethods.length > 0;
+  const { t } = useTranslation();
 
   const renderHeader = () => (
     <View style={[styles.header, { borderBottomColor: colors.border }]}>
@@ -47,7 +24,7 @@ export const PaymentScreen = () => {
         icon={<MaterialIcons name="arrow-back" size={24} color={colors.textPrimary} />}
         style={styles.backButton}
       />
-      <Text variant="heading1">Payment Methods</Text>
+      <Text variant="heading1">{t('profile.paymentMethods')}</Text>
     </View>
   );
 
@@ -66,7 +43,7 @@ export const PaymentScreen = () => {
           textAlign: 'center',
           marginBottom: 20,
         }}>
-        No Payment Methods
+        {t('payment.noPaymentMethods')}
       </Text>
 
       <Text
@@ -77,35 +54,21 @@ export const PaymentScreen = () => {
           marginBottom: 30,
           maxWidth: '80%',
         }}>
-        You haven't added any payment methods yet. Add a method to easily manage your subscriptions.
+        {t('payment.noPaymentMethodsAdded')}
       </Text>
     </View>
-  );
-
-  const renderLoadingState = () => (
-    <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-      <View style={styles.content}>
-        <Skeleton width="70%" height={24} style={{ marginBottom: 24 }} />
-
-        <View style={{ gap: 8 }}>
-          <PaymentMethodSkeleton />
-          <PaymentMethodSkeleton />
-          <PaymentMethodSkeleton />
-        </View>
-      </View>
-    </ScrollView>
   );
 
   const renderPaymentMethods = () => (
     <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
       <View style={styles.content}>
         <Text variant="heading2" style={styles.screenTitle}>
-          Your Payment Methods
+          {t('profile.paymentMethods')}
         </Text>
 
         <View style={{ gap: 16, marginTop: 16 }}>
           {paymentMethods?.map((method: IPaymentMethod, index: number) => (
-            <View style={styles.paymentMethodContainer}>
+            <View style={styles.paymentMethodContainer} key={method.id || index}>
               {method.details?.imageUrl && (
                 <Image
                   source={{ uri: method.details.imageUrl }}
@@ -114,10 +77,11 @@ export const PaymentScreen = () => {
               )}
               <View style={styles.paymentMethodDetails}>
                 <Text preset="bodyLarge" bold>
-                  {method.details?.cardType || 'Card'} ending in {method.details?.last4 || '****'}
+                  {method.details?.cardType || t('payment.cardType')} {t('payment.endingIn')}{' '}
+                  {method.details?.last4 || '****'}
                 </Text>
                 <Text variant="bodySmall" color="secondary">
-                  Expires {method.details?.expirationMonth || 'MM'}/
+                  {t('membership.expires')} {method.details?.expirationMonth || 'MM'}/
                   {method.details?.expirationYear || 'YY'}
                 </Text>
                 {method.details?.cardholderName && (
@@ -135,7 +99,8 @@ export const PaymentScreen = () => {
 
   const renderContent = () => {
     if (isLoading) {
-      return renderLoadingState();
+      // Loading state is handled by the Navigator using Suspense
+      return null;
     }
 
     if (!hasPaymentMethods) {

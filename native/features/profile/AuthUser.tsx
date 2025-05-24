@@ -37,7 +37,7 @@ interface FileData {
 const AuthenticatedProfile: React.FC = () => {
   const { colors } = useTheme();
   const router = useNavigation();
-  const { isLoading, uploadAvatar, isUploading } = useAuthStore();
+  const { uploadAvatar, isUploading } = useAuthStore();
   const insets = useSafeAreaInsets();
   const { data: user } = useUser();
   const { t } = useTranslation();
@@ -85,7 +85,7 @@ const AuthenticatedProfile: React.FC = () => {
         user={user as any}
         handleAvatarUpload={handleAvatarUpload}
         isAvatarUploadLoading={isUploading}
-        title={t('profile.title')}
+        title={t('profile.profile')}
       />
     ),
     [user, handleAvatarUpload, isUploading, t],
@@ -100,12 +100,12 @@ const AuthenticatedProfile: React.FC = () => {
           cardBackground: colors.background,
         }}
         translations={{
-          settings: t('profile.settings.title'),
-          preferences: t('profile.settings.preferences'),
-          language: t('profile.language.title'),
-          changeLanguage: t('profile.settings.changeLanguage'),
-          history: t('profile.history.title'),
-          checkinHistory: t('profile.history.checkinHistory'),
+          settings: t('common.settings'),
+          preferences: t('profile.preferences'),
+          language: t('common.language'),
+          changeLanguage: t('profile.changeLanguage'),
+          history: t('profile.checkins'),
+          checkinHistory: t('profile.checkins'),
           support: t('profile.support.title'),
           contactUs: t('profile.support.contactUs'),
           about: t('profile.about.title'),

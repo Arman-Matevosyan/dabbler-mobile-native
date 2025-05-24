@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, Dimensions, Platform } from 'react-native';
 import MapView, { Marker, PROVIDER_DEFAULT, PROVIDER_GOOGLE } from 'react-native-maps';
 import { useTheme } from '@/design-system';
 import { darkMapStyle, lightMapStyle } from '@/constants/MapColors';
+import { useTranslation } from 'react-i18next';
 
 interface Coordinates {
   latitude: number;
@@ -17,6 +18,7 @@ interface ClassLocationMapProps {
 export const ClassLocationMap = React.memo(
   ({ coordinates, venueName = 'Venue' }: ClassLocationMapProps) => {
     const { colors, mode } = useTheme();
+    const { t } = useTranslation();
 
     if (!coordinates?.latitude || !coordinates?.longitude) {
       return null;
@@ -24,7 +26,9 @@ export const ClassLocationMap = React.memo(
 
     return (
       <View style={styles.container}>
-        <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Location</Text>
+        <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
+          {t('classes.location')}
+        </Text>
 
         <View style={[styles.mapContainer, { backgroundColor: colors.border }]}>
           <MapView

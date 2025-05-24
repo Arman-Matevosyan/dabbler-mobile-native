@@ -9,7 +9,7 @@ export const CheckinHistorySkeleton = () => {
 
   const renderCheckinItem = (key: number) => (
     <View key={key} style={[styles.checkinItem, { backgroundColor: colors.card }]}>
-      <View style={styles.checkinHeader}>
+      <View style={[styles.checkinHeader, { borderBottomColor: colors.border }]}>
         <Skeleton width={120} height={18} style={{ marginBottom: 4 }} />
         <Skeleton width={80} height={14} />
       </View>
@@ -28,12 +28,12 @@ export const CheckinHistorySkeleton = () => {
   return (
     <View
       style={[styles.container, { backgroundColor: colors.background, paddingTop: insets.top }]}>
-      <View style={styles.header}>
+      <View style={[styles.header, { borderBottomColor: colors.border }]}>
         <Skeleton width={24} height={24} style={{ marginRight: 16 }} />
         <Skeleton width="60%" height={24} />
       </View>
 
-      <View style={styles.filterSection}>
+      <View style={[styles.filterSection, { borderBottomColor: colors.border }]}>
         <Skeleton width="70%" height={36} style={{ borderRadius: 18 }} />
         <Skeleton width={36} height={36} style={{ borderRadius: 18, marginLeft: 8 }} />
       </View>
@@ -65,7 +65,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.1)',
   },
   filterSection: {
     flexDirection: 'row',
@@ -73,7 +72,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.05)',
   },
   scrollView: {
     flex: 1,
@@ -97,7 +95,6 @@ const styles = StyleSheet.create({
   checkinHeader: {
     marginBottom: 12,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.05)',
     paddingBottom: 8,
   },
   venueDetails: {

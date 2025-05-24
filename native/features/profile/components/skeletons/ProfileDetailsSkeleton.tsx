@@ -10,14 +10,15 @@ export const ProfileDetailsSkeleton = () => {
   return (
     <View
       style={[styles.container, { backgroundColor: colors.background, paddingTop: insets.top }]}>
-      <View style={styles.header}>
-        <Skeleton width={40} height={40} borderRadius={20} style={{ marginRight: 16 }} />
+      <View style={[styles.header, { borderBottomColor: colors.border }]}>
+        <Skeleton width={24} height={24} style={{ marginRight: 16 }} />
         <Skeleton width={150} height={28} />
       </View>
 
       <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         <View style={styles.content}>
-          <Skeleton width="70%" height={30} style={{ marginBottom: 24 }} />
+          <Skeleton width="70%" height={28} style={{ marginBottom: 24 }} />
+
           {[1, 2, 3, 4].map(item => (
             <View
               key={item}
@@ -45,7 +46,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.1)',
   },
   scrollView: {
     flex: 1,

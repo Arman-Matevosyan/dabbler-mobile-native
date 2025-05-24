@@ -8,7 +8,11 @@ const { width } = Dimensions.get('window');
 export const HeaderSkeleton = ({ onClose }: { onClose?: () => void }) => {
   const { colors } = useTheme();
   return (
-    <View style={[styles.header, { backgroundColor: colors.background }]}>
+    <View
+      style={[
+        styles.header,
+        { backgroundColor: colors.background, borderBottomColor: colors.border },
+      ]}>
       <View style={styles.backButton} onTouchEnd={onClose}>
         <MaterialIcons name="arrow-back" size={24} color={colors.textPrimary} />
       </View>
@@ -137,7 +141,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     height: 60,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0, 0, 0, 0.1)',
     zIndex: 10,
   },
   backButton: {

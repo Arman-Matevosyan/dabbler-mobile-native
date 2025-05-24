@@ -11,7 +11,7 @@ export const FavoritesScreenSkeleton = () => {
     <View key={key} style={[styles.skeletonItem, { backgroundColor: colors.card }]}>
       <Skeleton style={styles.skeletonImage} />
       <View style={styles.skeletonContent}>
-        <Skeleton style={{ height: 20, width: '60%', marginBottom: 12 }} />
+        <Skeleton style={{ height: 24, width: '60%', marginBottom: 12 }} />
 
         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
           <View
@@ -48,14 +48,14 @@ export const FavoritesScreenSkeleton = () => {
     <View
       style={[styles.container, { backgroundColor: colors.background, paddingTop: insets.top }]}>
       <View style={[styles.header, { borderBottomColor: colors.border }]}>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Skeleton style={{ width: 40, height: 40, borderRadius: 20, marginRight: 16 }} />
-          <Skeleton style={{ width: 150, height: 26 }} />
+        <View style={styles.headerTop}>
+          <Skeleton width={24} height={24} style={{ marginRight: 16 }} />
+          <Skeleton width="50%" height={28} />
         </View>
-        <Skeleton style={{ width: '100%', height: 50, borderRadius: 8, marginTop: 16 }} />
+        <Skeleton width="100%" height={48} style={{ borderRadius: 8, marginTop: 16 }} />
       </View>
 
-      <ScrollView style={styles.scrollView}>
+      <ScrollView style={styles.scrollView} contentContainerStyle={styles.contentContainer}>
         {[1, 2, 3, 4, 5].map(key => renderSkeletonItem(key))}
       </ScrollView>
     </View>
@@ -65,35 +65,33 @@ export const FavoritesScreenSkeleton = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
   },
   header: {
-    paddingBottom: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
     borderBottomWidth: 1,
+  },
+  headerTop: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginBottom: 16,
   },
   scrollView: {
     flex: 1,
   },
+  contentContainer: {
+    padding: 16,
+  },
   skeletonItem: {
-    flexDirection: 'row',
-    marginBottom: 16,
     borderRadius: 12,
-    padding: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
+    overflow: 'hidden',
+    marginBottom: 16,
   },
   skeletonImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 8,
-    marginRight: 12,
+    height: 160,
+    width: '100%',
   },
   skeletonContent: {
-    flex: 1,
-    justifyContent: 'center',
+    padding: 16,
   },
 });

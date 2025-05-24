@@ -4,62 +4,13 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '@/navigation/types';
-import { Text, Button, useTheme, Skeleton } from '@/design-system';
+import { Text, Button, useTheme } from '@/design-system';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useSubscriptions } from '@/hooks/useSubscriptions';
 import { IPlan, ISubscription } from '@/types/payment.interfaces';
 import Animated, { FadeInUp } from 'react-native-reanimated';
 import { usePlans } from '@/hooks/usePlans';
-
-const PlanSkeleton = () => {
-  const { colors } = useTheme();
-
-  return (
-    <View
-      style={[
-        styles.skeletonCard,
-        {
-          backgroundColor: 'transparent',
-          borderWidth: 1,
-          borderColor: colors.border,
-          borderRadius: 12,
-          marginBottom: 16,
-          padding: 16,
-        },
-      ]}>
-      <Skeleton width="40%" height={24} style={{ marginBottom: 12 }} />
-      <Skeleton width="70%" height={16} style={{ marginBottom: 16 }} />
-
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'baseline',
-          marginBottom: 16,
-        }}>
-        <Skeleton width={30} height={18} style={{ marginRight: 8 }} />
-        <Skeleton width={50} height={32} style={{ marginRight: 8 }} />
-        <Skeleton width={60} height={16} />
-      </View>
-
-      <View style={{ gap: 8, marginBottom: 20 }}>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Skeleton width={20} height={20} style={{ marginRight: 8, borderRadius: 10 }} />
-          <Skeleton width="60%" height={14} />
-        </View>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Skeleton width={20} height={20} style={{ marginRight: 8, borderRadius: 10 }} />
-          <Skeleton width="70%" height={14} />
-        </View>
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <Skeleton width={20} height={20} style={{ marginRight: 8, borderRadius: 10 }} />
-          <Skeleton width="50%" height={14} />
-        </View>
-      </View>
-
-      <Skeleton width="100%" height={44} style={{ borderRadius: 22 }} />
-    </View>
-  );
-};
+import { PlansSkeleton } from '@/features/profile/components/skeletons';
 
 export default function PlansScreen() {
   const insets = useSafeAreaInsets();
@@ -181,17 +132,7 @@ export default function PlansScreen() {
     );
   };
 
-  const renderLoadingState = () => (
-    <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
-      <View style={styles.content}>
-        <Skeleton width="70%" height={24} style={{ marginBottom: 24, alignSelf: 'center' }} />
-
-        <PlanSkeleton />
-        <PlanSkeleton />
-        <PlanSkeleton />
-      </View>
-    </ScrollView>
-  );
+  const renderLoadingState = () => <PlansSkeleton />;
 
   const renderNoPlans = () => (
     <View style={styles.emptyContainer}>
@@ -369,21 +310,26 @@ const styles = StyleSheet.create({
   },
   priceContainer: {
     flexDirection: 'row',
-    alignItems: 'baseline',
+    alignItems: 'flex-end',
     marginBottom: 16,
+    paddingTop: 4,
+    paddingBottom: 4,
   },
   currency: {
     fontSize: 16,
     fontWeight: 'bold',
     marginRight: 4,
+    lineHeight: 24,
   },
   price: {
     fontSize: 32,
     fontWeight: 'bold',
     marginRight: 4,
+    lineHeight: 32,
   },
   period: {
     fontSize: 14,
+    lineHeight: 24,
   },
   featuresContainer: {
     marginBottom: 24,
@@ -402,8 +348,5 @@ const styles = StyleSheet.create({
   },
   currentPlanButton: {
     opacity: 0.7,
-  },
-  skeletonCard: {
-    height: 300,
   },
 });

@@ -8,3 +8,5 @@ export { PaymentSkeleton } from './PaymentSkeleton';
 export { PlansSkeleton } from './PlansSkeleton';
 export { CheckinHistorySkeleton } from './CheckinHistorySkeleton';
 export { ProfileSkeleton } from './ProfileSkeleton';
+export { UnAuthSkeleton } from './UnAuthSkeleton';
+export { AuthUserSkeleton } from './AuthUserSkeleton';

@@ -1,8 +1,9 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
 import { Button } from '@design-system';
+import { withTranslation, WithTranslation } from 'react-i18next';
 
-interface Props {
+interface Props extends WithTranslation {
   children: ReactNode;
 }
 
@@ -12,7 +13,7 @@ interface State {
   errorInfo: ErrorInfo | null;
 }
 
-export class ErrorBoundary extends Component<Props, State> {
+class ErrorBoundaryComponent extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -47,18 +48,20 @@ export class ErrorBoundary extends Component<Props, State> {
   };
 
   render(): ReactNode {
+    const { t } = this.props;
+
     if (this.state.hasError) {
       return (
         <View style={styles.container}>
-          <Text style={styles.title}>Something went wrong</Text>
+          <Text style={styles.title}>{t('errors.somethingWentWrong')}</Text>
           <ScrollView style={styles.scrollView}>
             <Text style={styles.errorText}>{this.state.error?.toString()}</Text>
             <Text style={styles.stackTrace}>
-              {this.state.errorInfo?.componentStack || 'No stack trace available'}
+              {this.state.errorInfo?.componentStack || t('errors.noStackTrace')}
             </Text>
           </ScrollView>
           <Button
-            title="Try Again"
+            title={t('common.tryAgain')}
             onPress={this.resetError}
             style={styles.button}
             variant="primary"
@@ -70,6 +73,8 @@ export class ErrorBoundary extends Component<Props, State> {
     return this.props.children;
   }
 }
+
+export const ErrorBoundary = withTranslation()(ErrorBoundaryComponent);
 
 const styles = StyleSheet.create({
   container: {

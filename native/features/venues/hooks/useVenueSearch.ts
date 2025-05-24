@@ -77,6 +77,30 @@ export function useVenueSearch(params: SearchParams, isFocused: boolean) {
     queryFn: () => fetchVenues(params),
     enabled: isFocused && hasLocationParams,
     retry: 0,
+    select: (data: MapSearchResponse) => {
+      const clusters = data.response?.clusters || [];
+      return {
+        clusters: clusters
+          .filter((c: MapCluster) => c.count > 1 && c.center?.latitude && c.center?.longitude)
+          .map((c: MapCluster) => ({
+            ...c,
+            id: c.id || `cluster-${c.center.latitude}-${c.center.longitude}`,
+          })),
+        venues: clusters
+          .filter(
+            (c: MapCluster) =>
+              c.count === 1 && c.venue && Array.isArray(c.venue.location.coordinates),
+          )
+          .map((c: MapCluster) => ({
+            ...c.venue!,
+            location: {
+              latitude: c.venue!.location.coordinates[1],
+              longitude: c.venue!.location.coordinates[0],
+            },
+          })),
+        total: data.response.total || 0,
+      };
+    },
     staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
     placeholderData: previousData => previousData,
@@ -102,8 +126,19 @@ const fetchVenues = async (params: SearchParams): Promise<MapSearchResponse> => 
     } else if (typeof params.category === 'string' && params.category) {
       categoryParam = params.category;
     }
-
-    const response = await client.get('/content/venues/discover/search', {
+    console.log(
+      {
+        latitude: params.locationLat?.toString(),
+        longitude: params.locationLng?.toString(),
+        distance: params.radius?.toString(),
+        limit: params.limit?.toString() || '100',
+        offset: params.offset?.toString() || '0',
+        q: params.query || '',
+        category: categoryParam?.toString(),
+      },
+      '======PARAM',
+    );
+    const response = await client.get('/content/venues/discover/map/search', {
       latitude: params.locationLat?.toString(),
       longitude: params.locationLng?.toString(),
       distance: params.radius?.toString(),

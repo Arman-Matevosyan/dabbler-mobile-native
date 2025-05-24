@@ -12,6 +12,7 @@ import { Venue } from './MapComponent';
 import { useNavigation } from '@react-navigation/native';
 import { useTheme } from '@/design-system';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useTranslation } from 'react-i18next';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 
@@ -27,6 +28,7 @@ const VenueDetailsPanel: React.FC<VenueDetailsPanelProps> = memo(
   ({ selectedVenue, isLoading, slideAnim, opacityAnim, onClose }) => {
     const navigation = useNavigation<any>();
     const { colors } = useTheme();
+    const { t } = useTranslation();
 
     const transformStyles = useMemo(
       () => ({
@@ -84,13 +86,13 @@ const VenueDetailsPanel: React.FC<VenueDetailsPanelProps> = memo(
                   : 'Fitness, Yoga, Aerial'}
               </Text>
               <View style={[styles.plusButton, { backgroundColor: colors.accent }]}>
-                <Text style={styles.plusButtonText}>Details</Text>
+                <Text style={styles.plusButtonText}>{t('venues.viewMore')}</Text>
               </View>
             </View>
           </View>
         </TouchableOpacity>
       );
-    }, [selectedVenue, colors, navigateToVenueDetails]);
+    }, [selectedVenue, colors, navigateToVenueDetails, t]);
 
     const skeletonContent = useMemo(
       () => (
@@ -159,6 +161,7 @@ const styles = StyleSheet.create({
     left: SCREEN_WIDTH * 0.025,
     padding: 16,
     bottom: 0,
+    top: -110,
     minHeight: 144,
     borderRadius: 8,
     shadowColor: '#000',

@@ -21,13 +21,10 @@ export const VenueDescription: React.FC<VenueDescriptionProps> = ({
 
   return (
     <View style={[styles.sectionContainer, { borderBottomColor: colors.border }]}>
-      <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
-        {t('venues.about')}
-      </Text>
+      <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>{t('venues.about')}</Text>
       <Text
         style={[styles.sectionText, { color: colors.textSecondary }]}
-        numberOfLines={showFullDescription ? undefined : 3}
-      >
+        numberOfLines={showFullDescription ? undefined : 3}>
         {descriptionText}
       </Text>
       {description && description.length > 120 && (
@@ -45,7 +42,6 @@ const styles = StyleSheet.create({
   sectionContainer: {
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255, 255, 255, 0.05)',
   },
   sectionTitle: {
     fontSize: 18,

@@ -10,7 +10,7 @@ export const DisplaySkeleton = () => {
   return (
     <View
       style={[styles.container, { backgroundColor: colors.background, paddingTop: insets.top }]}>
-      <View style={styles.header}>
+      <View style={[styles.header, { borderBottomColor: colors.border }]}>
         <Skeleton width={24} height={24} style={{ marginRight: 16 }} />
         <Skeleton width="40%" height={24} />
       </View>
@@ -23,7 +23,7 @@ export const DisplaySkeleton = () => {
             <Skeleton width="50%" height={20} style={{ marginBottom: 16 }} />
             <View style={[styles.optionContainer, { backgroundColor: colors.card }]}>
               {[1, 2].map(item => (
-                <View key={item} style={styles.optionItem}>
+                <View key={item} style={[styles.optionItem, { borderBottomColor: colors.border }]}>
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Skeleton width={24} height={24} style={{ marginRight: 12 }} />
                     <Skeleton width="60%" height={18} />
@@ -38,7 +38,7 @@ export const DisplaySkeleton = () => {
             <Skeleton width="60%" height={20} style={{ marginBottom: 16 }} />
             <View style={[styles.optionContainer, { backgroundColor: colors.card }]}>
               {[1, 2, 3].map(item => (
-                <View key={item} style={styles.optionItem}>
+                <View key={item} style={[styles.optionItem, { borderBottomColor: colors.border }]}>
                   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                     <Skeleton width={24} height={24} style={{ marginRight: 12 }} />
                     <Skeleton width="70%" height={18} />
@@ -64,7 +64,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.1)',
   },
   scrollView: {
     flex: 1,
@@ -86,6 +85,5 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 14,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.05)',
   },
 });

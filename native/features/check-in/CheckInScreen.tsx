@@ -135,11 +135,9 @@ export default function CheckInScreen() {
         </View>
         <Suspense fallback={<HeaderSkeleton />}>
           <View style={styles.header}>
-            <Text style={[styles.title, { color: colors.textPrimary }]}>
-              {t('checkin.checkIn')}
-            </Text>
+            <Text style={[styles.title, { color: colors.textPrimary }]}>{t('checkin.title')}</Text>
             <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-              {t('checkin.scanToCheckIn')}
+              {t('checkin.scanDescription')}
             </Text>
           </View>
         </Suspense>

@@ -19,19 +19,13 @@ import {
   View,
   ActivityIndicator,
   LayoutAnimation,
-  UIManager,
-  Platform,
   Dimensions,
 } from 'react-native';
-import { Skeleton, useTheme } from '@/design-system';
+import { Skeleton, useTheme, useToast } from '@/design-system';
 import { useVenuesBottomSheet } from '../hooks';
 import { useAuthStore } from '@/stores/authStore';
 import { useFavorites } from '@/hooks/useFavorites';
 import { useTranslation } from 'react-i18next';
-
-if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
-  UIManager.setLayoutAnimationEnabledExperimental(true);
-}
 
 const { height: screenHeight } = Dimensions.get('window');
 const MAX_SHEET_HEIGHT_PERCENTAGE = 90;
@@ -86,11 +80,11 @@ const FavoriteButton = React.memo(({ venue }: FavoriteButtonProps) => {
   const { toggleFavorite, isLoading, isFavorite } = useFavorites();
   const { isAuthenticated } = useAuthStore();
   const { t } = useTranslation();
+  const { showToast } = useToast();
 
   const handlePress = () => {
     if (!isAuthenticated) {
-      // If you have a toast or tooltip system, you could use it here
-      // showTooltip(t('venues.signInToSaveFavorites'));
+      showToast(t('venues.signInToSaveFavorites'), 'warning', 'top');
       return;
     }
     toggleFavorite(venue.id);
@@ -101,13 +95,13 @@ const FavoriteButton = React.memo(({ venue }: FavoriteButtonProps) => {
       style={[styles.favoriteButton]}
       onPress={handlePress}
       disabled={isLoading}
-      activeOpacity={0.6}>
+      activeOpacity={1}>
       {isLoading ? (
         <ActivityIndicator size="small" color="#FF3B30" />
       ) : (
         <MaterialIcons
           name={venue.isFavorite || isFavorite(venue.id) ? 'favorite' : 'favorite-border'}
-          size={20}
+          size={25}
           color={venue.isFavorite || isFavorite(venue.id) ? '#FF3B30' : 'white'}
         />
       )}
@@ -155,22 +149,30 @@ const VenueCard = React.memo(
       setExpanded(prev => !prev);
     }, []);
 
+    const renderImage = useMemo(() => {
+      if (hasImage && !imageError) {
+        return (
+          <Image
+            source={{ uri: imageUrl }}
+            style={[styles.venueImage]}
+            resizeMode="cover"
+            onError={handleImageError}
+          />
+        );
+      }
+
+      return (
+        <View style={[styles.placeholderImage, { backgroundColor: colors.border }]}>
+          <MaterialIcons name="image" size={40} color={colors.textSecondary} />
+        </View>
+      );
+    }, [hasImage, imageError, imageUrl, colors.border, colors.textSecondary, handleImageError]);
+
     return (
-      <TouchableOpacity style={styles.cardContainer} onPress={handlePress} activeOpacity={0.8}>
+      <TouchableOpacity style={styles.cardContainer} onPress={handlePress} activeOpacity={1}>
         <View style={styles.venueCard}>
           <View style={styles.leftContainer}>
-            {hasImage && !imageError ? (
-              <Image
-                source={{ uri: imageUrl }}
-                style={[styles.venueImage, { borderRadius: 0 }]}
-                resizeMode="cover"
-                onError={handleImageError}
-              />
-            ) : (
-              <View style={[styles.placeholderImage, { backgroundColor: colors.border }]}>
-                <MaterialIcons name="image" size={40} color={colors.textSecondary} />
-              </View>
-            )}
+            {renderImage}
             <View style={styles.favoriteButtonContainer}>
               <FavoriteButton venue={item} />
             </View>
@@ -178,7 +180,7 @@ const VenueCard = React.memo(
 
           <View style={styles.venueDetails}>
             <Text style={[styles.venueName, { color: colors.textPrimary }]} numberOfLines={1}>
-              {item.name || 'Venue'}
+              {item.name || t('venues.venue')}
             </Text>
             {locationText ? (
               <Text
@@ -204,7 +206,7 @@ const VenueCard = React.memo(
                     style={styles.expandButton}
                     activeOpacity={0.7}>
                     <Text style={[styles.expandButtonText, { color: colors.accent }]}>
-                      {expanded ? t('venues.readLess') : t('venues.readMore')}
+                      {expanded ? t('venues.showLess') : t('venues.showMore')}
                     </Text>
                   </TouchableOpacity>
                 )}
@@ -228,7 +230,7 @@ export const VenueBottomSheet = React.memo(
     const { colors } = useTheme();
     const bottomSheetRef = useRef<BottomSheet>(null);
 
-    const snapPoints = useMemo(() => ['7.5%', '50%', '80%'], []);
+    const snapPoints = useMemo(() => ['8%', '90%'], []);
 
     const [currentIndex, setCurrentIndex] = useState(0);
     const isExpanded = currentIndex > 0;
@@ -368,7 +370,7 @@ const BottomSheetContent = React.memo(
       if (enabled) {
         refetch();
       }
-    }, [enabled, refetch]);
+    }, [enabled, refetch, searchParams]);
 
     useEffect(() => {
       updateLoadingState(isLoading);
@@ -442,7 +444,7 @@ const BottomSheetContent = React.memo(
                 <TouchableOpacity key={item.id} style={styles.cardContainer} activeOpacity={1}>
                   <View style={styles.venueCard}>
                     <View style={styles.leftContainer}>
-                      <Skeleton style={{ width: 110, height: '100%' }} />
+                      <Skeleton style={{ width: 200, height: '100%' }} />
                     </View>
                     <View style={styles.venueDetails}>
                       <Skeleton style={{ height: 20, width: '70%', marginBottom: 8 }} />
@@ -467,7 +469,13 @@ const BottomSheetContent = React.memo(
               )}
               contentContainerStyle={{
                 backgroundColor: colors.background,
+                paddingBottom: 70,
               }}
+              initialNumToRender={5}
+              maxToRenderPerBatch={10}
+              windowSize={5}
+              removeClippedSubviews={true}
+              showsVerticalScrollIndicator={false}
             />
           )}
         </View>
@@ -476,7 +484,7 @@ const BottomSheetContent = React.memo(
           <TouchableOpacity
             style={[styles.mapViewButton, { backgroundColor: colors.accent }]}
             onPress={() => goToIndex(0)}>
-            <MaterialCommunityIcons name="map-outline" size={18} color="white" />
+            <MaterialIcons name="map" size={18} color="white" />
             <Text style={styles.mapViewText}>{t('venues.mapView')}</Text>
           </TouchableOpacity>
         </View>
@@ -488,8 +496,8 @@ const BottomSheetContent = React.memo(
 const styles = StyleSheet.create({
   cardContainer: {
     marginBottom: 16,
+    padding: 5,
     backgroundColor: 'transparent',
-    borderRadius: 16,
     overflow: 'hidden',
   },
   skeletonContainer: {
@@ -503,23 +511,16 @@ const styles = StyleSheet.create({
   },
   venueCard: {
     flexDirection: 'row',
-    height: 130,
-    borderRadius: 16,
-    overflow: 'hidden',
-    shadowColor: 'transparent',
-    shadowOffset: { width: 0, height: 0 },
-    shadowOpacity: 0,
-    shadowRadius: 0,
+    height: 200,
     elevation: 0,
   },
   venueImage: {
-    width: 110,
+    width: 200,
     height: '100%',
-    borderRadius: 0,
   },
   venueDetails: {
     padding: 12,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     flex: 1,
   },
   venueName: {
@@ -604,7 +605,7 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   placeholderImage: {
-    width: 110,
+    width: 200,
     height: '100%',
     alignItems: 'center',
     justifyContent: 'center',
@@ -613,7 +614,7 @@ const styles = StyleSheet.create({
   },
   leftContainer: {
     position: 'relative',
-    width: 110,
+    width: 200,
     height: '100%',
     overflow: 'hidden',
     borderRadius: 0,

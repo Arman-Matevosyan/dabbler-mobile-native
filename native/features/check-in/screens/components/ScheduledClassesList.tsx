@@ -60,7 +60,10 @@ const ScheduledClassesList = ({ classes, isLoading = false }: ScheduledClassesLi
 
     return (
       <TouchableOpacity
-        style={[styles.classCard, { backgroundColor: colors.background }]}
+        style={[
+          styles.classCard,
+          { backgroundColor: colors.background, borderBottomColor: colors.border },
+        ]}
         onPress={() => navigateToClassDetails(item)}
         activeOpacity={0.7}>
         <View style={styles.imageContainer}>
@@ -152,7 +155,6 @@ const styles = StyleSheet.create({
     paddingVertical: 12,
     paddingHorizontal: 16,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(150, 150, 150, 0.2)',
     overflow: 'hidden',
   },
   imageContainer: {

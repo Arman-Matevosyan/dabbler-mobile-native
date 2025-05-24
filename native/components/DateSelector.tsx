@@ -2,6 +2,7 @@ import { useTheme } from '@/design-system';
 import { format } from 'date-fns';
 import React from 'react';
 import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 interface DateSelectorProps {
   dates: Date[];
@@ -15,13 +16,15 @@ export const DateSelector: React.FC<DateSelectorProps> = ({
   onDateSelect,
 }) => {
   const { colors } = useTheme();
+  const { t } = useTranslation();
+
   const formatDate = (date: Date) => {
     const today = new Date();
     const isToday = date.toDateString() === today.toDateString();
 
     if (isToday) {
       return {
-        display: 'classes.today',
+        display: t('classes.today'),
         isToday,
       };
     }
@@ -45,7 +48,7 @@ export const DateSelector: React.FC<DateSelectorProps> = ({
           return (
             <TouchableOpacity
               key={index}
-              activeOpacity={0.7}
+              activeOpacity={1}
               style={[
                 styles.dateItem,
                 formatted.isToday && {
@@ -53,10 +56,6 @@ export const DateSelector: React.FC<DateSelectorProps> = ({
                   borderRightWidth: 1,
                   height: '90%',
                   alignSelf: 'center',
-                },
-                isSelected && {
-                  backgroundColor: colors.card,
-                  borderRadius: 8,
                 },
               ]}
               onPress={() => onDateSelect(date)}>

@@ -54,17 +54,17 @@ export const AuthNavigator = () => {
       <Stack.Screen
         name="Login"
         component={WithLoginSkeleton(LazyLoginScreen)}
-        options={{ title: t('auth.login.signIn') }}
+        options={{ title: t('auth.signIn') }}
       />
       <Stack.Screen
         name="Signup"
         component={WithSignupSkeleton(LazySignupScreen)}
-        options={{ title: t('auth.signup.createAccount') }}
+        options={{ title: t('auth.createAccount') }}
       />
       <Stack.Screen
         name="ForgotPassword"
         component={WithForgotPasswordSkeleton(LazyForgotPasswordScreen)}
-        options={{ title: t('auth.forgotPassword.resetPassword') }}
+        options={{ title: t('auth.resetPassword') }}
       />
     </Stack.Navigator>
   );

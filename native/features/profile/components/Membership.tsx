@@ -6,11 +6,13 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { ProfileStackParamList } from '@/navigation/types';
 import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useTranslation } from 'react-i18next';
 
 export const MembershipStatus: React.FC = () => {
   const { colors } = useTheme();
   const { data: subscription, isLoading } = useSubscriptions();
   const router = useNavigation<NativeStackNavigationProp<ProfileStackParamList>>();
+  const { t } = useTranslation();
 
   if (isLoading) {
     return (
@@ -29,7 +31,7 @@ export const MembershipStatus: React.FC = () => {
   const isActive = typedSubscription && typedSubscription.plan?.planId;
 
   const planName =
-    isActive && typedSubscription?.plan ? typedSubscription.plan.name : 'profile.inactive';
+    isActive && typedSubscription?.plan ? typedSubscription.plan.name : t('profile.inactive');
 
   return (
     <View style={styles.container}>

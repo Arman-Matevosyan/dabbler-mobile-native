@@ -87,10 +87,10 @@ export const SignupScreen = () => {
         keyboardShouldPersistTaps="handled">
         <View style={styles.header}>
           <Text style={[styles.title, { color: colors.textPrimary }]}>
-            {t('auth.signup.createAccount')}
+            {t('auth.createAccount')}
           </Text>
           <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-            {t('auth.signup.getStarted')}
+            {t('auth.joinCommunity')}
           </Text>
         </View>
 
@@ -110,8 +110,8 @@ export const SignupScreen = () => {
             name="firstName"
             render={({ field: { onChange, onBlur, value } }) => (
               <Input
-                label={t('auth.signup.firstName')}
-                placeholder={t('auth.signup.firstNamePlaceholder')}
+                label={t('auth.firstName')}
+                placeholder={t('auth.firstName')}
                 value={value}
                 onChangeText={onChange}
                 onBlur={onBlur}
@@ -126,8 +126,8 @@ export const SignupScreen = () => {
             name="lastName"
             render={({ field: { onChange, onBlur, value } }) => (
               <Input
-                label={t('auth.signup.lastName')}
-                placeholder={t('auth.signup.lastNamePlaceholder')}
+                label={t('auth.lastName')}
+                placeholder={t('auth.lastName')}
                 value={value}
                 onChangeText={onChange}
                 onBlur={onBlur}
@@ -142,8 +142,8 @@ export const SignupScreen = () => {
             name="signupEmail"
             render={({ field: { onChange, onBlur, value } }) => (
               <Input
-                label={t('auth.signup.email')}
-                placeholder={t('auth.signup.emailPlaceholder')}
+                label={t('auth.email')}
+                placeholder={t('auth.email')}
                 keyboardType="email-address"
                 autoCapitalize="none"
                 value={value}
@@ -160,8 +160,8 @@ export const SignupScreen = () => {
             name="signupPassword"
             render={({ field: { onChange, onBlur, value } }) => (
               <Input
-                label={t('auth.signup.password')}
-                placeholder={t('auth.signup.passwordPlaceholder')}
+                label={t('auth.password')}
+                placeholder={t('auth.password')}
                 secureTextEntry={!showPassword}
                 value={value}
                 onChangeText={onChange}
@@ -179,8 +179,8 @@ export const SignupScreen = () => {
             name="confirmPassword"
             render={({ field: { onChange, onBlur, value } }) => (
               <Input
-                label={t('auth.signup.confirmPassword')}
-                placeholder={t('auth.signup.confirmPasswordPlaceholder')}
+                label={t('auth.confirmPassword')}
+                placeholder={t('auth.confirmPassword')}
                 secureTextEntry={!showConfirmPassword}
                 value={value}
                 onChangeText={onChange}
@@ -194,9 +194,7 @@ export const SignupScreen = () => {
           />
 
           <Button
-            title={
-              isLoading ? t('auth.signup.creatingAccount') : t('auth.signup.createAccountButton')
-            }
+            title={isLoading ? t('common.loading') : t('auth.signup')}
             onPress={handleSubmit(onSubmit)}
             disabled={isLoading}
             style={styles.submitButton}
@@ -209,18 +207,15 @@ export const SignupScreen = () => {
 
         <View style={styles.loginContainer}>
           <Text style={[styles.loginText, { color: colors.textSecondary }]}>
-            {t('auth.signup.alreadyHaveAccount')}
+            {t('auth.hasAccount')}
           </Text>
           <TouchableOpacity onPress={() => authNavigation.navigate('Login')}>
-            <Text style={[styles.loginLink, { color: colors.accent }]}>
-              {' '}
-              {t('auth.signup.signIn')}
-            </Text>
+            <Text style={[styles.loginLink, { color: colors.accent }]}> {t('auth.signIn')}</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.dividerContainer}>
           <View style={[styles.divider, { backgroundColor: colors.border }]} />
-          <Text style={styles.dividerText}>{t('auth.signup.or')}</Text>
+          <Text style={styles.dividerText}>{t('auth.or')}</Text>
           <View style={[styles.divider, { backgroundColor: colors.border }]} />
         </View>
         <SocialLoginButtons />

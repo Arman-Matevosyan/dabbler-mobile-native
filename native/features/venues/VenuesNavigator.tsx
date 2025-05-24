@@ -1,12 +1,12 @@
 import React, { lazy, Suspense } from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { useTheme } from '@/design-system';
-import VenueClassesPage from './screens/list/VenueClassesList';
-import { VenuesScreenSkeleton } from './components/skeletons';
+import { VenuesScreenSkeleton, VenueClassesListScreenSkeleton } from './components/skeletons';
 import { VenueDetailsScreenSkeleton } from './screens/details/components';
 
 const VenuesScreen = lazy(() => import('./VenuesScreen'));
 const VenueDetailsScreen = lazy(() => import('./screens/details/VenueDetailsScreen'));
+const VenueClassesPage = lazy(() => import('./screens/list/VenueClassesList'));
 
 export type VenuesStackParamList = {
   VenuesList: undefined;
@@ -32,6 +32,14 @@ const VenueDetailsScreenWrapper = (props: any) => {
   );
 };
 
+const VenueClassesPageWrapper = (props: any) => {
+  return (
+    <Suspense fallback={<VenueClassesListScreenSkeleton />}>
+      <VenueClassesPage {...props} />
+    </Suspense>
+  );
+};
+
 const Stack = createNativeStackNavigator<VenuesStackParamList>();
 
 export const VenuesNavigator = () => {
@@ -48,7 +56,7 @@ export const VenuesNavigator = () => {
       <Stack.Screen name="VenueDetails" component={VenueDetailsScreenWrapper} />
       <Stack.Screen
         name="VenueClassesList"
-        component={VenueClassesPage}
+        component={VenueClassesPageWrapper}
         options={{
           animation: 'slide_from_bottom',
           presentation: 'modal',

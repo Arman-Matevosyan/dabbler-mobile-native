@@ -11,15 +11,18 @@ type Plan = {
 
 const PlanChip = ({ plan, style }: { plan: Plan; style?: any }) => {
   const { colors } = useTheme();
+  const { t } = useTranslation();
 
-  const planName = plan.name || 'Unnamed Plan';
+  const planName = plan.name || t('plans.noDescription');
   const planLimit = plan.limit || 0;
-  const planDescription = plan.description || 'No description available';
+  const planDescription = plan.description || t('plans.noDescription');
 
   return (
     <View style={[styles.planChip, { backgroundColor: colors.card }, style]}>
       <Text style={[styles.planName, { color: colors.textPrimary }]}>{planName}</Text>
-      <Text style={[styles.planLimit, { color: colors.accent }]}>{planLimit} visits/month</Text>
+      <Text style={[styles.planLimit, { color: colors.accent }]}>
+        {planLimit} {t('venues.visitsPerMonth')}
+      </Text>
       <Text style={[styles.planDescription, { color: colors.textSecondary }]} numberOfLines={1}>
         {planDescription}
       </Text>
@@ -102,7 +105,6 @@ const styles = StyleSheet.create({
   sectionContainer: {
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255, 255, 255, 0.05)',
   },
   sectionTitle: {
     fontSize: 18,

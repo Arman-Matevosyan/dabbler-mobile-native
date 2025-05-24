@@ -49,20 +49,20 @@ const LanguageScreen: React.FC<LanguageScreenNavigationProps> = () => {
   const languages: LanguageOption[] = [
     {
       id: 'en',
-      label: t('profile.language.english'),
-      description: t('profile.language.englishDescription'),
+      label: t('profile.english'),
+      description: t('profile.englishDescription'),
       icon: 'translate',
     },
     {
       id: 'ru',
-      label: t('profile.language.russian'),
-      description: t('profile.language.russianDescription'),
+      label: t('profile.russian'),
+      description: t('profile.russianDescription'),
       icon: 'translate',
     },
     {
       id: 'hy',
-      label: t('profile.language.armenian'),
-      description: t('profile.language.armenianDescription'),
+      label: t('profile.armenian'),
+      description: t('profile.armenianDescription'),
       icon: 'translate',
     },
   ];
@@ -82,7 +82,7 @@ const LanguageScreen: React.FC<LanguageScreenNavigationProps> = () => {
   return (
     <View
       style={[styles.container, { backgroundColor: colors.background, paddingTop: insets.top }]}>
-      <View style={styles.header}>
+      <View style={[styles.header, { borderBottomColor: colors.border }]}>
         <TouchableOpacity
           style={styles.backButton}
           activeOpacity={1}
@@ -90,7 +90,7 @@ const LanguageScreen: React.FC<LanguageScreenNavigationProps> = () => {
           <MaterialIcons name="arrow-back" size={24} color={colors.textPrimary} />
         </TouchableOpacity>
         <Text variant="heading1" style={{ color: colors.textPrimary }}>
-          {t('profile.language.title')}
+          {t('profile.profile')}
         </Text>
       </View>
 
@@ -100,7 +100,7 @@ const LanguageScreen: React.FC<LanguageScreenNavigationProps> = () => {
         showsVerticalScrollIndicator={false}>
         <View style={styles.content}>
           <Text variant="heading2" style={[styles.screenTitle, { color: colors.textPrimary }]}>
-            {t('profile.settings.languageSettings')}
+            {t('profile.languageSettings')}
           </Text>
 
           <View style={styles.optionsContainer}>
@@ -164,7 +164,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.1)',
   },
   backButton: {
     marginRight: 8,

@@ -17,8 +17,11 @@ import {
   PaymentSkeleton,
   PlansSkeleton,
   CheckinHistorySkeleton,
-  ProfileSkeleton,
+  UnAuthSkeleton,
+  AuthUserSkeleton,
 } from './components/skeletons';
+import { ActivityIndicator, View, StyleSheet } from 'react-native';
+import { useTheme } from '@/design-system';
 
 export type ProfileStackParamList = {
   AuthUser: undefined;
@@ -40,6 +43,7 @@ export type ProfileScreenProps<T extends keyof ProfileStackParamList> = StackScr
 >;
 
 const UnAuthProfile = lazy(() => import('./UnAuth'));
+
 const AuthenticatedProfile = lazy(() => import('./AuthUser'));
 const SettingsScreen = lazy(() =>
   import('./screens/settings/SettingsScreen').then(module => ({
@@ -123,26 +127,38 @@ const WithPlansSkeleton = (Component: React.ComponentType<any>) => (props: any) 
   </Suspense>
 );
 
-const WithDefaultSkeleton = (Component: React.ComponentType<any>) => (props: any) => (
-  <Suspense fallback={<ProfileSkeleton />}>
+const WithUnAuthSkeleton = (Component: React.ComponentType<any>) => (props: any) => (
+  <Suspense fallback={<UnAuthSkeleton />}>
+    <Component {...props} />
+  </Suspense>
+);
+
+const WithAuthUserSkeleton = (Component: React.ComponentType<any>) => (props: any) => (
+  <Suspense fallback={<AuthUserSkeleton />}>
     <Component {...props} />
   </Suspense>
 );
 
 export default function ProfileNavigator() {
-  const { isAuthenticated, showSubscriptionModal, setShowSubscriptionModal } = useAuthStore();
-  const navigation = useNavigation<StackNavigationProp<ProfileStackParamList>>();
+  const { isAuthenticated, showSubscriptionModal, setShowSubscriptionModal, isLoading } =
+    useAuthStore();
+  const { colors } = useTheme();
 
-  useEffect(() => {
-    if (!isAuthenticated) {
-      navigation.dispatch(
-        CommonActions.reset({
-          index: 0,
-          routes: [{ name: 'UnAuth' }],
-        }),
-      );
-    }
-  }, [isAuthenticated]);
+  if (!isAuthenticated && isLoading) {
+    return (
+      <View style={styles.container}>
+        <View style={styles.content}>
+          <Stack.Navigator screenOptions={{ headerShown: false }} initialRouteName="UnAuth">
+            <Stack.Screen name="UnAuth" component={WithUnAuthSkeleton(UnAuthProfile)} />
+          </Stack.Navigator>
+        </View>
+
+        <View style={[styles.overlay, { backgroundColor: colors.background + 'CC' }]}>
+          <ActivityIndicator size="large" color={colors.accent} />
+        </View>
+      </View>
+    );
+  }
 
   return (
     <>
@@ -151,7 +167,7 @@ export default function ProfileNavigator() {
         initialRouteName={isAuthenticated ? 'AuthUser' : 'UnAuth'}>
         {isAuthenticated ? (
           <>
-            <Stack.Screen name="AuthUser" component={WithDefaultSkeleton(AuthenticatedProfile)} />
+            <Stack.Screen name="AuthUser" component={WithAuthUserSkeleton(AuthenticatedProfile)} />
             <Stack.Screen name="Settings" component={WithSettingsSkeleton(SettingsScreen)} />
             <Stack.Screen name="ProfileDetails" component={WithProfileDetailsSkeleton(Details)} />
             <Stack.Screen name="Display" component={WithDisplaySkeleton(Display)} />
@@ -166,7 +182,7 @@ export default function ProfileNavigator() {
             <Stack.Screen name="Payment" component={WithPaymentSkeleton(Payment)} />
           </>
         ) : (
-          <Stack.Screen name="UnAuth" component={WithDefaultSkeleton(UnAuthProfile)} />
+          <Stack.Screen name="UnAuth" component={WithUnAuthSkeleton(UnAuthProfile)} />
         )}
       </Stack.Navigator>
 
@@ -174,3 +190,24 @@ export default function ProfileNavigator() {
     </>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    position: 'relative',
+  },
+  content: {
+    flex: 1,
+    opacity: 0.3,
+  },
+  overlay: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 1000,
+  },
+});

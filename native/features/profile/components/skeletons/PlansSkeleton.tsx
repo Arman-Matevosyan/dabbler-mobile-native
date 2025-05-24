@@ -1,9 +1,7 @@
 import React from 'react';
-import { View, StyleSheet, ScrollView, Dimensions } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Skeleton, useTheme } from '@/design-system';
-
-const { width: screenWidth } = Dimensions.get('window');
 
 export const PlansSkeleton = () => {
   const insets = useSafeAreaInsets();
@@ -12,52 +10,57 @@ export const PlansSkeleton = () => {
   return (
     <View
       style={[styles.container, { backgroundColor: colors.background, paddingTop: insets.top }]}>
-      <View style={styles.header}>
+      <View style={[styles.header, { borderBottomColor: colors.border }]}>
         <Skeleton width={24} height={24} style={{ marginRight: 16 }} />
         <Skeleton width="50%" height={24} />
       </View>
 
-      <ScrollView style={styles.scrollView}>
+      <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
         <View style={styles.content}>
-          <Skeleton width="70%" height={28} style={{ marginBottom: 8 }} />
-          <Skeleton width="90%" height={16} style={{ marginBottom: 24 }} />
+          <Skeleton width="70%" height={24} style={{ marginBottom: 24, alignSelf: 'center' }} />
 
-          <ScrollView
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            contentContainerStyle={styles.plansContainer}>
-            {[1, 2, 3].map(item => (
-              <View key={item} style={[styles.planCard, { backgroundColor: colors.card }]}>
-                <View style={styles.planHeader}>
-                  <Skeleton width="60%" height={24} style={{ marginBottom: 8 }} />
-                  <Skeleton width="40%" height={16} style={{ marginBottom: 16 }} />
-                </View>
+          {[1, 2, 3].map((_, index) => (
+            <View
+              key={index}
+              style={[
+                styles.planCard,
+                {
+                  backgroundColor: colors.background,
+                  borderWidth: 1,
+                  borderColor: colors.border,
+                },
+              ]}>
+              <Skeleton width="40%" height={24} style={{ marginBottom: 12 }} />
+              <Skeleton width="70%" height={16} style={{ marginBottom: 20 }} />
 
-                <View style={styles.pricingSection}>
-                  <View style={{ flexDirection: 'row', alignItems: 'flex-end' }}>
-                    <Skeleton width={60} height={36} style={{ marginRight: 6 }} />
-                    <Skeleton width={40} height={20} />
-                  </View>
-                  <Skeleton width="50%" height={16} style={{ marginTop: 8 }} />
-                </View>
-
-                <View style={styles.divider} />
-
-                <View style={styles.featuresSection}>
-                  {[1, 2, 3, 4].map(featureIndex => (
-                    <View key={featureIndex} style={styles.featureItem}>
-                      <Skeleton width={20} height={20} style={{ marginRight: 12 }} />
-                      <Skeleton width="80%" height={16} />
-                    </View>
-                  ))}
-                </View>
-
-                <Skeleton width="100%" height={46} style={{ borderRadius: 23, marginTop: 16 }} />
+              <View style={styles.priceContainer}>
+                <Skeleton width={30} height={16} style={{ marginRight: 4 }} />
+                <Skeleton width={70} height={40} style={{ marginRight: 4 }} />
+                <Skeleton width={50} height={14} />
               </View>
-            ))}
-          </ScrollView>
 
-          <Skeleton width="100%" height={50} style={{ borderRadius: 8, marginTop: 24 }} />
+              <View style={{ gap: 12, marginBottom: 24 }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Skeleton width={20} height={20} style={{ marginRight: 8, borderRadius: 10 }} />
+                  <Skeleton width="60%" height={14} />
+                </View>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Skeleton width={20} height={20} style={{ marginRight: 8, borderRadius: 10 }} />
+                  <Skeleton width="70%" height={14} />
+                </View>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Skeleton width={20} height={20} style={{ marginRight: 8, borderRadius: 10 }} />
+                  <Skeleton width="65%" height={14} />
+                </View>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Skeleton width={20} height={20} style={{ marginRight: 8, borderRadius: 10 }} />
+                  <Skeleton width="50%" height={14} />
+                </View>
+              </View>
+
+              <Skeleton width="100%" height={44} style={{ borderRadius: 22 }} />
+            </View>
+          ))}
         </View>
       </ScrollView>
     </View>
@@ -74,7 +77,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.1)',
   },
   scrollView: {
     flex: 1,
@@ -82,37 +84,16 @@ const styles = StyleSheet.create({
   content: {
     padding: 16,
   },
-  plansContainer: {
-    paddingRight: 16,
-  },
   planCard: {
-    width: screenWidth * 0.75,
     borderRadius: 12,
-    padding: 16,
-    marginRight: 16,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 2,
-  },
-  planHeader: {
+    padding: 20,
     marginBottom: 16,
+    position: 'relative',
   },
-  pricingSection: {
-    marginBottom: 16,
-  },
-  divider: {
-    height: 1,
-    backgroundColor: 'rgba(0,0,0,0.1)',
-    marginBottom: 16,
-  },
-  featuresSection: {
-    marginBottom: 16,
-  },
-  featureItem: {
+  priceContainer: {
     flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: 12,
+    alignItems: 'flex-end',
+    marginBottom: 20,
+    paddingVertical: 4,
   },
 });

@@ -91,10 +91,10 @@ export const LoginScreen = () => {
         keyboardShouldPersistTaps="handled">
         <View style={styles.header}>
           <Text variant="heading1" bold>
-            {t('auth.login.welcomeBack')}
+            {t('auth.welcomeBack')}
           </Text>
           <Text variant="body" color="secondary">
-            {t('auth.login.signInAccount')}
+            {t('auth.signInAccount')}
           </Text>
         </View>
 
@@ -119,8 +119,8 @@ export const LoginScreen = () => {
             name="loginEmail"
             render={({ field: { onChange, onBlur, value } }) => (
               <Input
-                label={t('auth.login.email')}
-                placeholder={t('auth.login.emailPlaceholder')}
+                label={t('auth.email')}
+                placeholder={t('auth.email')}
                 keyboardType="email-address"
                 autoCapitalize="none"
                 value={value}
@@ -137,8 +137,8 @@ export const LoginScreen = () => {
             name="loginPassword"
             render={({ field: { onChange, onBlur, value } }) => (
               <Input
-                label={t('auth.login.password')}
-                placeholder={t('auth.login.passwordPlaceholder')}
+                label={t('auth.password')}
+                placeholder={t('auth.password')}
                 secureTextEntry={!showPassword}
                 value={value}
                 onChangeText={onChange}
@@ -155,12 +155,12 @@ export const LoginScreen = () => {
             style={styles.forgotPasswordContainer}
             onPress={() => authNavigation.navigate('ForgotPassword')}>
             <Text variant="bodySmall" color="accent">
-              {t('auth.login.forgotPassword')}
+              {t('auth.forgotPassword')}
             </Text>
           </TouchableOpacity>
 
           <Button
-            title={isLoading ? t('auth.login.signingIn') : t('auth.login.signIn')}
+            title={isLoading ? t('common.loading') : t('auth.signIn')}
             onPress={handleSubmit(onSubmit)}
             disabled={isLoading}
             style={styles.submitButton}
@@ -173,17 +173,17 @@ export const LoginScreen = () => {
 
         <View style={styles.registerContainer}>
           <Text variant="bodySmall" color="secondary">
-            {t('auth.login.dontHaveAccount')}
+            {t('auth.noAccount')}
           </Text>
           <TouchableOpacity onPress={() => authNavigation.navigate('Signup')}>
             <Text variant="bodySmall" color="accent" semiBold>
-              {t('auth.login.signUp')}
+              {t('auth.signup')}
             </Text>
           </TouchableOpacity>
         </View>
         <View style={styles.dividerContainer}>
           <View style={[styles.divider, { backgroundColor: colors.border }]} />
-          <Text style={styles.dividerText}>{t('auth.login.or')}</Text>
+          <Text style={styles.dividerText}>{t('auth.or')}</Text>
           <View style={[styles.divider, { backgroundColor: colors.border }]} />
         </View>
         <SocialLoginButtons />

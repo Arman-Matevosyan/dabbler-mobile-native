@@ -1,4 +1,4 @@
-import { useTheme } from '@/design-system';
+import { useTheme, useToast } from '@/design-system';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import React, { useCallback, useEffect, useRef, useState, Suspense, lazy } from 'react';
 import {
@@ -79,10 +79,11 @@ export default function VenueDetailsScreen() {
 
   const { data: venueData, isLoading, error } = useVenueDetails(id);
   const venueDetails = venueData as any;
-  const { favorites, toggleFavorite, isLoading: favoritesLoading, isFavorite } = useFavorites();
+  const { toggleFavorite, isLoading: favoritesLoading, isFavorite } = useFavorites();
   const { isAuthenticated } = useAuthStore();
   const [showFullDescription, setShowFullDescription] = useState(false);
   const [showImportantInfo, setShowImportantInfo] = useState(false);
+  const { showToast } = useToast();
 
   const headerOpacity = scrollY.interpolate({
     inputRange: [0, 200],
@@ -95,6 +96,7 @@ export default function VenueDetailsScreen() {
     if (favoritesLoading) return;
 
     if (!isAuthenticated) {
+      showToast(t('venues.signInToSaveFavorites'), 'warning', 'top');
       return;
     }
 
@@ -142,7 +144,7 @@ export default function VenueDetailsScreen() {
         <TouchableOpacity
           style={[styles.retryButton, { backgroundColor: colors.accent }]}
           onPress={() => router.goBack()}>
-          <Text style={styles.retryButtonText}>{t('venues.retry')}</Text>
+          <Text style={styles.retryButtonText}>{t('common.retry')}</Text>
         </TouchableOpacity>
       </View>
     );
@@ -337,7 +339,6 @@ const styles = StyleSheet.create({
   sectionContainer: {
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255, 255, 255, 0.05)',
   },
   sectionTitle: {
     fontSize: 18,

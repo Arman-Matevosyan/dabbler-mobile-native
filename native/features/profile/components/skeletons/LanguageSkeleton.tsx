@@ -10,7 +10,7 @@ export const LanguageSkeleton = () => {
   return (
     <View
       style={[styles.container, { backgroundColor: colors.background, paddingTop: insets.top }]}>
-      <View style={styles.header}>
+      <View style={[styles.header, { borderBottomColor: colors.border }]}>
         <Skeleton width={24} height={24} style={{ marginRight: 16 }} />
         <Skeleton width="50%" height={24} />
       </View>
@@ -51,7 +51,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.1)',
   },
   scrollView: {
     flex: 1,

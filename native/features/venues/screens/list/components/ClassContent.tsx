@@ -3,6 +3,7 @@ import { ScrollView, StyleSheet, View } from 'react-native';
 import { EmptyState } from '@/design-system';
 import { ClassCard } from '@/components/ClassCard';
 import { ClassCardSkeleton } from './skeletons/VenueClassesSkeleton';
+import { useTranslation } from 'react-i18next';
 
 interface ClassItem {
   id: string;
@@ -44,13 +45,14 @@ export const ClassContent: React.FC<ClassContentProps> = ({
   freeClasses,
   scheduledClasses,
 }) => {
+  const { t } = useTranslation();
+
   if (isLoading) {
     return (
-      <ScrollView 
-        style={styles.scrollView} 
+      <ScrollView
+        style={styles.scrollView}
         contentContainerStyle={styles.skeletonContent}
-        showsVerticalScrollIndicator={false}
-      >
+        showsVerticalScrollIndicator={false}>
         {Array.from({ length: 3 }).map((_, index) => (
           <ClassCardSkeleton key={`skeleton-${index}`} />
         ))}
@@ -62,8 +64,8 @@ export const ClassContent: React.FC<ClassContentProps> = ({
     return (
       <View style={styles.contentContainer}>
         <EmptyState
-          title={'classes.unableToLoadClasses'}
-          message={error instanceof Error ? error.message : 'common.error'}
+          title={t('classes.unableToLoadClasses')}
+          message={error instanceof Error ? error.message : t('common.error')}
         />
       </View>
     );
@@ -72,7 +74,10 @@ export const ClassContent: React.FC<ClassContentProps> = ({
   if (!scheduledClasses?.length && !freeClasses.length) {
     return (
       <View style={styles.contentContainer}>
-        <EmptyState title={'classes.noClassesAvailable'} message={'classes.noClassesScheduled'} />
+        <EmptyState
+          title={t('classes.noClassesAvailable')}
+          message={t('classes.noClassesScheduled')}
+        />
       </View>
     );
   }
@@ -92,16 +97,21 @@ export const ClassContent: React.FC<ClassContentProps> = ({
   });
 
   return (
-    <ScrollView 
-      style={styles.scrollView} 
+    <ScrollView
+      style={styles.scrollView}
       contentContainerStyle={styles.contentContainerStyle}
-      showsVerticalScrollIndicator={false}
-    >
-      {freeClasses.map(classItem => (
-        <ClassCard key={`free-${classItem.id}-${classItem.date}`} classItem={mapToClassItem(classItem, false)} />
+      showsVerticalScrollIndicator={false}>
+      {freeClasses.map((classItem, index) => (
+        <ClassCard
+          key={`free-${classItem.id}-${classItem.date}-${index}`}
+          classItem={mapToClassItem(classItem, false)}
+        />
       ))}
-      {scheduledClasses?.map(classItem => (
-        <ClassCard key={`scheduled-${classItem.id}-${classItem.date}`} classItem={mapToClassItem(classItem, true)} />
+      {scheduledClasses?.map((classItem, index) => (
+        <ClassCard
+          key={`scheduled-${classItem.id}-${classItem.date}-${index}`}
+          classItem={mapToClassItem(classItem, true)}
+        />
       ))}
     </ScrollView>
   );

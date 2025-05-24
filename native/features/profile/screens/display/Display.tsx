@@ -48,14 +48,14 @@ export const DisplayScreen = () => {
   const themeOptions: ThemeOptionItem[] = [
     {
       id: 'light',
-      label: t('profile.settings.light'),
-      description: t('profile.settings.useSystemTheme'),
+      label: t('profile.light'),
+      description: t('profile.alwaysLightTheme'),
       icon: 'light-mode',
     },
     {
       id: 'dark',
-      label: t('profile.settings.dark'),
-      description: t('profile.settings.customizeAppearance'),
+      label: t('profile.dark'),
+      description: t('profile.alwaysDarkTheme'),
       icon: 'dark-mode',
     },
   ];
@@ -83,7 +83,7 @@ export const DisplayScreen = () => {
   return (
     <View
       style={[styles.container, { backgroundColor: colors.background, paddingTop: insets.top }]}>
-      <View style={styles.header}>
+      <View style={[styles.header, { borderBottomColor: colors.border }]}>
         <TouchableOpacity
           style={styles.backButton}
           activeOpacity={1}
@@ -91,7 +91,7 @@ export const DisplayScreen = () => {
           <MaterialIcons name="arrow-back" size={24} color={colors.textPrimary} />
         </TouchableOpacity>
         <Text variant="heading1" style={{ color: colors.textPrimary }}>
-          {t('profile.settings.display')}
+          {t('profile.display')}
         </Text>
       </View>
 
@@ -101,7 +101,7 @@ export const DisplayScreen = () => {
         showsVerticalScrollIndicator={false}>
         <View style={styles.content}>
           <Text variant="heading2" style={[styles.screenTitle, { color: colors.textPrimary }]}>
-            {t('profile.settings.displaySettings')}
+            {t('profile.displaySettings')}
           </Text>
 
           <View style={styles.systemInfo}>
@@ -112,8 +112,8 @@ export const DisplayScreen = () => {
               style={styles.infoIcon}
             />
             <Text style={{ color: colors.textSecondary, fontSize: 13 }}>
-              {t('profile.settings.systemTheme')}{' '}
-              {systemTheme === 'dark' ? t('profile.settings.dark') : t('profile.settings.light')}
+              {t('profile.followSystemTheme')}{' '}
+              {systemTheme === 'dark' ? t('profile.dark') : t('profile.light')}
             </Text>
           </View>
 
@@ -178,7 +178,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.1)',
   },
   backButton: {
     marginRight: 8,

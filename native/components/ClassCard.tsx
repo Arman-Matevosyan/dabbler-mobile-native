@@ -4,8 +4,7 @@ import { format } from 'date-fns';
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-
-const t = (key: string) => key;
+import { useTranslation } from 'react-i18next';
 
 interface ClassCardProps {
   classItem: {
@@ -27,6 +26,7 @@ interface ClassCardProps {
 export const ClassCard: React.FC<ClassCardProps> = ({ classItem, isFreeClass = false }) => {
   const { colors } = useTheme();
   const navigation = useNavigation<any>();
+  const { t } = useTranslation();
   const spotsLeft = classItem.totalSpots - classItem.scheduledSpots;
   const coverUrl =
     classItem.covers?.[0]?.url || 'https://images.unsplash.com/photo-1518611012118-696072aa579a';
@@ -46,14 +46,12 @@ export const ClassCard: React.FC<ClassCardProps> = ({ classItem, isFreeClass = f
 
   const handleClassPress = () => {
     navigation.navigate('MainTabs', {
-        screen: 'Classes',
-        params: {
-          screen: 'ClassDetails',
-          params: {  id: classItem.id,
-      date: classItem.date, },
-        },
-      });
-   
+      screen: 'Classes',
+      params: {
+        screen: 'ClassDetails',
+        params: { id: classItem.id, date: classItem.date },
+      },
+    });
   };
 
   const renderFreeTag = () => {

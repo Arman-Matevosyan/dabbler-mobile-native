@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, ScrollView, ViewStyle, TouchableOpacity } from 'react-native';
+import React from 'react';
+import { View, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import { Text, Button, useTheme, Skeleton } from '@/design-system';
+import { Text, useTheme } from '@/design-system';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useAuthStore } from '@/stores/authStore';
 import { useTranslation } from 'react-i18next';
@@ -23,7 +23,7 @@ export const SettingsScreen = () => {
   const insets = useSafeAreaInsets();
   const { colors } = useTheme();
   const navigation = useNavigation();
-  const { logout, isLoading } = useAuthStore();
+  const { logout } = useAuthStore();
   const { t } = useTranslation();
 
   const handleLogout = async () => {
@@ -49,18 +49,18 @@ export const SettingsScreen = () => {
       ],
     },
     {
-      title: 'Membership',
+      title: t('profile.membership'),
       items: [
         {
-          label: 'Membership Details',
-          description: 'View and manage your subscription',
+          label: t('profile.membershipDetails'),
+          description: t('profile.viewManageSubscription'),
           icon: 'card-membership',
           // @ts-ignore - Navigation typing would need to be updated
           onPress: () => navigation.navigate('Membership'),
         },
         {
-          label: 'Payment Methods',
-          description: 'Manage your payment options',
+          label: t('profile.paymentMethods'),
+          description: t('profile.managePaymentOptions'),
           icon: 'credit-card',
           // @ts-ignore - Navigation typing would need to be updated
           onPress: () => navigation.navigate('Payment'),
@@ -68,18 +68,18 @@ export const SettingsScreen = () => {
       ],
     },
     {
-      title: t('profile.settings.preferences'),
+      title: t('profile.preferences'),
       items: [
         {
-          label: t('profile.language.title'),
-          description: t('profile.settings.changeLanguage'),
+          label: t('profile.profile'),
+          description: t('profile.changeLanguage'),
           icon: 'translate',
           // @ts-ignore - Navigation typing would need to be updated
           onPress: () => navigation.navigate('Language'),
         },
         {
-          label: t('profile.settings.displaySettings'),
-          description: t('profile.settings.customizeAppearance'),
+          label: t('profile.displaySettings'),
+          description: t('profile.customizeAppearance'),
           icon: 'palette',
           // @ts-ignore - Navigation typing would need to be updated
           onPress: () => navigation.navigate('Display'),
@@ -88,41 +88,10 @@ export const SettingsScreen = () => {
     },
   ];
 
-  if (isLoading) {
-    return (
-      <View
-        style={[styles.container, { backgroundColor: colors.background, paddingTop: insets.top }]}>
-        <View style={styles.header}>
-          <Skeleton width={24} height={24} style={{ marginRight: 16 }} />
-          <Skeleton width="50%" height={24} />
-        </View>
-        <ScrollView style={styles.scrollView}>
-          {[1, 2, 3].map(section => (
-            <View key={section} style={{ marginBottom: 24, padding: 16 }}>
-              <Skeleton width="40%" height={20} style={{ marginBottom: 16 }} />
-              {[1, 2].map(item => (
-                <View
-                  key={item}
-                  style={[styles.settingItemSkeleton, { backgroundColor: colors.card }]}>
-                  <Skeleton width={24} height={24} style={{ marginRight: 16 }} />
-                  <View style={{ flex: 1 }}>
-                    <Skeleton width="60%" height={16} style={{ marginBottom: 4 }} />
-                    <Skeleton width="80%" height={14} />
-                  </View>
-                  <Skeleton width={16} height={16} />
-                </View>
-              ))}
-            </View>
-          ))}
-        </ScrollView>
-      </View>
-    );
-  }
-
   return (
     <View
       style={[styles.container, { backgroundColor: colors.background, paddingTop: insets.top }]}>
-      <View style={styles.header}>
+      <View style={[styles.header, { borderBottomColor: colors.border }]}>
         <TouchableOpacity
           style={styles.backButton}
           activeOpacity={1}
@@ -130,7 +99,7 @@ export const SettingsScreen = () => {
           <MaterialIcons name="arrow-back" size={24} color={colors.textPrimary} />
         </TouchableOpacity>
         <Text variant="heading1" color="primary">
-          {t('profile.settings.title')}
+          {t('profile.profile')}
         </Text>
       </View>
 
@@ -200,7 +169,7 @@ export const SettingsScreen = () => {
                     fontSize: 13,
                     color: colors.textSecondary,
                   }}>
-                  {t('auth.login.signInAccount')}
+                  {t('profile.signOutAccount')}
                 </Text>
               </View>
             </View>
@@ -215,20 +184,31 @@ export const SettingsScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.1)',
-  },
   backButton: {
     marginRight: 8,
     padding: 0,
+  },
+  container: {
+    flex: 1,
+  },
+  content: {
+    padding: 16,
+  },
+  errorContainer: {
+    alignItems: 'center',
+    backgroundColor: '#FFEEEE',
+    borderRadius: 8,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 16,
+    padding: 12,
+  },
+  header: {
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    flexDirection: 'row',
+    paddingHorizontal: 16,
+    paddingVertical: 12,
   },
   scrollView: {
     flex: 1,
@@ -236,54 +216,35 @@ const styles = StyleSheet.create({
   scrollViewContent: {
     flexGrow: 1,
   },
-  content: {
-    padding: 16,
-  },
   section: {
     marginBottom: 24,
   },
   sectionTitle: {
     marginBottom: 12,
   },
-  settingItem: {
-    marginBottom: 12,
-    padding: 0,
-  },
-  settingItemContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 16,
+  separator: {
+    bottom: 0,
+    height: 1,
+    left: 0,
+    position: 'absolute',
     width: '100%',
   },
   settingInfo: {
     flex: 1,
     marginLeft: 16,
   },
-  settingItemSkeleton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    padding: 16,
-    borderRadius: 12,
+  settingItem: {
     marginBottom: 12,
-  },
-  errorContainer: {
-    padding: 12,
-    backgroundColor: '#FFEEEE',
-    borderRadius: 8,
-    marginBottom: 16,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    padding: 0,
   },
   settingItemContainer: {
     marginBottom: 8,
     position: 'relative',
   },
-  separator: {
-    height: 1,
+  settingItemContent: {
+    alignItems: 'center',
+    flexDirection: 'row',
+    padding: 16,
     width: '100%',
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
   },
 });

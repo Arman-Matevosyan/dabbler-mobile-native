@@ -7,8 +7,8 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { format } from 'date-fns';
 import { useSubscriptions } from '@/hooks/useSubscriptions';
 import { ISubscription } from '@/types/payment.interfaces';
+import { useTranslation } from 'react-i18next';
 
-// Skeleton components for the membership screen
 const MembershipDetailSkeleton = () => {
   const { colors } = useTheme();
 
@@ -41,19 +41,20 @@ export const MembershipScreen = () => {
   const navigation = useNavigation();
   const { data: subscriptionData, isLoading } = useSubscriptions();
   const subscription = subscriptionData as ISubscription | undefined;
+  const { t } = useTranslation();
 
   const hasSubscriptionData =
     subscription && subscription.plan && subscription.plan.name && subscription.status;
 
   const renderHeader = () => (
-    <View style={styles.header}>
+    <View style={[styles.header, { borderBottomColor: colors.border }]}>
       <Button
         variant="ghost"
         onPress={() => navigation.goBack()}
         icon={<MaterialIcons name="arrow-back" size={24} color={colors.textPrimary} />}
         style={styles.backButton}
       />
-      <Text variant="heading1">Membership</Text>
+      <Text variant="heading1">{t('profile.membership')}</Text>
     </View>
   );
 
@@ -72,7 +73,7 @@ export const MembershipScreen = () => {
           textAlign: 'center',
           marginBottom: 20,
         }}>
-        No Membership Found
+        {t('membership.noMembershipFound')}
       </Text>
 
       <Text
@@ -82,12 +83,12 @@ export const MembershipScreen = () => {
           textAlign: 'center',
           marginBottom: 30,
         }}>
-        You don't have an active membership plan
+        {t('membership.noActivePlan')}
       </Text>
 
       <Button
         variant="primary"
-        title="View Plans"
+        title={t('membership.viewPlans')}
         // @ts-ignore - Navigation typing would need to be updated
         onPress={() => navigation.navigate('Plans')}
         style={styles.viewPlansButton}
@@ -115,7 +116,7 @@ export const MembershipScreen = () => {
     <ScrollView style={styles.scrollView} showsVerticalScrollIndicator={false}>
       <View style={styles.content}>
         <Text variant="heading2" style={styles.screenTitle}>
-          Membership Details
+          {t('profile.membershipDetails')}
         </Text>
 
         <View style={{ gap: 16, marginTop: 16 }}>
@@ -136,7 +137,7 @@ export const MembershipScreen = () => {
               />
               <View>
                 <Text variant="bodySmall" color="secondary">
-                  Plan
+                  {t('membership.plan')}
                 </Text>
                 <Text variant="bodySmall" bold>
                   {subscription?.plan?.name || ''}
@@ -167,7 +168,7 @@ export const MembershipScreen = () => {
               />
               <View>
                 <Text variant="bodySmall" color="secondary">
-                  Payment Method
+                  {t('membership.paymentMethod')}
                 </Text>
                 <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
                   {subscription?.paymentMethod?.details?.imageUrl && (
@@ -181,14 +182,14 @@ export const MembershipScreen = () => {
                   <Text variant="bodySmall" bold>
                     {subscription?.paymentMethod?.details?.last4
                       ? `•••• ${subscription.paymentMethod.details.last4}`
-                      : 'Not available'}
+                      : t('common.noResults')}
                   </Text>
                 </View>
                 {subscription?.paymentMethod?.details?.expirationMonth &&
                   subscription?.paymentMethod?.details?.expirationYear && (
                     <Text variant="bodySmall" color="secondary">
-                      Expires {subscription.paymentMethod.details.expirationMonth}/
-                      {subscription.paymentMethod.details.expirationYear}
+                      {t('membership.expires')} {subscription.paymentMethod.details.expirationMonth}
+                      /{subscription.paymentMethod.details.expirationYear}
                     </Text>
                   )}
               </View>
@@ -212,7 +213,7 @@ export const MembershipScreen = () => {
               />
               <View>
                 <Text variant="bodySmall" color="secondary">
-                  Billing Period
+                  {t('membership.billingPeriod')}
                 </Text>
                 {subscription?.billingPeriodStartDate && subscription?.billingPeriodEndDate ? (
                   <Text variant="bodySmall" bold>
@@ -221,7 +222,7 @@ export const MembershipScreen = () => {
                   </Text>
                 ) : (
                   <Text variant="bodySmall" bold>
-                    Not available
+                    {t('common.noResults')}
                   </Text>
                 )}
               </View>
@@ -245,7 +246,7 @@ export const MembershipScreen = () => {
               />
               <View>
                 <Text variant="bodySmall" color="secondary">
-                  Status
+                  {t('profile.status')}
                 </Text>
                 <Text
                   variant="bodySmall"
@@ -253,7 +254,7 @@ export const MembershipScreen = () => {
                   style={{
                     color: subscription?.status === 'active' ? colors.success : colors.error,
                   }}>
-                  {subscription?.status || 'Unknown'}
+                  {subscription?.status || t('common.noResults')}
                 </Text>
               </View>
             </View>
@@ -263,7 +264,7 @@ export const MembershipScreen = () => {
         {subscription?.status === 'active' && (
           <Button
             variant="outline"
-            title="Cancel Subscription"
+            title={t('profile.cancelSubscription')}
             onPress={() => {
               console.log('Cancel subscription pressed');
             }}
@@ -305,7 +306,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 12,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0,0,0,0.1)',
   },
   backButton: {
     marginRight: 8,

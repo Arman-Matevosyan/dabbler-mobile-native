@@ -10,6 +10,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Pressable, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useTranslation } from 'react-i18next';
 
 interface Category {
   id: string;
@@ -33,6 +34,7 @@ export const CategoryList = ({
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
   const { categories, isLoading: isCategoriesLoading } = useCategories();
+  const { t } = useTranslation();
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const searchInputRef = useRef<TextInput>(null);
   const isManualDismiss = useRef<boolean>(false);
@@ -169,14 +171,14 @@ export const CategoryList = ({
               <Icon name="close" size={24} color={colors.textSecondary} />
             </TouchableOpacity>
             <Text style={[styles.bottomSheetTitle, { color: colors.textPrimary }]}>
-              {'venues.categories'}
+              {t('venues.categories')}
             </Text>
           </View>
           <TouchableOpacity onPress={handleSelectAll}>
             <Text style={[styles.selectAllText, { color: colors.accent }]}>
               {localSelectedCategories.length === categoriesLength
-                ? 'venues.deselectAll'
-                : 'venues.selectAll'}
+                ? t('venues.deselectAll')
+                : t('venues.selectAll')}
             </Text>
           </TouchableOpacity>
         </View>
@@ -241,12 +243,12 @@ export const CategoryList = ({
             },
           ]}>
           <TouchableOpacity onPress={() => setLocalSelectedCategories([])}>
-            <Text style={[styles.resetText, { color: colors.accent }]}>{'venues.resetAll'}</Text>
+            <Text style={[styles.resetText, { color: colors.accent }]}>{t('venues.resetAll')}</Text>
           </TouchableOpacity>
           <TouchableOpacity
             style={[styles.confirmButton, { backgroundColor: colors.accent }]}
             onPress={handleConfirm}>
-            <Text style={styles.confirmButtonText}>{'venues.confirm'}</Text>
+            <Text style={styles.confirmButtonText}>{t('venues.confirm')}</Text>
           </TouchableOpacity>
         </View>
       </BottomSheetScrollView>

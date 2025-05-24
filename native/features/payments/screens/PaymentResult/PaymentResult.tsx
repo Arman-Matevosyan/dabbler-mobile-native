@@ -112,10 +112,10 @@ export default function PaymentResult({ route }: PaymentResultProps) {
             <ActivityIndicator size="large" color={colors.accent} />
           </View>
           <Text style={[styles.loadingText, { color: colors.textPrimary, marginTop: 24 }]}>
-            {t('payment.processing')}
+            {t('payment.verifyingPayment')}
           </Text>
           <Text style={[styles.loadingSubText, { color: colors.textSecondary }]}>
-            {t('payment.pleaseWait')}
+            {t('common.loading')}
           </Text>
         </View>
       </View>
@@ -140,7 +140,7 @@ export default function PaymentResult({ route }: PaymentResultProps) {
 
           <Animated.View style={[styles.textContainer, { opacity: fadeAnim }]}>
             <Text style={[styles.title, { color: colors.textPrimary }]}>
-              {t('payment.successful')}
+              {t('payment.paymentSuccessful')}
             </Text>
 
             <Animated.View
@@ -153,7 +153,7 @@ export default function PaymentResult({ route }: PaymentResultProps) {
               </Text>
 
               <Text style={[styles.details, { color: colors.textSecondary }]}>
-                {t('payment.membershipActive')}
+                {t('profile.viewManageSubscription')}
               </Text>
             </Animated.View>
           </Animated.View>
@@ -171,9 +171,7 @@ export default function PaymentResult({ route }: PaymentResultProps) {
               onPress={goToHome}
               activeOpacity={0.8}>
               <MaterialIcons name="check" size={22} color="#fff" style={styles.buttonIcon} />
-              <Text style={[styles.buttonText, { color: '#fff' }]}>
-                {t('payment.continueToProfile')}
-              </Text>
+              <Text style={[styles.buttonText, { color: '#fff' }]}>{t('common.done')}</Text>
             </TouchableOpacity>
           </Animated.View>
         </View>

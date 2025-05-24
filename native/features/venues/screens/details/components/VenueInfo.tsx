@@ -53,9 +53,7 @@ export const VenueInfo: React.FC<VenueInfoProps> = ({ venue }) => {
           <MaterialIcons name="access-time" size={22} color={colors.textSecondary} />
         </View>
         <View style={styles.infoTextContainer}>
-          <Text style={[styles.infoLabel, { color: colors.textPrimary }]}>
-            {t('venues.hours')}
-          </Text>
+          <Text style={[styles.infoLabel, { color: colors.textPrimary }]}>{t('venues.hours')}</Text>
           <Text style={[styles.infoValue, { color: colors.textSecondary }]}>
             {venue.openingHours || t('common.noResults')}
           </Text>
@@ -67,9 +65,7 @@ export const VenueInfo: React.FC<VenueInfoProps> = ({ venue }) => {
           <MaterialIcons name="phone" size={22} color={colors.textSecondary} />
         </View>
         <View style={styles.infoTextContainer}>
-          <Text style={[styles.infoLabel, { color: colors.textPrimary }]}>
-            {t('venues.phone')}
-          </Text>
+          <Text style={[styles.infoLabel, { color: colors.textPrimary }]}>{t('venues.phone')}</Text>
           <Text style={[styles.infoValue, { color: colors.textSecondary }]}>
             {venue.contacts?.phone || t('common.noResults')}
           </Text>
@@ -97,7 +93,6 @@ const styles = StyleSheet.create({
   sectionContainer: {
     padding: 16,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255, 255, 255, 0.05)',
   },
   sectionTitle: {
     fontSize: 18,

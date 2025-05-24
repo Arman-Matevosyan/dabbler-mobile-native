@@ -1,16 +1,8 @@
-import React, { useCallback, useState, useRef, useEffect } from 'react';
-import {
-  View,
-  StyleSheet,
-  FlatList,
-  TextInput,
-  Image,
-  TouchableOpacity,
-  Animated,
-} from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { View, StyleSheet, FlatList, TextInput, Image, TouchableOpacity } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
-import { Text, Button, useTheme, Skeleton } from '@/design-system';
+import { Text, Button, useTheme } from '@/design-system';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useFavorites } from '@/hooks/useFavorites';
 
@@ -25,60 +17,6 @@ interface IVenue {
   categories?: string[];
   description?: string;
 }
-
-const VenueSkeletonItem = () => {
-  const { colors } = useTheme();
-
-  return (
-    <View style={[styles.skeletonItem, { backgroundColor: colors.card }]}>
-      <Skeleton style={styles.skeletonImage} />
-      <View style={styles.skeletonContent}>
-        <Skeleton style={{ height: 20, width: '60%', marginBottom: 12 }} />
-
-        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
-          <View
-            style={{
-              width: 14,
-              height: 14,
-              borderRadius: 7,
-              backgroundColor: colors.textSecondary,
-              opacity: 0.5,
-              marginRight: 8,
-            }}
-          />
-          <Skeleton style={{ height: 16, width: '70%' }} />
-        </View>
-
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-          <View
-            style={{
-              width: 14,
-              height: 14,
-              borderRadius: 7,
-              backgroundColor: colors.textSecondary,
-              opacity: 0.5,
-              marginRight: 8,
-            }}
-          />
-          <Skeleton style={{ height: 16, width: '80%' }} />
-        </View>
-      </View>
-    </View>
-  );
-};
-
-const SkeletonHeader = () => {
-  const { colors } = useTheme();
-  return (
-    <View style={[styles.header, { borderBottomColor: colors.border }]}>
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <Skeleton style={{ width: 40, height: 40, borderRadius: 20, marginRight: 16 }} />
-        <Skeleton style={{ width: 150, height: 26 }} />
-      </View>
-      <Skeleton style={{ width: '100%', height: 50, borderRadius: 8, marginTop: 16 }} />
-    </View>
-  );
-};
 
 const VenueCard = ({ item, onPress }: { item: IVenue; onPress: (venue: IVenue) => void }) => {
   const { colors } = useTheme();
@@ -133,20 +71,9 @@ const VenueCard = ({ item, onPress }: { item: IVenue; onPress: (venue: IVenue) =
 export const FavoritesScreen = () => {
   const insets = useSafeAreaInsets();
   const { colors } = useTheme();
-  const navigation = useNavigation();
+  const navigation = useNavigation<any>();
   const { favorites, isLoading } = useFavorites();
   const [searchQuery, setSearchQuery] = useState('');
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    if (isLoading) {
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 500,
-        useNativeDriver: true,
-      }).start();
-    }
-  }, [fadeAnim, isLoading]);
 
   const filteredFavorites = searchQuery
     ? favorites.filter(
@@ -170,16 +97,6 @@ export const FavoritesScreen = () => {
     [navigation],
   );
 
-  const renderSkeletons = () => {
-    return (
-      <Animated.View style={{ opacity: fadeAnim }}>
-        {[1, 2, 3, 4, 5].map(key => (
-          <VenueSkeletonItem key={key} />
-        ))}
-      </Animated.View>
-    );
-  };
-
   const renderEmptyState = () => {
     return (
       <View style={styles.emptyStateContainer}>
@@ -192,10 +109,6 @@ export const FavoritesScreen = () => {
   };
 
   const renderHeader = () => {
-    if (isLoading) {
-      return <SkeletonHeader />;
-    }
-
     return (
       <View style={[styles.header, { borderBottomColor: colors.border }]}>
         <View style={styles.headerTop}>
@@ -234,7 +147,8 @@ export const FavoritesScreen = () => {
 
   const renderContent = () => {
     if (isLoading) {
-      return renderSkeletons();
+      // Loading state is handled by the Navigator using Suspense
+      return null;
     }
 
     if (!isLoading && filteredFavorites.length === 0) {
@@ -351,17 +265,5 @@ const styles = StyleSheet.create({
   tagsText: {
     marginLeft: 4,
     flex: 1,
-  },
-  skeletonItem: {
-    borderRadius: 12,
-    overflow: 'hidden',
-    marginBottom: 16,
-  },
-  skeletonImage: {
-    height: 160,
-    width: '100%',
-  },
-  skeletonContent: {
-    padding: 16,
   },
 });

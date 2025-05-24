@@ -1,23 +1,11 @@
 import { darkMapStyle, lightMapStyle } from '@/constants/MapColors';
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import {
-  Animated,
-  Dimensions,
-  LayoutAnimation,
-  Platform,
-  StyleSheet,
-  UIManager,
-  View,
-} from 'react-native';
+import { Animated, Dimensions, LayoutAnimation, Platform, StyleSheet, View } from 'react-native';
 import MapView, { PROVIDER_DEFAULT, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 import ClusterMarker from './ClusterMarker';
 import VenueMarker from './VenueMarker';
 import { useTheme } from '@/design-system';
 import VenueDetailsPanel from './VenueDetailsPanel';
-
-if (Platform.OS === 'android' && UIManager.setLayoutAnimationEnabledExperimental) {
-  UIManager.setLayoutAnimationEnabledExperimental(true);
-}
 
 export interface Venue {
   id: string;

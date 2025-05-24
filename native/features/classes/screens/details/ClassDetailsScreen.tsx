@@ -212,11 +212,9 @@ export default function ClassDetailsScreen() {
     }
 
     if (!Calendar) {
-      Alert.alert(
-        'Calendar Not Available',
-        'The calendar feature is not available on your device.',
-        [{ text: 'OK' }],
-      );
+      Alert.alert(t('classes.calendar.notAvailable'), t('classes.calendar.notAvailableMessage'), [
+        { text: t('common.ok') },
+      ]);
       return;
     }
 
@@ -227,9 +225,9 @@ export default function ClassDetailsScreen() {
       const { status } = await Calendar.requestCalendarPermissionsAsync();
       if (status !== 'granted') {
         Alert.alert(
-          'Calendar Permission',
-          'Calendar permission is required to add this class to your calendar.',
-          [{ text: 'OK' }],
+          t('classes.calendar.permissionRequired'),
+          t('classes.calendar.permissionMessage'),
+          [{ text: t('common.ok') }],
         );
         return;
       }
@@ -308,7 +306,11 @@ export default function ClassDetailsScreen() {
   if (error || !processedClassData) {
     return (
       <View style={[styles.container, { backgroundColor: colors.background }]}>
-        <View style={[styles.header, { backgroundColor: colors.background }]}>
+        <View
+          style={[
+            styles.header,
+            { backgroundColor: colors.background, borderBottomColor: colors.border },
+          ]}>
           <TouchableOpacity style={styles.backButton} onPress={closeScreen} activeOpacity={0.7}>
             <MaterialIcons name="arrow-back" size={24} color={colors.textPrimary} />
           </TouchableOpacity>
@@ -322,7 +324,7 @@ export default function ClassDetailsScreen() {
             {t('classes.details.errorTitle')}
           </Text>
           <Text style={[styles.errorText, { color: colors.textSecondary }]}>
-            {error instanceof Error ? error.message : 'An error occurred'}
+            {error instanceof Error ? error.message : t('classes.unableToLoadClass')}
           </Text>
           <TouchableOpacity
             style={[styles.tryAgainButton, { backgroundColor: colors.accent }]}
@@ -470,7 +472,7 @@ export default function ClassDetailsScreen() {
             {classDetail.importantInfo && (
               <View style={styles.sectionContainer}>
                 <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
-                  Important Info
+                  {t('venues.importantInfo')}
                 </Text>
                 <Text style={[styles.importantInfo, { color: colors.textSecondary }]}>
                   {classDetail.importantInfo}
@@ -480,7 +482,9 @@ export default function ClassDetailsScreen() {
 
             {hasValidCoordinates && (
               <View style={styles.sectionContainer}>
-                <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Location</Text>
+                <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
+                  {t('classes.location')}
+                </Text>
                 <Suspense fallback={<MapSkeleton />}>
                   <ClassLocationMap
                     coordinates={classDetail.venue?.coordinates}
@@ -642,7 +646,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     height: 60,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(0, 0, 0, 0.1)',
   },
   backButton: {
     position: 'absolute',

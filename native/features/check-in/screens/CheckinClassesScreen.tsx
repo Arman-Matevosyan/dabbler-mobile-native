@@ -39,7 +39,7 @@ const CheckInListScreen = ({ route, navigation }: CheckInListScreenProps) => {
       <View style={[styles.header, { backgroundColor: colors.background }]}>
         <HeaderBackButton onPress={handleGoBack} />
         <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>
-          {t('checkin.checkins')}
+          {t('checkin.titles')}
         </Text>
         <View style={styles.headerRight} />
       </View>

@@ -8,6 +8,8 @@ import { format } from 'date-fns';
 import { useEffect } from 'react';
 import { Image, Linking, ScrollView, StyleSheet, TouchableOpacity, View } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
+import { useTranslation } from 'react-i18next';
+
 interface ScheduleItem {
   id: string;
   date: string;
@@ -39,6 +41,8 @@ export const MySchedules = () => {
   const { data, isLoading, refetch } = useMyschedules();
   const { colors } = useTheme();
   const router = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+  const { t } = useTranslation();
+
   useEffect(() => {
     refetch();
   }, [refetch]);
@@ -124,9 +128,9 @@ export const MySchedules = () => {
       <View style={styles.emptyStateContainer}>
         <GirlDoingYoga width={200} height={200} />
 
-        <Text style={styles.noClassesTitle}>{'schedule.noUpcomingClasses'}</Text>
+        <Text style={styles.noClassesTitle}>{t('schedule.noUpcomingClasses')}</Text>
 
-        <Text style={styles.noClassesMessage}>{'schedule.emptyStateMessage'}</Text>
+        <Text style={styles.noClassesMessage}>{t('schedule.emptyStateMessage')}</Text>
       </View>
     );
   }
@@ -157,7 +161,7 @@ export const MySchedules = () => {
     <ScrollView>
       <View style={styles.container}>
         <View style={styles.header}>
-          <Text style={styles.headerText}>{'schedule.mySchedules'}</Text>
+          <Text style={styles.headerText}>{t('schedule.mySchedules')}</Text>
         </View>
 
         <View style={styles.divider} />
@@ -191,7 +195,7 @@ export const MySchedules = () => {
 
                 <View style={styles.classDetails}>
                   <Text style={styles.className}>
-                    {schedule.name || 'schedule.class'}{' '}
+                    {schedule.name || t('classes.class')}{' '}
                     {schedule.level ? `- ${schedule.level}` : ''}
                   </Text>
 
@@ -216,7 +220,9 @@ export const MySchedules = () => {
                     <View style={styles.instructorContainer}>
                       <Icon name="person" size={16} color={colors.textSecondary} />
                       <Text style={styles.instructor}>
-                        {schedule.instructorInfo || schedule.instructorName || 'classes.instructor'}
+                        {schedule.instructorInfo ||
+                          schedule.instructorName ||
+                          t('classes.instructor')}
                       </Text>
                     </View>
                   )}
@@ -230,7 +236,7 @@ export const MySchedules = () => {
 
                   <View style={styles.statusContainer}>
                     <View style={styles.bookedStatusDot} />
-                    <Text style={styles.bookedStatusText}>{'schedule.booked'}</Text>
+                    <Text style={styles.bookedStatusText}>{t('schedule.booked')}</Text>
                   </View>
                 </View>
               </TouchableOpacity>

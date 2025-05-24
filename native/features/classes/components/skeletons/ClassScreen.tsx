@@ -41,7 +41,7 @@ export const ClassCardSkeleton = () => {
   const { colors } = useTheme();
 
   return (
-    <View style={[styles.card, { backgroundColor: colors.card }]}>
+    <View style={[styles.card, { backgroundColor: colors.card, borderBottomColor: colors.border }]}>
       <View style={styles.imageContainer}>
         <Skeleton width={100} height={100} style={{ borderRadius: 8, marginRight: 16 }} />
       </View>
@@ -97,7 +97,6 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     elevation: 3,
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(255,255,255,0.1)',
     paddingBottom: 20,
     marginBottom: 20,
     paddingTop: 20,

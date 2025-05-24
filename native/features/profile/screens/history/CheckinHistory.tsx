@@ -12,8 +12,6 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import {
   CheckinDetailsBottomSheet,
   CheckinDetailsStatus,
@@ -44,7 +42,7 @@ const HeaderTabs = ({
   const { t } = useTranslation();
 
   return (
-    <View style={styles.headerTabsContainer}>
+    <View style={[styles.headerTabsContainer, { borderBottomColor: colors.border }]}>
       <View style={styles.tabsContainer}>
         <Pressable
           style={styles.tabTextContainer}
@@ -58,7 +56,7 @@ const HeaderTabs = ({
                 color: activeTab === 'history' ? colors.accent : colors.textSecondary,
               },
             ]}>
-            {t('profile.history.title')}
+            {t('checkin.history')}
           </Text>
           {activeTab === 'history' && (
             <View style={[styles.tabIndicator, { backgroundColor: colors.accent }]} />
@@ -77,7 +75,7 @@ const HeaderTabs = ({
                 color: activeTab === 'limits' ? colors.accent : colors.textSecondary,
               },
             ]}>
-            {t('profile.history.checkinHistory')}
+            {t('checkin.limits')}
           </Text>
           {activeTab === 'limits' && (
             <View style={[styles.tabIndicator, { backgroundColor: colors.accent }]} />
@@ -170,9 +168,9 @@ const EmptyState = () => {
 
   return (
     <View style={styles.emptyStateContainer}>
-      <Text style={styles.noCheckinsTitle}>{t('profile.history.noCheckins')}</Text>
+      <Text style={styles.noCheckinsTitle}>{t('checkin.noCheckins')}</Text>
 
-      <Text style={styles.noCheckinsMessage}>{t('profile.history.emptyStateMessage')}</Text>
+      <Text style={styles.noCheckinsMessage}>{t('checkin.emptyStateMessage')}</Text>
     </View>
   );
 };
@@ -194,6 +192,7 @@ interface ClassHistoryItemProps {
 
 const ClassHistoryItem = ({ item, onPress }: ClassHistoryItemProps) => {
   const { colors } = useTheme();
+  const { t } = useTranslation();
   const [showBottomSheet, setShowBottomSheet] = useState(false);
 
   const coverImage =
@@ -285,7 +284,9 @@ const ClassHistoryItem = ({ item, onPress }: ClassHistoryItemProps) => {
           {item.status === 'confirmed' && (
             <View style={styles.statusContainer}>
               <View style={[styles.statusIndicator, { backgroundColor: colors.success }]} />
-              <Text style={[styles.statusText, { color: colors.success }]}>Booking Confirmed</Text>
+              <Text style={[styles.statusText, { color: colors.success }]}>
+                {t('classes.bookingConfirmed')}
+              </Text>
             </View>
           )}
         </View>
@@ -338,6 +339,7 @@ const HistoryContent = ({ checkIn }: { checkIn: ClassHistoryItemProps['item'][] 
 // Limits tab content
 const LimitsContent = () => {
   const { colors, mode } = useTheme();
+  const { t } = useTranslation();
 
   const username = 'Vahan!';
 
@@ -346,21 +348,21 @@ const LimitsContent = () => {
       <Text style={styles.welcomeTitle}>Hi {username}</Text>
 
       <Text style={[styles.welcomeDescription, { color: colors.textSecondary }]}>
-        {'checkin.trackLimits'}
+        {t('checkin.trackLimits')}
       </Text>
 
       <View style={styles.limitSection}>
         <View style={styles.limitHeader}>
-          <Ionicons name="time-outline" size={20} color={colors.textSecondary} />
-          <Text style={styles.limitHeaderText}>{'checkin.resetDates'}</Text>
+          <MaterialIcons name="access-time" size={20} color={colors.textSecondary} />
+          <Text style={styles.limitHeaderText}>{t('checkin.resetDates')}</Text>
         </View>
 
         <Text style={[styles.limitText, { color: colors.textSecondary }]}>
-          {'checkin.totalCheckinsReset'}
+          {t('checkin.totalCheckinsReset', { date: '01/04/2023' })}
         </Text>
 
         <Text style={[styles.limitText, { color: colors.textSecondary, marginTop: 16 }]}>
-          {'checkin.allVenueLimits'}
+          {t('checkin.allVenueLimits')}
         </Text>
       </View>
 
@@ -368,9 +370,9 @@ const LimitsContent = () => {
 
       <View
         style={[styles.venueCard, { backgroundColor: mode === 'dark' ? '#222429' : '#F7F7F7' }]}>
-        <Text style={styles.venueCardTitle}>{'checkin.venueCheckins'}</Text>
+        <Text style={styles.venueCardTitle}>{t('checkin.venueCheckins')}</Text>
         <Text style={[styles.visitCount, { color: colors.textSecondary }]}>
-          3 {'checkin.visitsInMarch'}
+          3 {t('checkin.visitsInMarch')}
         </Text>
 
         <View style={styles.venueItem}>
@@ -410,6 +412,8 @@ export default function ProfileCheckinScreen() {
   const checkInData: ClassHistoryItemProps['item'][] = [];
   const isLoading = false;
   const router = useNavigation();
+  const { t } = useTranslation();
+
   useLayoutEffect(() => {
     StatusBar.setBarStyle(mode === 'dark' ? 'light-content' : 'dark-content');
     return () => {
@@ -425,7 +429,7 @@ export default function ProfileCheckinScreen() {
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <View style={[styles.header, { backgroundColor: colors.background }]}>
         <HeaderBackButton onPress={handleGoBack} />
-        <Text style={styles.headerTitle}>{'checkin.checkins'}</Text>
+        <Text style={styles.headerTitle}>{t('checkin.checkins')}</Text>
         <View style={styles.headerRight} />
       </View>
 
@@ -471,7 +475,6 @@ const styles = StyleSheet.create({
   },
   headerTabsContainer: {
     borderBottomWidth: 1,
-    borderBottomColor: 'rgba(150, 150, 150, 0.2)',
   },
   tabsContainer: {
     flexDirection: 'row',

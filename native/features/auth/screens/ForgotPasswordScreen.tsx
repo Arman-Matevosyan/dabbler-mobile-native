@@ -63,10 +63,10 @@ export const ForgotPasswordScreen = () => {
 
         <View style={styles.header}>
           <Text style={[styles.title, { color: colors.textPrimary }]}>
-            {t('auth.forgotPassword.resetPassword')}
+            {t('auth.resetPassword')}
           </Text>
           <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-            {t('auth.forgotPassword.instructions')}
+            {t('auth.enterEmailForReset')}
           </Text>
         </View>
 
@@ -93,13 +93,13 @@ export const ForgotPasswordScreen = () => {
               <Icon name="check-circle" size={48} color={colors.accent} />
             </View>
             <Text style={[styles.successTitle, { color: colors.textPrimary }]}>
-              {t('auth.forgotPassword.emailSent')}
+              {t('auth.emailSent')}
             </Text>
             <Text style={[styles.successMessage, { color: colors.textSecondary }]}>
-              {t('auth.forgotPassword.emailSentMessage')}
+              {t('auth.resetInstructions')}
             </Text>
             <Button
-              title={t('auth.forgotPassword.backToLogin')}
+              title={t('auth.backToSignIn')}
               onPress={() => navigation.navigate('Login')}
               style={styles.backToLoginButton}
             />
@@ -111,8 +111,8 @@ export const ForgotPasswordScreen = () => {
               name="email"
               render={({ field: { onChange, onBlur, value } }) => (
                 <Input
-                  label={t('auth.forgotPassword.email')}
-                  placeholder={t('auth.forgotPassword.emailPlaceholder')}
+                  label={t('auth.email')}
+                  placeholder={t('auth.email')}
                   keyboardType="email-address"
                   autoCapitalize="none"
                   value={value}
@@ -125,11 +125,7 @@ export const ForgotPasswordScreen = () => {
             />
 
             <Button
-              title={
-                isLoading
-                  ? t('auth.forgotPassword.sending')
-                  : t('auth.forgotPassword.resetPasswordButton')
-              }
+              title={isLoading ? t('common.loading') : t('auth.resetPassword')}
               onPress={handleSubmit(onSubmit)}
               disabled={isLoading}
               style={styles.submitButton}
