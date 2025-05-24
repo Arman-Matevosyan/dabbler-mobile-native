@@ -33,7 +33,7 @@ export const ContentAPI = {
       '/content/venues/discover/search',
       params,
     );
-    return response.response;
+    return response;
   },
 
   searchVenuesOnMap: async (params: any): Promise<IVenuesListResponse> => {
@@ -41,7 +41,7 @@ export const ContentAPI = {
       '/content/venues/discover/map/search',
       params,
     );
-    return response.response;
+    return response;
   },
 
   getFavoriteVenues: async (): Promise<IVenuesListResponse> => {

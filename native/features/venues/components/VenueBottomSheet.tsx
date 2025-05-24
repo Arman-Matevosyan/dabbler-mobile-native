@@ -361,48 +361,45 @@ const BottomSheetContent = React.memo(
     updateLoadingState,
   }: BottomSheetContentProps) => {
     const isFocused = useIsFocused();
-
-    const enabled = useMemo(() => isExpanded && isFocused, [isExpanded, isFocused]);
-    const { data, isLoading, refetch } = useVenuesBottomSheet(searchParams, enabled);
     const { t } = useTranslation();
 
-    useEffect(() => {
-      if (enabled) {
-        refetch();
-      }
-    }, [enabled, refetch, searchParams]);
+    const infiniteParams = useMemo(
+      () => ({
+        ...searchParams,
+        limit: 10,
+      }),
+      [searchParams],
+    );
+
+    const enabled = useMemo(() => isExpanded && isFocused, [isExpanded, isFocused]);
+
+    const { data, isLoading, fetchNextPage, hasNextPage, isFetchingNextPage } =
+      useVenuesBottomSheet(infiniteParams, enabled);
 
     useEffect(() => {
       updateLoadingState(isLoading);
     }, [isLoading, updateLoadingState]);
 
     const processedVenues = useMemo(() => {
-      if (!data) return [];
+      if (!data?.pages) return [];
 
-      let venuesArray: any[] = [];
-
-      if (Array.isArray(data)) {
-        venuesArray = data;
-      } else if (data && typeof data === 'object') {
-        if ((data as any).venues && Array.isArray((data as any).venues)) {
-          venuesArray = (data as any).venues;
-        } else if ((data as any).response && Array.isArray((data as any).response)) {
-          venuesArray = (data as any).response;
+      const allVenues = data.pages.flatMap(page => {
+        if (Array.isArray(page.response)) {
+          return page.response;
         }
-      }
-
-      return venuesArray.map((venue: any) => {
-        return {
-          id: venue.id || `venue-${Math.random()}`,
-          name: venue.name || 'Unknown Venue',
-          description: venue.description || '',
-          location: venue.location || {},
-          address: venue.address || {},
-          covers: venue.covers || [],
-          isFavorite: venue.isFavorite || false,
-          categories: venue.categories || [],
-        };
+        return [];
       });
+
+      return allVenues.map((venue: any) => ({
+        id: venue.id || `venue-${Math.random()}`,
+        name: venue.name || 'Unknown Venue',
+        description: venue.description || '',
+        location: venue.location || {},
+        address: venue.address || {},
+        covers: venue.covers || [],
+        isFavorite: venue.isFavorite || false,
+        categories: venue.categories || [],
+      }));
     }, [data]);
 
     const skeletonVenues = useMemo(() => {
@@ -417,6 +414,12 @@ const BottomSheetContent = React.memo(
         categories: [],
       }));
     }, []);
+
+    const handleEndReached = useCallback(() => {
+      if (hasNextPage && !isFetchingNextPage) {
+        fetchNextPage();
+      }
+    }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
     if (!isExpanded) {
       return (
@@ -471,11 +474,23 @@ const BottomSheetContent = React.memo(
                 backgroundColor: colors.background,
                 paddingBottom: 70,
               }}
-              initialNumToRender={5}
+              initialNumToRender={10}
               maxToRenderPerBatch={10}
               windowSize={5}
               removeClippedSubviews={true}
               showsVerticalScrollIndicator={false}
+              onEndReached={handleEndReached}
+              onEndReachedThreshold={0.5}
+              ListFooterComponent={
+                isFetchingNextPage ? (
+                  <View style={styles.loadingFooter}>
+                    <ActivityIndicator size="small" color={colors.accent} />
+                    <Text style={[styles.loadingText, { color: colors.textSecondary }]}>
+                      {t('common.loadingMore')}
+                    </Text>
+                  </View>
+                ) : null
+              }
             />
           )}
         </View>
@@ -638,6 +653,16 @@ const styles = StyleSheet.create({
   expandButtonText: {
     fontSize: 14,
     fontWeight: '500',
+  },
+  loadingFooter: {
+    paddingVertical: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    flexDirection: 'row',
+    gap: 8,
+  },
+  loadingText: {
+    fontSize: 14,
   },
 });
 

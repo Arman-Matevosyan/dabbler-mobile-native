@@ -1,442 +1,376 @@
 import { darkMapStyle, lightMapStyle } from '@/constants/MapColors';
-import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { Animated, Dimensions, LayoutAnimation, Platform, StyleSheet, View } from 'react-native';
-import MapView, { PROVIDER_DEFAULT, PROVIDER_GOOGLE, Region } from 'react-native-maps';
-import ClusterMarker from './ClusterMarker';
-import VenueMarker from './VenueMarker';
+import React, { memo, useRef, useState, useEffect, useCallback, useMemo } from 'react';
+import { Platform, StyleSheet, View, Animated } from 'react-native';
+import MapView, {
+  PROVIDER_DEFAULT,
+  PROVIDER_GOOGLE,
+  Region,
+  Marker,
+  MarkerAnimated,
+} from 'react-native-maps';
 import { useTheme } from '@/design-system';
-import VenueDetailsPanel from './VenueDetailsPanel';
+import { useVenueSearch } from '../hooks/useVenueSearch';
+import { useIsFocused } from '@react-navigation/native';
+import { useLocationParams } from '@/stores/searchStore';
+import VenueMarker from './VenueMarker';
+import ClusterMarker from './ClusterMarker';
+import { Venue, Cluster } from '../hooks/useVenueSearch';
 
-export interface Venue {
-  id: string;
-  name: string;
-  description?: string;
-  location: {
-    coordinates: number[];
-    type: string;
+const INITIAL_ZOOM_LEVEL = 10;
+const ZOOM_ANIMATION_DURATION = 500; // ms
+
+interface MarkerAnimationState {
+  [key: string]: {
+    opacity: Animated.Value;
+    scale: Animated.Value;
+    isVisible: boolean;
   };
-  address: {
-    addressLine2?: string;
-    city?: string;
-    country?: string;
-    district?: string;
-    houseNumber?: string;
-    landmark?: string;
-    postalCode?: string;
-    stateOrProvince?: string;
-    street?: string;
-  };
-  covers: Array<{ url: string; name?: string }>;
-  categories?: string[] | Array<{ name: string }>;
 }
 
-export interface Cluster {
-  id?: string;
-  count: number;
-  center: {
-    latitude: number;
-    longitude: number;
+const MapComponent = () => {
+  const { mode } = useTheme();
+  const mapRef = useRef<MapView>(null);
+  const isFocused = useIsFocused();
+  const [zoomLevel, setZoomLevel] = useState(INITIAL_ZOOM_LEVEL);
+  const [selectedVenueId, setSelectedVenueId] = useState<string | null>(null);
+  const [isMapMoving, setIsMapMoving] = useState(false);
+  const lastRegionChangeTimestamp = useRef<number>(0);
+  const debounceTimeout = useRef<number | null>(null);
+  const [prevData, setPrevData] = useState<{ venues: Venue[]; clusters: Cluster[] } | null>(null);
+  const [markerAnimations, setMarkerAnimations] = useState<MarkerAnimationState>({});
+  const [clusterAnimations, setClusterAnimations] = useState<MarkerAnimationState>({});
+
+  const { locationLat, locationLng, radius, updateLocation } = useLocationParams();
+
+  // Calculate dynamic radius based on zoom level - in meters
+  const calculateRadiusFromZoom = (zoom: number): number => {
+    // These are in meters already
+    if (zoom >= 16) return 1000; // ~1km radius
+    if (zoom >= 14) return 3000; // ~3km radius
+    if (zoom >= 12) return 5000; // ~5km radius
+    if (zoom >= 10) return 15000; // ~15km radius
+    if (zoom >= 8) return 50000; // ~50km radius
+    return 100000; // ~100km radius - very zoomed out
   };
-  venue?: Venue | null;
-}
 
-interface MapComponentProps {
-  onRegionChange: (region: Region, radius: number) => void;
-  venues?: Venue[];
-  clusters?: Cluster[];
-  initialRegion?: Partial<Region>;
-  showUserLocation?: boolean;
-  onMapReady?: () => void;
-  selectedVenue?: Venue | null;
-  onVenuePress?: (venue: Venue) => void;
-}
-
-const { width: SCREEN_WIDTH } = Dimensions.get('window');
-
-const processMapData = (venues: Venue[] = [], clusters: Cluster[] = []) => {
-  const processedVenues = [...venues];
-  const processedClusters = clusters.filter(cluster => {
-    if (cluster.count === 1 && cluster.venue) {
-      processedVenues.push(cluster.venue);
-      return false;
-    }
-    return true;
-  });
-
-  return {
-    venues: processedVenues,
-    clusters: processedClusters,
+  const calculateZoomLevel = (delta: number): number => {
+    if (delta <= 0.001) return 16;
+    if (delta <= 0.01) return 14;
+    if (delta <= 0.05) return 12;
+    if (delta <= 0.1) return 10;
+    if (delta <= 0.5) return 8;
+    return 6;
   };
-};
 
-const VenueMarkerMemo = memo(
-  ({
-    venue,
-    isSelected,
-    onPress,
-  }: {
-    venue: Venue;
-    isSelected: boolean;
-    onPress: (venue: Venue) => void;
-  }) => <VenueMarker key={venue.id} venue={venue} isSelected={isSelected} onPress={onPress} />,
-  (prev, next) => prev.venue.id === next.venue.id && prev.isSelected === next.isSelected,
-);
+  // Get venues and clusters based on current parameters
+  const searchParams = {
+    locationLat,
+    locationLng,
+    radius,
+    zoomLevel,
+    limit: 100,
+    offset: 0,
+  };
 
-const ClusterMarkerMemo = memo(
-  ({ cluster, onPress }: { cluster: Cluster; onPress: () => void }) => (
-    <ClusterMarker key={cluster.id} cluster={cluster} onPress={onPress} />
-  ),
-  (prev, next) => prev.cluster.id === next.cluster.id && prev.cluster.count === next.cluster.count,
-);
+  const { data } = useVenueSearch(searchParams, isFocused);
 
-const MapComponent: React.FC<MapComponentProps> = memo(
-  ({
-    onRegionChange,
-    venues = [],
-    clusters = [],
-    initialRegion,
-    showUserLocation = true,
-    onMapReady,
-    selectedVenue: externalSelectedVenue,
-    onVenuePress: externalOnVenuePress,
-  }) => {
-    const { mode } = useTheme();
-    const mapRef = useRef<MapView>(null);
-    const [internalSelectedVenue, setInternalSelectedVenue] = useState<Venue | null>(null);
+  // Initialize and update animations for markers and clusters
+  useEffect(() => {
+    if (!data) return;
 
-    const selectedVenue =
-      externalSelectedVenue !== undefined ? externalSelectedVenue : internalSelectedVenue;
+    // Store current data for animation
+    if (prevData) {
+      // Handle venue animations
+      const newVenueAnimations = { ...markerAnimations };
 
-    const isRegionChanging = useRef(false);
-    // @ts-ignore
-    const regionChangeTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-    const defaultRegion: Region = useMemo(
-      () => ({
-        latitude: initialRegion?.latitude ?? 0,
-        longitude: initialRegion?.longitude ?? 0,
-        latitudeDelta: initialRegion?.latitudeDelta ?? 0.02,
-        longitudeDelta: initialRegion?.longitudeDelta ?? 0.02,
-      }),
-      [initialRegion],
-    );
-
-    const currentRegion = useRef(defaultRegion);
-    const slideAnim = useRef(new Animated.Value(0)).current;
-    const opacityAnim = useRef(new Animated.Value(0)).current;
-
-    const prevVenues = useRef<Venue[]>([]);
-    const prevClusters = useRef<Cluster[]>([]);
-
-    useEffect(() => {
-      return () => {
-        if (regionChangeTimeoutRef.current) {
-          clearTimeout(regionChangeTimeoutRef.current);
-        }
-      };
-    }, []);
-
-    const configureMarkerAnimation = useCallback(() => {
-      LayoutAnimation.configureNext({
-        duration: 300,
-        create: {
-          type: LayoutAnimation.Types.easeInEaseOut,
-          property: LayoutAnimation.Properties.opacity,
-        },
-        update: {
-          type: LayoutAnimation.Types.easeInEaseOut,
-          property: LayoutAnimation.Properties.opacity,
-        },
-        delete: {
-          type: LayoutAnimation.Types.easeInEaseOut,
-          property: LayoutAnimation.Properties.opacity,
-        },
-      });
-    }, []);
-
-    const handleMapReady = useCallback(() => {
-      if (onMapReady) {
-        onMapReady();
-      }
-    }, [onMapReady]);
-
-    const getVenueKey = useCallback((venue: Venue) => `venue-${venue.id}`, []);
-
-    useEffect(() => {
-      Animated.parallel([
-        Animated.spring(slideAnim, {
-          toValue: selectedVenue ? 1 : 0,
-          useNativeDriver: true,
-        }),
-        Animated.timing(opacityAnim, {
-          toValue: selectedVenue ? 1 : 0,
-          duration: 300,
-          useNativeDriver: true,
-        }),
-      ]).start();
-    }, [selectedVenue, slideAnim, opacityAnim]);
-
-    const getClusterKey = useCallback(
-      (cluster: Cluster) => `cluster-${cluster.id}-${cluster.count}`,
-      [],
-    );
-
-    const { venues: processedVenues, clusters: processedClusters } = useMemo(
-      () => processMapData(venues, clusters),
-      [venues, clusters],
-    );
-
-    useEffect(() => {
-      if (processedVenues.length > 0 || processedClusters.length > 0) {
-        prevVenues.current = processedVenues;
-        prevClusters.current = processedClusters;
-      }
-    }, [processedVenues, processedClusters]);
-
-    const calculateDynamicClusterRadius = useCallback((region: Region) => {
-      const { longitudeDelta } = region;
-      const metersPerDegree = 40075000 / 360;
-      const baseRadius = (longitudeDelta * metersPerDegree) / 2;
-
-      if (longitudeDelta < 0.01) {
-        return baseRadius * 0.5;
-      } else if (longitudeDelta < 0.05) {
-        return baseRadius * 0.7;
-      } else {
-        return baseRadius;
-      }
-    }, []);
-
-    const handleRegionChangeStart = useCallback(() => {
-      if (isRegionChanging.current) return;
-      isRegionChanging.current = true;
-
-      if (regionChangeTimeoutRef.current) {
-        clearTimeout(regionChangeTimeoutRef.current);
-      }
-    }, []);
-
-    const handleRegionChangeComplete = useCallback(
-      (region: Region) => {
-        currentRegion.current = region;
-
-        if (regionChangeTimeoutRef.current) {
-          clearTimeout(regionChangeTimeoutRef.current);
-        }
-
-        const dynamicRadius = calculateDynamicClusterRadius(region);
-
-        regionChangeTimeoutRef.current = setTimeout(() => {
-          if (onRegionChange) {
-            onRegionChange(region, dynamicRadius);
+      // Animate out disappearing venues
+      prevData.venues.forEach(venue => {
+        const stillExists = data.venues.some(v => v.id === venue.id);
+        if (!stillExists) {
+          if (newVenueAnimations[venue.id]) {
+            // Fade out animation
+            Animated.timing(newVenueAnimations[venue.id].opacity, {
+              toValue: 0,
+              duration: 300,
+              useNativeDriver: true,
+            }).start(() => {
+              // Remove after animation completes
+              setMarkerAnimations(current => {
+                const updated = { ...current };
+                delete updated[venue.id];
+                return updated;
+              });
+            });
           }
-          isRegionChanging.current = false;
-        }, 150);
-      },
-      [onRegionChange, calculateDynamicClusterRadius],
-    );
-
-    const handleVenuePress = useCallback(
-      (venue: Venue) => {
-        if (selectedVenue?.id === venue.id) {
-          return;
         }
-
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-
-        if (externalOnVenuePress) {
-          externalOnVenuePress(venue);
-        } else {
-          setInternalSelectedVenue(venue);
-        }
-
-        if (mapRef.current && venue.location?.coordinates?.length === 2) {
-          const coordinate = {
-            latitude: venue.location.coordinates[1],
-            longitude: venue.location.coordinates[0],
-          };
-
-          mapRef.current.animateToRegion(
-            {
-              ...coordinate,
-              latitudeDelta: currentRegion.current.latitudeDelta,
-              longitudeDelta: currentRegion.current.longitudeDelta,
-            },
-            300,
-          );
-        }
-      },
-      [selectedVenue, externalOnVenuePress],
-    );
-
-    const handleClusterPress = useCallback(
-      (cluster: Cluster) => {
-        configureMarkerAnimation();
-
-        if (mapRef.current) {
-          const region: Region = {
-            latitude: cluster.center.latitude,
-            longitude: cluster.center.longitude,
-            latitudeDelta: 0.01,
-            longitudeDelta: 0.01,
-          };
-          mapRef.current.animateToRegion(region, 300);
-        }
-      },
-      [configureMarkerAnimation],
-    );
-
-    const deduplicateMarkers = useCallback((venues: Venue[]) => {
-      if (!venues || venues.length <= 1) return venues;
-
-      if (currentRegion.current.longitudeDelta < 0.005) return venues;
-
-      const gridSize = 0.0005;
-      const occupiedCells = new Map<string, Venue>();
-
-      const sortedVenues = [...venues].sort((a, b) => a.name.localeCompare(b.name));
-
-      return sortedVenues.filter(venue => {
-        if (!venue.location?.coordinates) return false;
-        const latCell = Math.floor(venue.location.coordinates[1] / gridSize);
-        const lngCell = Math.floor(venue.location.coordinates[0] / gridSize);
-        const cellKey = `${latCell},${lngCell}`;
-
-        if (!occupiedCells.has(cellKey)) {
-          occupiedCells.set(cellKey, venue);
-          return true;
-        }
-
-        return false;
       });
-    }, []);
 
-    const getVisibleVenues = useCallback(
-      (venues: Venue[], maxVenuesToRender = 50) => {
-        if (!venues || venues.length === 0) return [];
+      // Initialize animations for new venues
+      data.venues.forEach(venue => {
+        if (!newVenueAnimations[venue.id]) {
+          newVenueAnimations[venue.id] = {
+            opacity: new Animated.Value(0),
+            scale: new Animated.Value(0.5),
+            isVisible: true,
+          };
 
-        const { latitude, longitude, latitudeDelta, longitudeDelta } = currentRegion.current;
+          // Fade in animation
+          Animated.parallel([
+            Animated.timing(newVenueAnimations[venue.id].opacity, {
+              toValue: 1,
+              duration: 300,
+              useNativeDriver: true,
+            }),
+            Animated.timing(newVenueAnimations[venue.id].scale, {
+              toValue: 1,
+              duration: 300,
+              useNativeDriver: true,
+            }),
+          ]).start();
+        }
+      });
 
-        const bufferFactor = 0.5;
-        const minLat = latitude - latitudeDelta * (1 + bufferFactor);
-        const maxLat = latitude + latitudeDelta * (1 + bufferFactor);
-        const minLng = longitude - longitudeDelta * (1 + bufferFactor);
-        const maxLng = longitude + longitudeDelta * (1 + bufferFactor);
+      setMarkerAnimations(newVenueAnimations);
 
-        const inViewport = venues.filter(venue => {
-          if (!venue?.location?.coordinates) return false;
-          const [lng, lat] = venue.location.coordinates;
-          return lat >= minLat && lat <= maxLat && lng >= minLng && lng <= maxLng;
+      // Handle cluster animations
+      const newClusterAnimations = { ...clusterAnimations };
+
+      // Animate out disappearing clusters
+      prevData.clusters.forEach(cluster => {
+        const stillExists = data.clusters.some(c => c.id === cluster.id);
+        if (!stillExists) {
+          if (newClusterAnimations[cluster.id]) {
+            // Fade out animation
+            Animated.timing(newClusterAnimations[cluster.id].opacity, {
+              toValue: 0,
+              duration: 300,
+              useNativeDriver: true,
+            }).start(() => {
+              // Remove after animation completes
+              setClusterAnimations(current => {
+                const updated = { ...current };
+                delete updated[cluster.id];
+                return updated;
+              });
+            });
+          }
+        }
+      });
+
+      // Initialize animations for new clusters
+      data.clusters.forEach(cluster => {
+        if (!newClusterAnimations[cluster.id]) {
+          newClusterAnimations[cluster.id] = {
+            opacity: new Animated.Value(0),
+            scale: new Animated.Value(0.5),
+            isVisible: true,
+          };
+
+          // Fade in animation
+          Animated.parallel([
+            Animated.timing(newClusterAnimations[cluster.id].opacity, {
+              toValue: 1,
+              duration: 300,
+              useNativeDriver: true,
+            }),
+            Animated.timing(newClusterAnimations[cluster.id].scale, {
+              toValue: 1,
+              duration: 300,
+              useNativeDriver: true,
+            }),
+          ]).start();
+        }
+      });
+
+      setClusterAnimations(newClusterAnimations);
+    } else {
+      // First load - initialize all animations
+      const newVenueAnimations: MarkerAnimationState = {};
+      const newClusterAnimations: MarkerAnimationState = {};
+
+      data.venues.forEach(venue => {
+        newVenueAnimations[venue.id] = {
+          opacity: new Animated.Value(1),
+          scale: new Animated.Value(1),
+          isVisible: true,
+        };
+      });
+
+      data.clusters.forEach(cluster => {
+        newClusterAnimations[cluster.id] = {
+          opacity: new Animated.Value(1),
+          scale: new Animated.Value(1),
+          isVisible: true,
+        };
+      });
+
+      setMarkerAnimations(newVenueAnimations);
+      setClusterAnimations(newClusterAnimations);
+    }
+
+    setPrevData({
+      venues: data.venues || [],
+      clusters: data.clusters || [],
+    });
+  }, [data]);
+
+  // Debounced region change handler to reduce API calls during continuous zoom/pan
+  const handleRegionChange = useCallback(
+    (region: Region) => {
+      const now = Date.now();
+
+      // Clear any existing timeout
+      if (debounceTimeout.current) {
+        clearTimeout(debounceTimeout.current);
+      }
+
+      // Mark that the map is moving
+      setIsMapMoving(true);
+
+      // Debounce the actual region change handling
+      debounceTimeout.current = setTimeout(() => {
+        const newZoomLevel = calculateZoomLevel(region.latitudeDelta);
+        setZoomLevel(newZoomLevel);
+
+        // Update search params with new center and radius
+        updateLocation({
+          locationLat: region.latitude,
+          locationLng: region.longitude,
+          radius: calculateRadiusFromZoom(newZoomLevel),
         });
 
-        if (inViewport.length > maxVenuesToRender) {
-          return deduplicateMarkers(inViewport).slice(0, maxVenuesToRender);
-        }
+        setIsMapMoving(false);
+        lastRegionChangeTimestamp.current = now;
+      }, 300); // 300ms debounce
+    },
+    [updateLocation],
+  );
 
-        return inViewport;
+  // Handle region change start to mark map as moving
+  const handleRegionChangeStart = useCallback(() => {
+    setIsMapMoving(true);
+  }, []);
+
+  // Handle cluster press
+  const handleClusterPress = useCallback((cluster: any) => {
+    if (!mapRef.current) return;
+
+    const { coordinate, venues } = cluster;
+
+    // Find the boundaries of the venues in the cluster
+    let minLat = Infinity,
+      maxLat = -Infinity;
+    let minLng = Infinity,
+      maxLng = -Infinity;
+
+    venues.forEach((venue: any) => {
+      minLat = Math.min(minLat, venue.location.latitude);
+      maxLat = Math.max(maxLat, venue.location.latitude);
+      minLng = Math.min(minLng, venue.location.longitude);
+      maxLng = Math.max(maxLng, venue.location.longitude);
+    });
+
+    // Add padding around the cluster area
+    const PADDING = 0.01;
+    minLat -= PADDING;
+    maxLat += PADDING;
+    minLng -= PADDING;
+    maxLng += PADDING;
+
+    // Animate to the region containing all venues in the cluster
+    mapRef.current.animateToRegion(
+      {
+        latitude: (minLat + maxLat) / 2,
+        longitude: (minLng + maxLng) / 2,
+        latitudeDelta: Math.max(maxLat - minLat, 0.01),
+        longitudeDelta: Math.max(maxLng - minLng, 0.01),
       },
-      [deduplicateMarkers],
+      ZOOM_ANIMATION_DURATION,
     );
+  }, []);
 
-    const validVenues = useMemo(() => {
-      const filtered = processedVenues.filter(venue => venue?.location?.coordinates?.length === 2);
+  // Handle venue marker press
+  const handleVenuePress = useCallback((venueId: string) => {
+    setSelectedVenueId(venueId);
+  }, []);
 
-      return getVisibleVenues(filtered);
-    }, [processedVenues, getVisibleVenues]);
+  return (
+    <View style={styles.container}>
+      <MapView
+        ref={mapRef}
+        style={styles.map}
+        customMapStyle={mode === 'dark' ? darkMapStyle : lightMapStyle}
+        provider={Platform.OS === 'android' ? PROVIDER_GOOGLE : PROVIDER_DEFAULT}
+        showsUserLocation={true}
+        onRegionChangeComplete={handleRegionChange}
+        onRegionChange={handleRegionChangeStart}
+        moveOnMarkerPress={false}
+        maxZoomLevel={18}
+        minZoomLevel={3}
+        rotateEnabled={false}
+        pitchEnabled={false}
+        zoomEnabled={true}
+        zoomControlEnabled={true}
+        zoomTapEnabled={true}>
+        {/* Render all venues with animations */}
+        {data?.venues?.map(venue => {
+          const animation = markerAnimations[venue.id];
+          if (!animation) return null;
 
-    const validClusters = useMemo(() => {
-      return processedClusters.filter(
-        (c: Cluster) =>
-          c?.center?.latitude !== undefined &&
-          c?.center?.longitude !== undefined &&
-          typeof c.center.latitude === 'number' &&
-          typeof c.center.longitude === 'number',
-      );
-    }, [processedClusters]);
+          return (
+            <MarkerAnimated
+              key={venue.id}
+              coordinate={venue.location}
+              onPress={() => handleVenuePress(venue.id)}
+              tracksViewChanges={false}
+              opacity={animation.opacity}>
+              <Animated.View
+                style={{
+                  transform: [{ scale: animation.scale }],
+                }}>
+                <View pointerEvents="none">
+                  <VenueMarker
+                    coordinate={venue.location}
+                    onPress={() => handleVenuePress(venue.id)}
+                    isSelected={venue.id === selectedVenueId}
+                  />
+                </View>
+              </Animated.View>
+            </MarkerAnimated>
+          );
+        })}
 
-    const clusterMarkers = useMemo(
-      () =>
-        validClusters.map((cluster: Cluster) => (
-          <ClusterMarkerMemo
-            key={getClusterKey(cluster)}
-            cluster={cluster}
-            onPress={() => {
-              handleClusterPress(cluster);
-            }}
-          />
-        )),
-      [validClusters, handleClusterPress, getClusterKey],
-    );
+        {/* Render all clusters with animations */}
+        {data?.clusters?.map(cluster => {
+          const animation = clusterAnimations[cluster.id];
+          if (!animation) return null;
 
-    const venueMarkers = useMemo(
-      () =>
-        validVenues.map((venue: Venue) => (
-          <VenueMarkerMemo
-            key={getVenueKey(venue)}
-            venue={venue}
-            isSelected={selectedVenue?.id === venue.id}
-            onPress={handleVenuePress}
-          />
-        )),
-      [validVenues, selectedVenue?.id, handleVenuePress, getVenueKey],
-    );
-
-    return (
-      <View style={styles.container}>
-        <MapView
-          ref={mapRef}
-          style={styles.map}
-          customMapStyle={mode === 'dark' ? darkMapStyle : lightMapStyle}
-          provider={Platform.OS === 'android' ? PROVIDER_GOOGLE : PROVIDER_DEFAULT}
-          initialRegion={defaultRegion}
-          onRegionChangeComplete={handleRegionChangeComplete}
-          onRegionChange={handleRegionChangeStart}
-          onPress={() => {
-            if (externalOnVenuePress) {
-              externalOnVenuePress(null as any);
-            } else {
-              setInternalSelectedVenue(null);
-            }
-          }}
-          showsUserLocation={showUserLocation}
-          moveOnMarkerPress={false}
-          onMapReady={handleMapReady}
-          maxZoomLevel={18}
-          minZoomLevel={3}
-          rotateEnabled={false}
-          pitchEnabled={false}>
-          {clusterMarkers}
-          {venueMarkers}
-        </MapView>
-
-        {selectedVenue && (
-          <View
-            style={{
-              position: 'absolute',
-              bottom: 120,
-              left: 0,
-              right: 0,
-              zIndex: 9999,
-            }}>
-            <VenueDetailsPanel
-              selectedVenue={selectedVenue}
-              isLoading={false}
-              onClose={() => {
-                if (externalOnVenuePress) {
-                  externalOnVenuePress(null as any);
-                } else {
-                  setInternalSelectedVenue(null);
-                }
-              }}
-              slideAnim={slideAnim}
-              opacityAnim={opacityAnim}
-            />
-          </View>
-        )}
-      </View>
-    );
-  },
-);
+          return (
+            <MarkerAnimated
+              key={cluster.id}
+              coordinate={cluster.coordinate}
+              onPress={() => handleClusterPress(cluster)}
+              tracksViewChanges={false}
+              opacity={animation.opacity}>
+              <Animated.View
+                style={{
+                  transform: [{ scale: animation.scale }],
+                }}>
+                <View pointerEvents="none">
+                  <ClusterMarker
+                    coordinate={cluster.coordinate}
+                    count={cluster.count}
+                    onPress={() => handleClusterPress(cluster)}
+                  />
+                </View>
+              </Animated.View>
+            </MarkerAnimated>
+          );
+        })}
+      </MapView>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
@@ -445,14 +379,6 @@ const styles = StyleSheet.create({
   },
   map: {
     flex: 1,
-  },
-  detailsPanelContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    zIndex: 999,
-    width: SCREEN_WIDTH,
   },
 });
 

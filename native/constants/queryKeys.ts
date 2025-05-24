@@ -13,6 +13,7 @@ export enum VenueQueryKeys {
   venueDetails = 'VenuesDetailsData',
   venuePlans = 'VenuesPlasData',
   venuesSearchBottomSheet = 'VenuesDataBottomSheet',
+  venuesInfiniteSearchBottomSheet = 'VenuesInfiniteDataBottomSheet',
   favorites = 'favorites',
 }
 

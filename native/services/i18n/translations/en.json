@@ -9,6 +9,7 @@
     "delete": "Delete",
     "confirm": "Confirm",
     "loading": "Loading...",
+    "loadingMore": "Loading more...",
     "error": "Error",
     "success": "Success",
     "retry": "Retry",

@@ -1,7 +1,7 @@
 import { VenueQueryKeys } from '@/constants/queryKeys';
 import { ContentAPI } from '@/services/api';
 import { IVenuesListResponse } from '@/types/venues.interfaces';
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { useMemo } from 'react';
 
 interface ISearchParams {
@@ -15,35 +15,41 @@ interface ISearchParams {
 }
 
 export const useVenuesBottomSheet = (params: ISearchParams, enabled: boolean) => {
+  const pageSize = params.limit || 10;
+
   const queryKey = useMemo(
     () => [
-      VenueQueryKeys.venuesSearchBottomSheet,
+      VenueQueryKeys.venuesInfiniteSearchBottomSheet,
       params.query || '',
       params.locationLat,
       params.locationLng,
       params.radius,
-      params.limit,
-      params.offset,
+      pageSize,
       params.category?.join(','),
     ],
-    [params],
+    [params, pageSize],
   );
 
-  return useQuery<IVenuesListResponse>({
+  return useInfiniteQuery<IVenuesListResponse>({
     queryKey,
-    queryFn: () =>
+    queryFn: ({ pageParam = 0 }) =>
       ContentAPI.searchVenues({
         q: params.query || '',
         latitude: params.locationLat,
         longitude: params.locationLng,
         distance: params.radius,
-        limit: params.limit || 20,
-        offset: params.offset || 0,
+        limit: pageSize,
+        offset: pageParam,
         category: params.category?.join(','),
       }),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage, _, lastPageParam) => {
+      if (lastPage.metadata?.next_page) {
+        return Number(lastPageParam) + pageSize;
+      }
+      return null;
+    },
     enabled: enabled && (!!params.locationLat || !!params.query),
-    select: data => data,
-    retry: 0,
     staleTime: 5 * 60 * 1000,
   });
 };
